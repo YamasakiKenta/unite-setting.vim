@@ -7,5 +7,13 @@ function! unite_setting#get#str_data_from_name(valname) "{{{
 	return rtn
 endfunction "}}}
 function! unite_setting#get#data_from_name(valname) "{{{
-	exe 'return '.a:valname
+	exe 'let tmp = '.a:valname
+	return tmp
+endfunction "}}}
+function! unite_setting#get#data_from_name_def(default, valname) "{{{
+	let tmp = unite_setting#get#data_from_name(a:valname)
+	if type(a:default) != type(tmp)
+		let tmp = a:default
+	endif
+	return tmp
 endfunction "}}}
