@@ -1,0 +1,52 @@
+*unite-setting.jax*
+
+CONTENTS					*unite-setting-contents*
+
+Introduction		|unite-setting-introduction|
+Usage			|unite-setting-usage|
+Install			|unite-setting-install|
+Interface		|unite-setting-interface|
+  Commands		  |unite-setting-commands|
+  Variables		  |unite-setting-variables|
+    Sources variables	    |unite-setting-sources-variables|
+  Key mappings		  |unite-setting-key-mappings|
+  Functions		  |unite-setting-functions|
+Sources			|unite-setting-sources|
+Kinds			|unite-setting-kinds|
+Actions			|unite-setting-actions|
+Filters			|unite-setting-filters|
+Create source		|unite-setting-create-source|
+Create kind		|unite-setting-create-kind|
+Create filter		|unite-setting-create-filter|
+Configulation Examples	|unite-setting-examples|
+User defined source	|unite-setting-user-sources|
+FAQ			|unite-setting-faq|
+Changelog		|unite-setting-changelog|
+
+==============================================================================
+INTRODUCTION					*unite-setting-setting-introduction*
+USAGE						*unite-setting-usage*
+INSTALL						*unite-setting-install*
+INTERFACE					*unite-setting-interface*
+COMMANDS 					*unite-setting-commands*
+VARIABLES 					*unite-setting-variables*
+FUNCTIONS					*unite-setting-functions*
+CORE						*unite-setting-functions-core*
+CUSTOMS						*unite-setting-functions-customs*
+==============================================================================
+SOURCES						*unite-setting-sources*
+*setting-var*
+setting-var	vim ÇÃï“èWÇÃàÍóóÇï\é¶ÇµÇ‹Ç∑ÅB
+==============================================================================
+KINDS						*unite-setting-kinds*
+
+FILTERS						*unite-setting-filters*
+ACTIONS						*unite-setting-actions*
+NOTATION					*unite-setting-notation*
+EXAMPLES					*unite-setting-examples*
+FAQ						*unite-setting-faq*
+CHANGELOG					*unite-setting-changelog*
+CONTENTS					*unite-setting-contents*
+INTRODUCTION					*unite-setting-introduction*
+==============================================================================
+vim:tw=78:ts=8:ft=help:norl:noet:fen:fdl=0:

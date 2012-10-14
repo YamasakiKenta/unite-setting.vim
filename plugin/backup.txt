@@ -1,0 +1,772 @@
+let s:unite_kind = {
+			\ 'bool'     : 'settings_bool',
+			\ 'list'     : 'settings_list',
+			\ 'select'   : 'settings_val_select',
+			\ 'title'    : 'settings_common',
+			\ 'val'      : 'settings_val',
+			\ }
+
+let s:unite_kind_deta_type = {
+			\ 'bool'     : 1,
+			\ 'list'     : [1, 'please input data'],
+			\ 'select'   : [1, 'please input data'],
+			\ 'title'    : 'title',
+			\ 'val'      : 'please input data',
+			\ }
+"@ bit
+function! s:get_bits(dict_name, valname, kind) "{{{
+
+	let tmp_d   = s:get_orig(a:dict_name, a:valname, a:kind)
+	let tmp_num = tmp_d[0]
+	let bits    = []
+	let num     = 1
+
+	for i in range(len(tmp_d[1:]))
+		call add(bits, tmp_num % 2 > 0 ? num : 0 )
+		let tmp_num = tmp_num / 2
+		let num = num * 2
+	endfor
+
+	return bits
+endfunction "}}}
+function! s:get_num_from_bits(bits) "{{{
+	let sum = 0
+	let num_ = 1
+	for i_ in range(len(a:bits))
+		if a:bits[i_] > 0
+			let sum += num_
+		endif
+		let num_ = num_ * 2
+	endfor
+	let sum = sum / 2
+
+	return sum
+endfunction "}}}
+function! s:get_nums_form_bit(bit) "{{{
+
+	let nums = []
+	let bit  = a:bit
+	let val  = 0
+
+	while bit > 0 
+		" BIT が有効ならリストに追加する
+		if bit % 2 
+			let nums += [val]
+		endif
+
+		" Bit リストの更新
+		let bit = bit / 2
+
+		" リスト位置の更新
+		let val += 1
+	endwhile
+
+	return nums
+
+endfunction "}}}
+"@ sub
+function! Sub_setting_syntax(args, context) "{{{
+	syntax match uniteSource__settings_choose /<.\{-}>/ containedin=uniteSource__settings contained
+	syntax match uniteSource__settings_group /".*"/ containedin=uniteSource__settings contained
+	highlight default link uniteSource__settings_choose Type 
+	highlight default link uniteSource__settings_group Underlined  
+endfunction "}}}
+function! s:add_order(dict_name, valname) "{{{
+	let tmp_d = s:get_data_from_name({}, a:dict_name)
+	let tmp_d.__order = get(tmp_d, '__order', [])
+	call add(tmp_d.__order, a:valname)
+endfunction "}}}
+function! s:common_out(dict_name) "{{{
+	call s:save(a:dict_name)
+	call unite#force_redraw()
+endfunction "}}}
+function! s:delete(dict_name, valname, kind, nums) "{{{
+
+	" 並び替え
+	let nums = copy(a:nums)
+	call sort(nums, 's:sort_lager')
+
+	" 番号の取得
+	let datas = s:get_orig(a:dict_name, a:valname, a:kind)
+
+	" 選択番号の取得
+	let bits = [0]
+	call extend(bits, s:get_bits(a:dict_name, a:valname, a:kind))
+
+	" 削除 ( 大きい数字から削除 ) 
+	for num_ in a:nums
+		" 番号の更新
+		if exists('datas[num_]')
+			unlet datas[num_]
+		endif
+		if exists('bits[num_]')
+			unlet bits[num_]
+		endif
+	endfor
+
+	" 選択番号の設定
+	let datas[0] = s:get_num_from_bits(bits)
+
+	" 設定
+	call s:set(a:dict_name, a:valname, a:kind, datas)
+
+endfunction "}}}
+function! s:get(dict_name, valname, kind) "{{{
+	let tmp_d = s:get_data_from_name({}, a:dict_name)
+	let kind  = s:get_kind(a:dict_name, a:valname, a:kind)
+	let type  = s:get_type(a:dict_name, a:valname, a:kind)
+
+	" 存在しない場合は、common を代入する
+	if !exists('tmp_d[a:valname][kind]')
+		let tmp_d[a:valname][kind] = tmp_d[a:valname].__common
+	endif
+
+	let val = tmp_d[a:valname][kind]
+
+	if type == 'list'
+		let rtns = s:get_lists(val)
+	elseif type == 'select'
+		let rtns = join(s:get_lists(val))
+	else
+		let rtns = val
+	endif
+
+	return rtns
+endfunction "}}}
+function! s:get_data_from_name(default, dict_name) "{{{
+	if exists(a:dict_name)
+		exe 'let tmp = '.a:dict_name
+		if type(tmp) == type(a:default)
+			return tmp
+		endif
+	endif
+
+	return a:default
+endfunction "}}}
+function! s:get_data_from_str(str) "{{{
+	exe 'return '.a:str
+endfunction "}}}
+function! s:get_description(dict_name, valname, kind) "{{{
+	return get(s:get_data_from_name({} , a:dict_name), '__description', '----')
+endfunction "}}}
+function! s:get_file(dict_name) "{{{
+	return s:get_data_from_name({}, a:dict_name).__file
+endfunction "}}}
+function! s:get_kind(dict_name, valname, kind) "{{{
+	if exists(a:dict_name.'[a:valname][a:kind]')
+		return a:kind
+	endif
+	return '__common'
+endfunction "}}}
+function! s:get_lists(datas) "{{{
+
+	if a:datas[0] < 0
+		let rtns = a:datas[1:]
+	else
+		let rtns = copy(s:get_nums_form_bit(a:datas[0]*2))
+
+		call filter (rtns, "exists('a:datas[v:val]')")
+		call map    (rtns, "a:datas[v:val]")
+	endif
+
+	return rtns
+endfunction "}}}
+function! s:get_order(dict_name) "{{{
+	let tmp_d = s:get_data_from_name({}, a:dict_name)
+	return tmp_d.__order
+endfunction "}}}
+function! s:get_orig(dict_name, valname, kind) "{{{
+	let tmp_d = s:get_data_from_name({} , a:dict_name)
+	return tmp_d[a:valname][s:get_kind(a:dict_name, a:valname, a:kind)]
+endfunction "}}}
+function! s:get_source_kind(dict_name, valname, kind) "{{{
+	let type = s:get_type(a:dict_name, a:valname, a:kind)
+	return s:unite_kind[type]
+endfunction "}}}
+function! s:get_source_word(dict_name, valname, kind) "{{{
+	let type = s:get_type(a:dict_name, a:valname, a:kind)
+
+	let rtn = '----'
+	if type == 'bool'
+		let rtn = s:get_source_word_from_bool(a:dict_name, a:valname, a:kind)
+	elseif type == 'list' || type == 'select'
+		let rtn = s:get_source_word_from_strs(a:dict_name, a:valname, a:kind)
+	elseif type == 'val'
+		let rtn = s:get_source_word_from_val(a:dict_name, a:valname, a:kind)
+	else
+		let rtn = '"'.a:valname.'"'
+	endif
+
+	return rtn
+endfunction "}}}
+function! s:get_source_word_from_bool(dict_name, valname, kind) "{{{
+	let str =  s:get(a:dict_name, a:valname, a:kind) ? 
+				\ '<TRUE>  FALSE ' :
+				\ ' TRUE  <FALSE>'
+	return s:get_source_word_sub( a:dict_name, a:valname, a:kind, str)
+endfunction "}}}
+function! s:get_source_word_from_strs(dict_name, valname, kind) "{{{
+
+	let datas  = s:get_orig(a:dict_name, a:valname, a:kind)
+	let select = datas[0]
+
+	"全選択
+	if select < 0
+		let items  = datas[1:]
+		let strs   = map(copy(items), "'<'.v:val.'>'")
+	else
+		let strs  = s:get_strs_on_off(a:dict_name, a:valname, a:kind)
+	endif
+	return s:get_source_word_sub( a:dict_name, a:valname, a:kind, join(strs))
+endfunction "}}}
+function! s:get_source_word_from_val(dict_name, valname, kind) "{{{
+	return s:get_source_word_sub( a:dict_name, a:valname, a:kind, s:get(a:dict_name, a:valname, a:kind))
+endfunction "}}}
+function! s:get_source_word_sub(dict_name, valname, kind, str) "{{{
+	return printf(' %-30s %50s - %s', 
+				\ s:get_description     (a:dict_name, a:valname, a:kind),
+				\ s:get_source_word_type(a:dict_name, a:valname, a:kind),
+				\ a:str,
+				\ )
+endfunction "}}}
+function! s:get_source_word_type(dict_name, valname, kind) "{{{
+	let kind = s:get_kind( a:dict_name, a:valname, a:kind) 
+
+	if exists(a:valname)
+		let star = '_'
+	elseif kind=='__common'
+		let star = '*'
+	else
+		let star = ' '
+	endif
+
+	return star.''.a:valname.''.star
+endfunction "}}}
+function! s:get_strs_on_off(dict_name, valname, kind) "{{{
+
+	let items  = s:get_orig(a:dict_name, a:valname, a:kind)[1:]
+	let flgs   = s:get_bits(a:dict_name, a:valname, a:kind)
+	let tmps_d = map(range(len(items)), "{
+				\ 'flg'      : flgs[v:val],
+				\ 'item_on'  : '<'.items[v:val].'>',
+				\ 'item_off' : ' '.items[v:val].' ',
+				\ }")
+	let strs = map(copy(tmps_d), "v:val.flg ? v:val.item_on : v:val.item_off")
+
+	return strs
+endfunction "}}}
+function! s:get_type(dict_name, valname, kind) "{{{
+	let tmp_d = get(s:get_data_from_name({}, a:dict_name), a:valname, {})
+	return get( tmp_d,'__type','title')
+endfunction "}}}
+function! s:load(dict_name) "{{{
+	let lists  = readfile( s:get_file(a:dict_name))
+	let tmp_d  = s:get_data_from_str(join(lists))
+	let origin = s:get_data_from_name({}, a:dict_name)
+
+	" 上書きするように修正
+	for data in keys(tmp_d)
+		let origin[data] = tmp_d[data]
+	endfor
+
+	call s:set_val_name_from_val(a:dict_name, tmp_d)
+endfunction "}}}
+function! s:new(dict_name, valname, val, description, type) "{{{
+
+	" 変数の存在確認
+	let tmp_d = s:get_data_from_name({}, a:dict_name)
+
+	if !exists('tmp_d') 
+		let tmp_d = {} 
+	endif
+
+	if !exists('tmp_d[a:valname]') 
+		let tmp_d[a:valname] = {} 
+	endif
+
+	" 実際に登録
+	call s:set(a:dict_name       , a:valname  , '__type'        , a:type        ) 
+	call s:set(a:dict_name       , a:valname  , '__description' , a:description ) 
+	call s:set(a:dict_name       , a:valname  , '__common'      , a:val         ) 
+	call s:set(a:dict_name       , a:valname  , '__default'     , a:val         ) 
+
+	" 保存する
+	call s:add_order(a:dict_name , a:valname                                    ) 
+endfunction "}}}
+function! s:new_title(dict_name, valname) "{{{
+	call s:new('g:unite_data',a:valname,1,'','title')
+endfunction "}}}
+function! s:save(dict_name) "{{{
+	let tmp_d = s:get_data_from_name({}, a:dict_name)
+	call writefile([string(tmp_d)], s:get_file(a:dict_name))
+endfunction "}}}
+function! s:set(dict_name, valname, kind, val) "{{{
+
+	" データを保存する
+	call s:set_val_name_from_val(a:dict_name.'["'.a:valname.'"]["'.a:kind.'"]', a:val)
+
+	" 変数の場合は、変数も修正する
+	if exists(a:valname)
+		call s:set_val_name_from_val(a:valname, s:get(a:dict_name, a:valname, a:kind))
+	endif
+
+endfunction "}}}
+function! s:set_val_name_from_str(val_name, str) "{{{
+	exe 'let '.a:val_name.' = '.a:str
+endfunction "}}}
+function! s:set_val_name_from_val(val_name, val) "{{{
+	exe 'let '.a:val_name.' = a:val'
+endfunction "}}}
+function! s:set_next(dict_name, valname, kind) "{{{
+	let type = s:get_type(a:dict_name, a:valname, a:kind)
+	if type == 'bool'
+		let val = !s:get(a:dict_name, a:valname, a:kind)
+	else
+		let val = s:get_orig(a:dict_name, a:valname, a:kind)
+		let tmp_int   = val[0]
+
+		" 修正できる範囲か確認する
+		let max   = s:get_num_from_bits(range(len(val)-1))
+		let val[0]   = val[0] > max ? 1 : val[0] * 2
+	endif
+
+	call s:set(a:dict_name, a:valname, a:kind, val )
+endfunction "}}}
+function! s:sort_lager(a, b) "{{{
+	return a:b - a:a
+endfunction "}}}
+"@ main
+" data "{{{
+let g:unite_data = {}
+let g:debug_bool = 0
+let g:debug_list = []
+let g:debug_str = 'abc'
+let g:debug_int = 1
+let g:debug_select = 'zzz'
+let g:debug_add = 1
+call s:new_title('g:unite_data', 'title')
+call s:new('g:unite_data' , 'g:debug_bool'   , 1                                       , '' , 'bool'   ) 
+call s:new('g:unite_data' , 'g:debug_list'   , [-1, 'zzz', 'xxx', 'yyy']               , '' , 'list'   ) 
+call s:new('g:unite_data' , 'g:debug_str'    , 'abc'                                   , '' , 'val'    ) 
+call s:new('g:unite_data' , 'g:debug_select' , [1, 'zzz', 'xxx', 'yyy']                , '' , 'select' ) 
+let g:unite_data.__file = 'c:\tmp\data.txt'
+"call s:load('g:unite_data')
+"}}}
+" untie - setting 
+" source - settings "{{{
+let s:source = {
+			\ 'name'        : 'settings',
+			\ 'description' : '変数を編集します',
+			\ 'syntax'      : 'uniteSource__settings',
+			\ 'hooks'       : {},
+			\ 'is_quit'     : 0,
+			\ }
+let s:source.hooks.on_syntax = function("Sub_setting_syntax")
+function! s:source.hooks.on_init(args, context) "{{{
+	if len(a:args) > 0
+		let a:context.source__dict_name = a:args[0]
+	endif
+endfunction "}}}
+function! s:source.gather_candidates(args, context) "{{{
+	" 設定する項目
+	let dict_name = get(a:, 'args[0]', 'g:unite_data')
+
+	let orders  = s:get_order(dict_name)
+	let kind       = '__common'
+
+	" 辞書名と、取得関数が必要になる
+
+	return map( copy(orders), "{
+				\ 'word'              : s:get_source_word(dict_name, v:val, kind),
+				\ 'kind'              : s:get_source_kind(dict_name, v:val, kind),
+				\ 'action__kind'      : kind,
+				\ 'action__valname'   : v:val,
+				\ 'action__dict_name' : dict_name,
+				\ }")
+
+endfunction "}}}
+function! s:source.change_candidates(args, context) "{{{
+
+	let dict_name   = a:context.source__dict_name
+
+	let valname     = a:context.input
+	let kind        = '__common'
+
+	"let tmp_d = s:get_data_from_name({}, dict_name)
+	let tmp_d = {
+				\ 'kind' : 'settings_new',
+				\ 'action__kind'      : kind,
+				\ 'action__valname'   : valname,
+				\ 'action__dict_name' : a:context.source__dict_name,
+				\ }
+
+	let rtns = []
+	if !exists(dict_name.'[valname]') && valname != ''
+		for type in keys(s:unite_kind)
+			let tmp_d.word         = '[add] '.valname.' - '.type
+			let tmp_d.action__type = type
+			call add(rtns, copy(tmp_d))
+		endfor
+	endif
+
+	" ★
+	if 0 
+		let tmp_d.action__type = 'bool'
+
+		for data in keys(g:)
+			let tmp_d.word         = '[add] g:'.data
+			call add(rtns, copy(tmp_d))
+		endfor
+	endif
+
+	return rtns
+
+endfunction "}}}
+let s:source_settings = s:source
+call unite#define_source( s:source_settings )
+unlet s:source 
+"}}}
+" kind - settings_common "{{{
+let s:kind = { 
+			\ 'name'           : 'settings_common',
+			\ 'default_action' : '',
+			\ 'action_table'   : {},
+			\ }
+let s:kind.action_table.delete = {
+			\ 'description'   : 'delete',
+			\ 'is_quit'       : 0,
+			\ }
+function! s:kind.action_table.delete.func(candidate) "{{{
+	let candidate = a:candidate
+
+	let dict_name = candidate.action__dict_name
+	let valname   = candidate.action__valname
+	let kind      = candidate.action__kind
+
+	let tmp_d = s:get_data_from_name({}, dict_name)
+
+	unlet tmp_d[valname]
+	let orders = s:get_order(dict_name)
+	for num_ in range(len(orders)-1, 0, -1)
+		let order = orders[num_]
+		if order  =~ valname
+			unlet orders[num_]
+		endif
+	endfor
+
+	call s:set_val_name_from_val(dict_name, tmp_d)
+
+	call s:common_out(dict_name)
+endfunction "}}}
+let s:settings_val = s:kind
+call unite#define_kind(s:settings_val) 
+unlet s:kind "}}}
+" kind - settings_bool "{{{
+let s:kind = { 
+			\ 'name'           : 'settings_bool',
+			\ 'default_action' : 'a_toggle',
+			\ 'action_table'   : {},
+			\ 'parents': ['settings_common'],
+			\ }
+let s:kind.action_table.a_toggle = {
+			\ 'is_selectable' : 1,
+			\ 'description'   : '設定の切替',
+			\ 'is_quit'       : 0,
+			\ }
+function! s:kind.action_table.a_toggle.func(candidates) "{{{
+	for candidate in a:candidates
+		let dict_name = candidate.action__dict_name
+		let valname   = candidate.action__valname
+		let kind      = candidate.action__kind
+		call s:set_next(dict_name, valname, kind)
+	endfor
+	call s:common_out(dict_name)
+endfunction "}}}
+let s:settings_bool = s:kind
+call unite#define_kind(s:settings_bool) 
+unlet s:kind "}}}
+" kind - settings_val "{{{
+let s:kind = { 
+			\ 'name'           : 'settings_val',
+			\ 'default_action' : 'a_toggle',
+			\ 'action_table'   : {},
+			\ 'parents': ['settings_common'],
+			\ }
+let s:kind.action_table.a_toggle = {
+			\ 'description'   : '設定の切替',
+			\ 'is_quit'       : 0,
+			\ }
+function! s:kind.action_table.a_toggle.func(candidate) "{{{
+	let candidate = a:candidate
+
+	let dict_name = candidate.action__dict_name
+	let valname   = candidate.action__valname
+	let kind      = candidate.action__kind
+	let val = s:get(dict_name, valname, kind)
+	let val = input(''.valname.' : ', val)
+	call s:set(dict_name, valname, kind, val )
+
+	call s:common_out(dict_name)
+endfunction "}}}
+let s:settings_val = s:kind
+call unite#define_kind(s:settings_val) 
+unlet s:kind "}}}
+" kind - settings_list "{{{
+let s:kind = { 
+			\ 'name'           : 'settings_list',
+			\ 'default_action' : 'a_toggles',
+			\ 'action_table'   : {},
+			\ 'parents': ['settings_common'],
+			\ }
+" action
+let s:kind.action_table.a_toggles = {
+			\ 'description' : '複数選択',
+			\ 'is_quit'     : 0,
+			\ }
+function! s:kind.action_table.a_toggles.func(candidate) "{{{
+	let tmp_d = {
+				\ 'dict_name' : a:candidate.action__dict_name,
+				\ 'valname'   : a:candidate.action__valname,
+				\ 'kind'      : a:candidate.action__kind,
+				\ 'only_'     : 0,
+				\ }
+	call unite#start_temporary([['settings_select', tmp_d]])
+endfunction "}}}
+let s:kind.action_table.edit = {
+			\ 'description' : '設定編集',
+			\ 'is_quit'     : 0,
+			\ }
+function! s:kind.action_table.edit.func(candidate) "{{{
+	let dict_name = a:candidate.action__dict_name
+	let valname   = a:candidate.action__valname
+	let kind      = a:candidate.action__kind
+	let tmp       = input("",string(s:get_orig(dict_name, valname, kind)))
+
+	if tmp != ""
+		let val = s:get_data_from_str(tmp)
+		call s:set(dict_name, valname, kind, val)
+	endif
+
+	call s:common_out(dict_name)
+endfunction "}}}
+let s:settings_strs = s:kind
+call unite#define_kind(s:settings_strs) 
+unlet s:kind
+"}}}
+" kind - settings_val_select "{{{
+let s:kind = { 
+			\ 'name'           : 'settings_val_select',
+			\ 'default_action' : 'a_toggle',
+			\ 'action_table'   : {},
+			\ 'parents': ['settings_common'],
+			\ }
+let s:kind.action_table.a_toggle = {
+			\ 'description' : '選択',
+			\ 'is_quit'     : 0,
+			\ }
+function! s:kind.action_table.a_toggle.func(candidate) "{{{
+
+	let dict_name = a:candidate.action__dict_name
+	let valname   = a:candidate.action__valname
+	let kind      = a:candidate.action__kind
+
+	call s:set_next(dict_name, valname, kind)
+	call s:common_out(dict_name)
+endfunction "}}}
+let s:kind.action_table.edit = {
+			\ 'description' : 'edit',
+			\ 'is_quit'     : 0,
+			\ }
+function! s:kind.action_table.edit.func(candidate) "{{{
+	let tmp_d = {
+				\ 'dict_name' : a:candidate.action__dict_name,
+				\ 'valname'   : a:candidate.action__valname,
+				\ 'kind'      : a:candidate.action__kind,
+				\ 'only_'     : 1,
+				\ }
+	call unite#start_temporary([['settings_select', tmp_d]], {'default_action' : 'a_toggle'})
+endfunction "}}}
+let s:settings_val_select = s:kind
+call unite#define_kind(s:settings_val_select) 
+unlet s:kind "}}}
+"unite - setting - new
+" kind - settings_new "{{{
+let s:kind = { 
+			\ 'name'           : 'settings_new',
+			\ 'default_action' : 'add',
+			\ 'action_table'   : {},
+			\ }
+" action
+let s:kind.action_table.add = {
+			\ 'description' : 'add',
+			\ 'is_quit' : 0,
+			\ }
+function! s:kind.action_table.add.func(candidate) "{{{
+
+	let dict_name = a:candidate.action__dict_name
+	let valname   = a:candidate.action__valname
+	let kind      = a:candidate.action__kind
+	let type      = a:candidate.action__type
+
+	let val = s:get_data_from_name(s:unite_kind_deta_type[type] ,valname)
+
+	call s:new(dict_name, valname, val, "", type)
+
+	call s:common_out(dict_name)
+
+endfunction "}}}
+call unite#define_kind(s:kind)
+unlet s:kind
+"}}}
+" unite - setting - select
+"source - settings_select "{{{
+let s:source = {
+			\ 'name'        : 'settings_select',
+			\ 'description' : '複数選択',
+			\ 'syntax'      : 'uniteSource__settings',
+			\ 'hooks'       : {},
+			\ }
+let s:source.hooks.on_syntax = function('Sub_setting_syntax')
+function! s:source.hooks.on_init(args, context) "{{{
+	if len(a:args) > 0
+		let a:context.source__dict_name = a:args[0].dict_name
+		let a:context.source__valname   = a:args[0].valname
+		let a:context.source__kind      = a:args[0].kind
+		let a:context.source__only      = a:args[0].only_
+	endif
+endfunction "}}}
+function! s:source.gather_candidates(args, context) "{{{
+
+	" 設定する項目
+	if len(a:args) > 0
+		let dict_name = a:args[0].dict_name
+		let valname   = a:args[0].valname
+		let kind      = a:args[0].kind
+	endif
+
+	" 引数を取得する
+	let words = s:get_orig(dict_name, valname, kind)[1:]
+
+	let val  = 0
+	let num_ = 0
+
+	let strs  = s:get_strs_on_off(dict_name, valname, kind)
+	call insert(strs, ' NULL ')
+
+	let rtns = []
+	for word in strs 
+		let rtns += [{
+					\ 'word'              : word,
+					\ 'kind'              : 'settings_select',
+					\ 'action__dict_name' : a:context.source__dict_name,
+					\ 'action__valname'   : a:context.source__valname,
+					\ 'action__kind'      : a:context.source__kind,
+					\ 'action__only'      : a:context.source__only,
+					\ 'action__bitnum'    : val,
+					\ 'action__num'       : num_,
+					\ 'action__new'       : '',
+					\ }]
+		let val = val ? val * 2 : 1
+		let num_ += 1
+	endfor	
+
+	return rtns
+
+endfunction "}}}
+function! s:source.change_candidates(args, context) "{{{
+
+	let new = a:context.input
+	let dict_name   = a:context.source__dict_name
+	let valname     = a:context.source__valname
+	let kind        = a:context.source__kind
+
+	let rtns = []
+	if new != ''
+		let rtns = [{
+					\ 'word' : '[add] '.new,
+					\ 'kind' : 'settings_select',
+					\ 'action__new'       : new,
+					\ 'action__dict_name' : a:context.source__dict_name,
+					\ 'action__valname'   : a:context.source__valname,
+					\ 'action__kind'      : a:context.source__kind,
+					\ 'action__only'      : a:context.source__only,
+					\ 'action__bitnum'    : 0,
+					\ 'action__num'       : 0,
+					\ }]
+	endif
+
+	return rtns
+
+endfunction "}}}
+let s:source_settings_select = s:source
+call unite#define_source( s:source_settings_select ) 
+unlet s:source 
+"}}}
+" kind - settings_select "{{{
+let s:kind = { 
+			\ 'name'           : 'settings_select',
+			\ 'default_action' : 'a_toggles',
+			\ 'action_table'   : {},
+			\ }
+let s:kind.action_table.a_toggles = {
+			\ 'is_selectable' : 1,
+			\ 'description' : '設定の切替 ( 複数選択可能 )',
+			\ 'is_quit'        : 0,
+			\ }
+function! Sub_set_settings_select_toggle(candidates) "{{{
+
+	let candidates = type(a:candidates) == type([]) ? a:candidates : [a:candidates]
+
+	let dict_name = candidates[0].action__dict_name
+	let valname   = candidates[0].action__valname
+	let kind      = candidates[0].action__kind
+	let only_     = candidates[0].action__only
+
+	let tmps = s:get_orig(dict_name, valname, kind)
+
+	let val = 0
+	for candidate in candidates
+		let val += candidate.action__bitnum
+	endfor
+
+	" 新規追加の場合
+	if candidates[0].action__new != ''
+		call insert(tmps, candidates[0].action__new, 1)
+		let val = val * 2 + 1
+	else
+		call unite#force_quit_session()
+	endif
+
+	let tmps[0] = val
+	call s:set(dict_name, valname, kind, tmps)
+
+	call s:common_out(dict_name)
+	return 
+endfunction "}}}
+let s:kind.action_table.a_toggles.func = function("Sub_set_settings_select_toggle")
+let s:kind.action_table.a_toggle = {
+			\ 'description' : '設定の切替',
+			\ 'is_quit'        : 0,
+			\ }
+let s:kind.action_table.a_toggle.func = function("Sub_set_settings_select_toggle")
+let s:kind.action_table.delete = {
+			\ 'is_selectable' : 1,
+			\ 'description'   : 'delete',
+			\ 'is_quit'        : 0,
+			\ }
+function! s:kind.action_table.delete.func(candidates) "{{{
+
+	" 初期化
+	let valname   = a:candidates[0].action__valname
+	let kind      = a:candidates[0].action__kind
+	let dict_name = a:candidates[0].action__dict_name
+	let nums      = map(copy(a:candidates), 'v:val.action__num')
+
+	" 削除する
+	call s:delete(dict_name, valname, kind, nums)
+
+	call s:common_out(dict_name)
+endfunction "}}}
+call unite#define_kind(s:kind)
+unlet s:kind
+"}}}
