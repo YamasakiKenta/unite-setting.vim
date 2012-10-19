@@ -1,26 +1,25 @@
-let s:settings_select_quit_nflg = 0
 let s:valname_to_source_kind_tabel = {
-			\ type(0)              : 'settings_val',
-			\ type("")             : 'settings_val',
-			\ type(function("tr")) : 'settings_val',
-			\ type(0.0)            : 'settings_val',
+			\ type(0)              : 'settings_common',
+			\ type("")             : 'settings_common',
+			\ type(function("tr")) : 'settings_common',
+			\ type(0.0)            : 'settings_common',
 			\ type([])             : 'settings_list',
 			\ type({})             : 'settings_list',
 			\ }
 " source 
 function! s:get_source_word(valname) "{{{
-	let val_str = unite_setting#get#str_data_from_name(a:valname)
+	exe 'let val_str = string('.a:valname.')'
 	return printf("%50s : %s", a:valname, val_str)
 endfunction "}}}
 function! s:get_source_kind(valname) "{{{
-	let type = unite_setting#get#type_from_name(a:valname)
+	exe 'let type = type('.valname.')'
 	return s:valname_to_source_kind_tabel[type]
 endfunction "}}}
 
 " s:kind_settings_common "{{{
 let s:kind = { 
 			\ 'name'           : 'settings_common',
-			\ 'default_action' : '',
+			\ 'default_action' : 'edit',
 			\ 'action_table'   : {},
 			\ }
 "let s:kind.action_table.edit = { "{{{
@@ -34,21 +33,21 @@ function! s:kind.action_table.edit.func(candidate)
 
 	if !exists(valname)
 		let tmp_str = matchstr(valname, '.*\ze[.*\]$')
-		let type_ = unite_setting#get#type_from_name(tmp_str)
+		exe 'let type = type('.valname.')'
 
 		if type_ == type([])
 			exe 'call add('.tmp_str.', new_)'
 		elseif type_ == type({})
-			call unite_setting#set#name_from_str(valname, 0)
+			exe 'let '.valname.' = 0'
 			let str = new_
 		endif
 	endif
 
-	let str = string(unite_setting#get#data_from_name(valname))
+	exe 'let str = string('.valname.')'
 	let str = input(valname.' : ', str)
 
 	if str !=# ""
-		call unite_setting#set#name_from_str(valname, str)
+		exe 'let '.valname.' = str'
 	endif
 
 	call unite#force_redraw()
@@ -69,15 +68,6 @@ function! s:kind.action_table.delete.func(candidate)
 endfunction
 "}}}
 let s:kind_settings_common = deepcopy(s:kind)
-"}}}
-" s:kind_settings_val "{{{
-let s:kind = { 
-			\ 'name'           : 'settings_val',
-			\ 'default_action' : 'edit',
-			\ 'action_table'   : {},
-			\ 'parents': ['settings_common'],
-			\ }
-let s:kind_settings_val = deepcopy(s:kind)
 "}}}
 "s:kind_settings_list "{{{
 let s:kind = { 
@@ -108,22 +98,15 @@ let s:source = {
 			\ }
 let s:source.hooks.on_syntax = function("unite_setting#sub_setting_syntax")
 function! s:source.hooks.on_init(args, context) "{{{
-	let s:settings_select_quit_flg = 0
 	let a:context.source__valname = get(a:args, 0, 'g:')
-endfunction "}}}
-function! s:source.hooks.on_close(args, context) "{{{
-	" ñ≥óùÇ‚ÇËçXêV
-	if s:settings_select_quit_flg == 0
-		let s:settings_select_quit_flg = 1
-		call unite#force_quit_session()
-	endif
-	call unite#force_redraw()
 endfunction "}}}
 function! s:source.gather_candidates(args, context) "{{{
 
 	let valname = a:context.source__valname
 
-	let tmp = unite_setting#get#data_from_name(valname)
+	call unite#print_source_message(valname, 'settings_var')
+
+	exe 'let tmp = '.valname
 
 	if type([]) == type(tmp)
 		let vars = map(range(len(tmp)),
@@ -131,7 +114,7 @@ function! s:source.gather_candidates(args, context) "{{{
 	elseif type({}) == type(tmp)
 		let vars = map(keys(tmp),
 					\ "valname.'['''.v:val.''']'")
-					" \ "valname.'.'.v:val")
+		" \ "valname.'.'.v:val")
 	endif
 
 	return map( copy(vars), "{
@@ -146,7 +129,7 @@ function! s:source.change_candidates(args, context) "{{{
 
 	let new_    = a:context.input
 	let valname = a:context.source__valname
-	let type    = unite_setting#get#type_from_name(valname)
+	exe 'let type = type('.valname.')'
 
 	if type == type([])
 		let num_    = len(unite_setting#get#data_from_name_def([], valname))
@@ -157,14 +140,14 @@ function! s:source.change_candidates(args, context) "{{{
 
 
 	let rtns = []
-		if new_ != ''
-			let rtns = [{
-						\ 'word' : printf("[add]%45s : %s", valname, new_),
-						\ 'kind' : 'settings_val',
-						\ 'action__valname'   : valname,
-						\ 'action__new'       : new_,
-						\ }]
-		endif
+	if new_ != ''
+		let rtns = [{
+					\ 'word' : printf("[add]%45s : %s", valname, new_),
+					\ 'kind' : 'settings_val',
+					\ 'action__valname'   : valname,
+					\ 'action__new'       : new_,
+					\ }]
+	endif
 
 	return rtns
 
@@ -173,11 +156,10 @@ let s:source_settings_var = deepcopy(s:source)
 "}}}
 
 call unite#define_source ( s:source_settings_var      ) | unlet s:source_settings_var
-call unite#define_kind   ( s:kind_settings_val        ) | unlet s:kind_settings_val
 call unite#define_kind   ( s:kind_settings_common     ) | unlet s:kind_settings_common     
 call unite#define_kind   ( s:kind_settings_list       ) | unlet s:kind_settings_list       
 
 let g:test_num  = 0
-let g:test_list = ['aaa', 'bbb', 'ccc']
+let g:test_list = [{'a':123, 'b':456, 'd':[1,2,3,{'eee':4}]}, 'bbb', 'ccc']
 let g:test_dict = {}
 
