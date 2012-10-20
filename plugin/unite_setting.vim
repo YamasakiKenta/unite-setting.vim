@@ -8,12 +8,12 @@ let s:valname_to_source_kind_tabel = {
 			\ }
 
 function! s:get_source_word(valname) "{{{
-	exe 'let val_str = string('.a:valname.')'
-	return printf("%-50s : %s", a:valname, val_str)
+	exe 'let tmp = '.a:valname
+	return printf("%-50s : %s", a:valname, string(tmp))
 endfunction "}}}
 function! s:get_source_kind(valname) "{{{
-	exe 'let type = type('.a:valname.')'
-	return s:valname_to_source_kind_tabel[type]
+	exe 'let tmp_ = '.a:valname
+	return s:valname_to_source_kind_tabel[type(tmp)]
 endfunction "}}}
 
 "s:source_settings_var "{{{
