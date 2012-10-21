@@ -53,6 +53,37 @@ function! s:save(dict_name) "{{{
 	let file_ = tmp_d.__file
 	call writefile([string(tmp_d)], file_)
 endfunction "}}}
+function! s:delete(dict_name, valname, kind, nums) "{{{
+
+	" 並び替え
+	let nums = copy(a:nums)
+	call sort(nums, 's:sort_lager')
+
+	" 番号の取得
+	let datas = s:get_orig(a:dict_name, a:valname, a:kind)
+
+	" 選択番号の取得
+	let bits = [0]
+	call extend(bits, s:get_bits(a:dict_name, a:valname, a:kind))
+
+	" 削除 ( 大きい数字から削除 ) 
+	for num_ in a:nums
+		" 番号の更新
+		if exists('datas[num_]')
+			unlet datas[num_]
+		endif
+		if exists('bits[num_]')
+			unlet bits[num_]
+		endif
+	endfor
+
+	" 選択番号の設定
+	let datas[0] = s:get_num_from_bits(bits)
+
+	" 設定
+	call s:set(a:dict_name, a:valname, a:kind, datas)
+
+endfunction "}}}
 
 function! s:common_out(dict_name) "{{{
 	call s:save(a:dict_name)
