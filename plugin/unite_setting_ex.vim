@@ -1,7 +1,7 @@
 let s:unite_kind = {
-			\ 'bool'     : 'settings_bool',
-			\ 'list'     : 'settings_list',
-			\ 'select'   : 'settings_val_select',
+			\ 'bool'     : 'settings_ex_bool',
+			\ 'list'     : 'settings_ex_list',
+			\ 'select'   : 'settings_ex_select',
 			\ }
 
 function! s:load(dict_name) "{{{
@@ -27,6 +27,7 @@ function! s:common_out(dict_name) "{{{
 	call s:save(a:dict_name)
 	call unite#force_redraw()
 endfunction "}}}
+
 function! s:get_bits(dict_name, valname, kind) "{{{
 
 	let tmp_d   = s:get_orig(a:dict_name, a:valname, a:kind)
@@ -49,7 +50,7 @@ function! s:get_kind(dict_name, valname, kind) "{{{
 	return '__common'
 endfunction "}}}
 function! s:get_num_from_bits(bits) "{{{
-	let sum = 0
+	let sum  = 0
 	let num_ = 1
 	for i_ in range(len(a:bits))
 		if a:bits[i_] > 0
@@ -63,7 +64,8 @@ function! s:get_num_from_bits(bits) "{{{
 endfunction "}}}
 function! s:get_orig(dict_name, valname, kind) "{{{
 	exe 'let tmp_d = '.a:dict_name
-	return tmp_d[a:valname][s:get_kind(a:dict_name, a:valname, a:kind)]
+	let kind = s:get_kind(a:dict_name, a:valname, a:kind)
+	return tmp_d[a:valname][kind]
 endfunction "}}}
 function! s:get_source_kind(dict_name, valname, kind) "{{{
 	exe 'let tmp_d = '.a:dict_name
@@ -117,11 +119,11 @@ function! s:get_source_word_sub(dict_name, valname, kind, str) "{{{
 	exe 'let tmp_d = '.a:dict_name
 	return printf(' %-30s %50s - %s', 
 				\ tmp_d[a:valname].__description,
-				\ s:get_source_word_type(a:dict_name, a:valname, a:kind),
+				\ s:get_source_word_sub_type(a:dict_name, a:valname, a:kind),
 				\ a:str,
 				\ )
 endfunction "}}}
-function! s:get_source_word_type(dict_name, valname, kind) "{{{
+function! s:get_source_word_sub_type(dict_name, valname, kind) "{{{
 	let kind = s:get_kind( a:dict_name, a:valname, a:kind) 
 
 	if exists(a:valname)
@@ -151,10 +153,21 @@ function! s:get_type(dict_name, valname, kind) "{{{
 	exe 'let tmp_d = '.a:dict_name
 	return get( tmp_d[a:valname],'__type','title')
 endfunction "}}}
+
+function! s:set(dict_name, valname, kind, val) "{{{
+
+	exe 'let '.a:dict_name.'["'.a:valname.'"]["'.a:kind.'"]'.' = a:val'
+
+	if exists(a:valname)
+		let tmp = unite_setting_ex#get(a:dict_name, a:valname, a:kind))
+		exe 'let '.a:valname.' = tmp'
+	endif
+
+endfunction "}}}
 function! s:set_next(dict_name, valname, kind) "{{{
 	exe 'let tmp_d = '.a:dict_name
 	let type = tmp_d[a:valname].__type
-	"let type = s:get_type(a:dict_name, a:valname, a:kind)
+
 	if type == 'bool'
 		let val = !unite_setting_ex#get(a:dict_name, a:valname, a:kind)
 	else
@@ -166,154 +179,12 @@ function! s:set_next(dict_name, valname, kind) "{{{
 		let val[0]   = val[0] > max ? 1 : val[0] * 2
 	endif
 
-	call unite_setting_ex#set(a:dict_name, a:valname, a:kind, val )
+	call s:set(a:dict_name, a:valname, a:kind, val )
 endfunction "}}}
 
-" s:kind_settings_list "{{{
-let s:kind = { 
-			\ 'name'           : 'settings_list',
-			\ 'default_action' : 'a_toggles',
-			\ 'action_table'   : {},
-			\ 'parents': ['settings_common'],
-			\ }
-" action
-let s:kind.action_table.a_toggles = {
-			\ 'description' : '複数選択',
-			\ 'is_quit'     : 0,
-			\ }
-function! s:kind.action_table.a_toggles.func(candidate) "{{{
-	let tmp_d = {
-				\ 'dict_name' : a:candidate.action__dict_name,
-				\ 'valname'   : a:candidate.action__valname,
-				\ 'kind'      : a:candidate.action__kind,
-				\ 'only_'     : 0,
-				\ }
-	call unite#start_temporary([['settings_select', tmp_d]])
-endfunction "}}}
-let s:kind.action_table.edit = {
-			\ 'description' : '設定編集',
-			\ 'is_quit'     : 0,
-			\ }
-function! s:kind.action_table.edit.func(candidate) "{{{
-	let dict_name = a:candidate.action__dict_name
-	let valname   = a:candidate.action__valname
-	let kind      = a:candidate.action__kind
-	let tmp       = input("",string(s:get_orig(dict_name, valname, kind)))
-
-	if tmp != ""
-		exe 'let val = '.tmp
-		call unite_setting_ex#set(dict_name, valname, kind, val)
-	endif
-
-	call s:common_out(dict_name)
-endfunction "}}}
-let s:kind_settings_list = deepcopy(s:kind)
-"}}}
-"s:kind_setting_select "{{{
-let s:kind = { 
-			\ 'name'           : 'settings_select',
-			\ 'default_action' : 'a_toggles',
-			\ 'action_table'   : {},
-			\ }
-let s:kind.action_table.a_toggles = {
-			\ 'is_selectable' : 1,
-			\ 'description' : '設定の切替 ( 複数選択可能 )',
-			\ 'is_quit'        : 0,
-			\ }
-function! Sub_set_settings_select_toggle(candidates) "{{{
-
-	let candidates = type(a:candidates) == type([]) ? a:candidates : [a:candidates]
-
-	let dict_name = candidates[0].action__dict_name
-	let valname   = candidates[0].action__valname
-	let kind      = candidates[0].action__kind
-	let only_     = candidates[0].action__only
-
-	let tmps = s:get_orig(dict_name, valname, kind)
-
-	let val = 0
-	for candidate in candidates
-		let val += candidate.action__bitnum
-	endfor
-
-	" 新規追加の場合
-	if candidates[0].action__new != ''
-		call insert(tmps, candidates[0].action__new, 1)
-		let val = val * 2 + 1
-	else
-		call unite#force_quit_session()
-	endif
-
-	let tmps[0] = val
-	call unite_setting_ex#set(dict_name, valname, kind, tmps)
-
-	call s:common_out(dict_name)
-	return 
-endfunction "}}}
-let s:kind.action_table.a_toggles.func = function("Sub_set_settings_select_toggle")
-let s:kind.action_table.a_toggle = {
-			\ 'description' : '設定の切替',
-			\ 'is_quit'        : 0,
-			\ }
-let s:kind.action_table.a_toggle.func = function("Sub_set_settings_select_toggle")
-let s:kind.action_table.delete = {
-			\ 'is_selectable' : 1,
-			\ 'description'   : 'delete',
-			\ 'is_quit'        : 0,
-			\ }
-function! s:kind.action_table.delete.func(candidates) "{{{
-
-	" 初期化
-	let valname   = a:candidates[0].action__valname
-	let kind      = a:candidates[0].action__kind
-	let dict_name = a:candidates[0].action__dict_name
-	let nums      = map(copy(a:candidates), 'v:val.action__num')
-
-	" 削除する
-	call s:delete(dict_name, valname, kind, nums)
-
-	call s:common_out(dict_name)
-endfunction "}}}
-let s:kind_setting_select = deepcopy(s:kind)
-"}}}
-"s:kind_settings_val_select "{{{
-let s:kind = { 
-			\ 'name'           : 'settings_val_select',
-			\ 'default_action' : 'a_toggle',
-			\ 'action_table'   : {},
-			\ 'parents': ['settings_common'],
-			\ }
-let s:kind.action_table.a_toggle = {
-			\ 'description' : '選択',
-			\ 'is_quit'     : 0,
-			\ }
-function! s:kind.action_table.a_toggle.func(candidate) "{{{
-
-	let dict_name = a:candidate.action__dict_name
-	let valname   = a:candidate.action__valname
-	let kind      = a:candidate.action__kind
-
-	call s:set_next(dict_name, valname, kind)
-	call s:common_out(dict_name)
-endfunction "}}}
-let s:kind.action_table.edit = {
-			\ 'description' : 'edit',
-			\ 'is_quit'     : 0,
-			\ }
-function! s:kind.action_table.edit.func(candidate) "{{{
-	let tmp_d = {
-				\ 'dict_name' : a:candidate.action__dict_name,
-				\ 'valname'   : a:candidate.action__valname,
-				\ 'kind'      : a:candidate.action__kind,
-				\ 'only_'     : 1,
-				\ }
-	call unite#start_temporary([['settings_select', tmp_d]], {'default_action' : 'a_toggle'})
-endfunction "}}}
-let s:kind_settings_val_select = deepcopy(s:kind)
-"}}}
 " s:kind_settings_ex_bool "{{{
 let s:kind = { 
-			\ 'name'           : 'settings_bool',
+			\ 'name'           : 'settings_ex_bool',
 			\ 'default_action' : 'a_toggle',
 			\ 'action_table'   : {},
 			\ }
@@ -333,6 +204,82 @@ function! s:kind.action_table.a_toggle.func(candidates) "{{{
 endfunction "}}}
 let s:kind_settings_ex_bool = deepcopy(s:kind)
 "}}}
+"s:kind_settings_ex_select "{{{
+let s:kind = { 
+			\ 'name'           : 'settings_ex_select',
+			\ 'default_action' : 'a_toggle',
+			\ 'action_table'   : {},
+			\ 'parents': ['settings_common'],
+			\ }
+let s:kind.action_table.a_toggle = {
+			\ 'description' : '選択',
+			\ 'is_quit'     : 0,
+			\ }
+function! s:kind.action_table.a_toggle.func(candidate) "{{{
+	let dict_name = a:candidate.action__dict_name
+	let valname   = a:candidate.action__valname
+	let kind      = a:candidate.action__kind
+
+	call s:set_next(dict_name, valname, kind)
+	call s:common_out(dict_name)
+endfunction "}}}
+let s:kind.action_table.edit = {
+			\ 'description' : 'edit',
+			\ 'is_quit'     : 0,
+			\ }
+function! s:kind.action_table.edit.func(candidate) "{{{
+	let tmp_d = {
+				\ 'dict_name' : a:candidate.action__dict_name,
+				\ 'valname'   : a:candidate.action__valname,
+				\ 'kind'      : a:candidate.action__kind,
+				\ 'only_'     : 1,
+				\ }
+	call unite#start_temporary([['settings_ex_select', tmp_d]], {'default_action' : 'a_toggle'})
+endfunction "}}}
+let s:kind_settings_ex_select = deepcopy(s:kind)
+"}}}
+"
+" s:kind_settings_ex_list "{{{
+let s:kind = { 
+			\ 'name'           : 'settings_ex_list',
+			\ 'default_action' : 'a_toggles',
+			\ 'action_table'   : {},
+			\ 'parents': ['settings_common'],
+			\ }
+" action
+let s:kind.action_table.a_toggles = {
+			\ 'description' : '複数選択',
+			\ 'is_quit'     : 0,
+			\ }
+function! s:kind.action_table.a_toggles.func(candidate) "{{{
+	let tmp_d = {
+				\ 'dict_name' : a:candidate.action__dict_name,
+				\ 'valname'   : a:candidate.action__valname,
+				\ 'kind'      : a:candidate.action__kind,
+				\ 'only_'     : 0,
+				\ }
+	call unite#start_temporary([['settings_ex_select', tmp_d]])
+endfunction "}}}
+let s:kind.action_table.edit = {
+			\ 'description' : '設定編集',
+			\ 'is_quit'     : 0,
+			\ }
+function! s:kind.action_table.edit.func(candidate) "{{{
+	let dict_name = a:candidate.action__dict_name
+	let valname   = a:candidate.action__valname
+	let kind      = a:candidate.action__kind
+	let tmp       = input("",string(s:get_orig(dict_name, valname, kind)))
+
+	if tmp != ""
+		exe 'let val = '.tmp
+		call s:set(dict_name, valname, kind, val)
+	endif
+
+	call s:common_out(dict_name)
+endfunction "}}}
+let s:kind_settings_ex_list = deepcopy(s:kind)
+"}}}
+"
 "s:source_settings_ex "{{{
 let s:source = {
 			\ 'name'        : 'settings_ex',
@@ -372,9 +319,9 @@ function! s:source.gather_candidates(args, context) "{{{
 endfunction "}}}
 let s:source_settings_ex = deepcopy(s:source)
 "}}}
-"s:source_settings_select"{{{
+"s:source_settings_ex_select"{{{
 let s:source = {
-			\ 'name'        : 'settings_select',
+			\ 'name'        : 'settings_ex_select',
 			\ 'description' : '複数選択',
 			\ 'syntax'      : 'uniteSource__settings',
 			\ 'hooks'       : {},
@@ -410,7 +357,7 @@ function! s:source.gather_candidates(args, context) "{{{
 	for word in strs 
 		let rtns += [{
 					\ 'word'              : word,
-					\ 'kind'              : 'settings_select',
+					\ 'kind'              : 'settings_ex_select',
 					\ 'action__dict_name' : a:context.source__dict_name,
 					\ 'action__valname'   : a:context.source__valname,
 					\ 'action__kind'      : a:context.source__kind,
@@ -437,7 +384,7 @@ function! s:source.change_candidates(args, context) "{{{
 	if new != ''
 		let rtns = [{
 					\ 'word' : '[add] '.new,
-					\ 'kind' : 'settings_select',
+					\ 'kind' : 'settings_ex_select',
 					\ 'action__new'       : new,
 					\ 'action__dict_name' : a:context.source__dict_name,
 					\ 'action__valname'   : a:context.source__valname,
@@ -451,15 +398,14 @@ function! s:source.change_candidates(args, context) "{{{
 	return rtns
 
 endfunction "}}}
-let s:source_settings_select = deepcopy(s:source)
+let s:source_settings_ex_select = deepcopy(s:source)
 "}}}
 
-call unite#define_kind   ( s:kind_setting_select      )  | unlet s:kind_setting_select
-call unite#define_kind   ( s:kind_settings_ex_bool    )  | unlet s:kind_settings_ex_bool
-call unite#define_kind   ( s:kind_settings_list       )  | unlet s:kind_settings_list
-call unite#define_kind   ( s:kind_settings_val_select )  | unlet s:kind_settings_val_select
-call unite#define_source ( s:source_settings_select   )  | unlet s:source_settings_select
-call unite#define_source ( s:source_settings_ex       )  | unlet s:source_settings_ex
+call unite#define_kind   ( s:kind_settings_ex_select   )  | unlet s:kind_settings_ex_select
+call unite#define_kind   ( s:kind_settings_ex_bool     )  | unlet s:kind_settings_ex_bool
+call unite#define_kind   ( s:kind_settings_ex_list     )  | unlet s:kind_settings_ex_list
+call unite#define_source ( s:source_settings_ex        )  | unlet s:source_settings_ex
+call unite#define_source ( s:source_settings_ex_select )  | unlet s:source_settings_ex_select
 
 "test
 let g:unite_pf_data = {'__order' : [], '__file' : 'c:\tmp\vim_data.txt' }

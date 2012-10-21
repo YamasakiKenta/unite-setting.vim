@@ -54,13 +54,3 @@ function! unite_setting_ex#get(dict_name, valname, kind) "{{{
 
 	return rtns
 endfunction "}}}
-function! unite_setting_ex#set(dict_name, valname, kind, val) "{{{
-
-	exe 'let '.a:dict_name.'["'.a:valname.'"]["'.a:kind.'"]'.' = a:val'
-
-	if exists(a:valname)
-		let tmp = unite_setting_ex#get(a:dict_name, a:valname, a:kind))
-		exe 'let '.a:valname.' = tmp'
-	endif
-
-endfunction "}}}

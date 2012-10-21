@@ -2,44 +2,32 @@
 
 CONTENTS					*unite-setting-contents*
 
-Introduction		|unite-setting-introduction|
-Usage			|unite-setting-usage|
-Install			|unite-setting-install|
 Interface		|unite-setting-interface|
   Commands		  |unite-setting-commands|
   Variables		  |unite-setting-variables|
-    Sources variables	    |unite-setting-sources-variables|
-  Key mappings		  |unite-setting-key-mappings|
-  Functions		  |unite-setting-functions|
 Sources			|unite-setting-sources|
-Kinds			|unite-setting-kinds|
-Actions			|unite-setting-actions|
-Filters			|unite-setting-filters|
-Create source		|unite-setting-create-source|
-Create kind		|unite-setting-create-kind|
-Create filter		|unite-setting-create-filter|
-Configulation Examples	|unite-setting-examples|
-User defined source	|unite-setting-user-sources|
-FAQ			|unite-setting-faq|
-Changelog		|unite-setting-changelog|
 
 ==============================================================================
-INTRODUCTION					*unite-setting-setting-introduction*
-USAGE						*unite-setting-usage*
-INSTALL						*unite-setting-install*
-INTERFACE					*unite-setting-interface*
-COMMANDS 					*unite-setting-commands*
-VARIABLES 					*unite-setting-variables*
+
 FUNCTIONS					*unite-setting-functions*
-CORE						*unite-setting-functions-core*
-CUSTOMS						*unite-setting-functions-customs*
+
+						*unite_setting_ex#add()*
+unite_setting_ex#add({dict-name}, {valname}, {description}, {type}, {val})
+		設定を追加します。
+
+
+
 ==============================================================================
 SOURCES						*unite-setting-sources*
-*setting-var*
-setting-var	vim の編集の一覧を表示します。
+
+						*setting-var*
+setting_var	vim の編集の一覧を表示します。
+
+						*settings_ex*
+settings_ex	各種設定が行えます
+
 ==============================================================================
 KINDS						*unite-setting-kinds*
-
 FILTERS						*unite-setting-filters*
 ACTIONS						*unite-setting-actions*
 NOTATION					*unite-setting-notation*
