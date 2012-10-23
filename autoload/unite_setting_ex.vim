@@ -4,7 +4,7 @@ function! s:get_lists(datas) "{{{
 	if a:datas[0] < 0
 		let rtns = a:datas[1:]
 	else
-		let rtns = copy(s:get_nums_form_bit(a:datas[0]*2))
+		let rtns = copy(unite_setting#get_nums_form_bit(a:datas[0]*2))
 
 		call filter (rtns, "exists('a:datas[v:val]')")
 		call map    (rtns, "a:datas[v:val]")
@@ -19,7 +19,7 @@ function! unite_setting_ex#add(dict_name, valname, description, type, val) "{{{
 
 	if !exists('tmp_d[a:valname]') 
 		let tmp_d[a:valname] = {} 
-	endif
+	endi
 
 	let tmp_d[a:valname] = {
 				\ '__type'        : a:type,
@@ -53,4 +53,20 @@ function! unite_setting_ex#get(dict_name, valname, kind) "{{{
 	endif
 
 	return rtns
+endfunction "}}}
+function! unite_setting_ex#load(dict_name) "{{{
+	exe 'let origin_ = '.a:dict_name
+
+	let file_ = origin_.__file
+
+	" “Ç‚İ‚İ
+	let lists  = readfile( file_ )
+	exe 'let tmp_d = '.join(lists)
+
+	" ã‘‚«
+	for key in keys(tmp_d)
+		let origin_[key] = tmp_d[key]
+	endfor
+
+	exe 'let '.a:dict_name.' = tmp_d'
 endfunction "}}}
