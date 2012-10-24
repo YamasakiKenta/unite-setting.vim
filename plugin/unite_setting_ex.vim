@@ -412,7 +412,7 @@ let s:source = {
 			\ 'syntax'      : 'uniteSource__settings',
 			\ 'hooks'       : {},
 			\ }
-let s:source.hooks.on_syntax = function('Sub_setting_syntax')
+let s:source.hooks.on_syntax = function('unite_setting#sub_setting_syntax')
 function! s:source.hooks.on_init(args, context) "{{{
 	if len(a:args) > 0
 		let a:context.source__dict_name = a:args[0].dict_name
