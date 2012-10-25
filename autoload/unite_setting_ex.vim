@@ -17,16 +17,12 @@ function! unite_setting_ex#add(dict_name, valname, description, type, val) "{{{
 
 	exe 'let tmp_d = '.a:dict_name
 
-	if !exists('tmp_d[a:valname]') 
-		let tmp_d[a:valname] = {} 
-	endi
+	let tmp_d[a:valname] = get(tmp_d, a:valname, {})
 
-	let tmp_d[a:valname] = {
-				\ '__type'        : a:type,
-				\ '__description' : a:description,
-				\ '__common'      : a:val,
-				\ '__default'     : a:val,
-				\ }
+	let tmp_d[a:valname].__type        = a:type
+	let tmp_d[a:valname].__description = a:description
+	let tmp_d[a:valname].__default     = a:val
+	let tmp_d[a:valname].__common      = get(tmp_d[a:valname], '__common', a:val)
 
 	call add(tmp_d.__order, a:valname)
 
@@ -39,7 +35,7 @@ function! unite_setting_ex#get(dict_name, valname, kind) "{{{
 
 	" ë∂ç›ÇµÇ»Ç¢èÍçáÇÕÅAcommon Çë„ì¸Ç∑ÇÈ
 	if !exists('tmp_d[a:valname][a:kind]')
-		let a:tmp_d[a:valname][a:kind] = tmp_d[a:valname].__common
+		let tmp_d[a:valname][a:kind] = tmp_d[a:valname].__common
 	endif
 
 	let val = tmp_d[a:valname][a:kind]
@@ -54,21 +50,15 @@ function! unite_setting_ex#get(dict_name, valname, kind) "{{{
 
 	return rtns
 endfunction "}}}
+
 function! unite_setting_ex#load(dict_name) "{{{
-	exe 'let origin_ = '.a:dict_name
 
-	let file_ = origin_.__file
+	exe 'let data_d = 'a:dict_name
 
-	" ì«Ç›çûÇ›
-	if filereadable(file_)
-		let lists  = readfile( file_ )
-		exe 'let tmp_d = '.join(lists)
+	exe 'so '.expand(data_d.__file)
 
-		" è„èëÇ´
-		for key in keys(tmp_d)
-			let origin_[key] = tmp_d[key]
-		endfor
+	for data in filter(keys(data_d), "v:val =~ '^__'")
+		exe 'let '.a:dict_name.'[data] = data_d[data]'
+	endfor
 
-		exe 'let '.a:dict_name.' = origin_'
-	endif
 endfunction "}}}

@@ -100,6 +100,7 @@ function! s:kind.action_table.select.func(candidate)
 endfunction "}}}
 let s:kind_settings_list = deepcopy(s:kind)
 "}}}
+
 "s:source_settings_var "{{{
 let s:source = {
 			\ 'name'        : 'settings_var',

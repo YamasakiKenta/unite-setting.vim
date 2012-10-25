@@ -1,6 +1,6 @@
 let g:unite_data = {'__order' : [], '__file' : '~/.unite_setting' }
-" bool title list select
-"
+
+"call unite_setting_ex#load('g:unite_data')
 call unite_setting_ex#add('g:unite_data', 'g:unite_update_time',
 			\ 'Update time interval of candidates for each input of narrowing text.  In Msec.',
 			\ 'select', [1, 500, 750, 1000])
@@ -55,8 +55,6 @@ call unite_setting_ex#add('g:unite_data' , 'g:unite_source_vimgrep_search_word_h
 call unite_setting_ex#add('g:unite_data' , 'g:unite_split_rule'                            , '' , 'var'  , get(g: , 'unite_split_rule'                            , 0) )
 call unite_setting_ex#add('g:unite_data' , 'g:unite_winheight'                             , '' , 'var'  , get(g: , 'unite_winheight'                             , 0) )
 call unite_setting_ex#add('g:unite_data' , 'g:unite_winwidth'                              , '' , 'var'  , get(g: , 'unite_winwidth'                              , 0) )
-
-call unite_setting_ex#load('g:unite_data')
 
 nnoremap ;uu<CR> :<C-u>call unite#start([['settings_ex', 'g:unite_data']])<CR>
 
