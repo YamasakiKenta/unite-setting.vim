@@ -105,7 +105,10 @@ function! s:source.gather_candidates(args, context) "{{{
 
 	exe 'let tmp = '.valname
 
-	if type([]) == type(tmp)
+	if valname == 'g:'
+		let vars = map(keys(tmp),
+					\ "valname.''.v:val")
+	elseif type([]) == type(tmp)
 		let vars = map(range(len(tmp)),
 					\ "valname.'['.v:val.']'")
 	elseif type({}) == type(tmp)
