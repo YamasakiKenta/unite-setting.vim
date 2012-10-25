@@ -65,6 +65,21 @@ function! s:kind.action_table.delete.func(candidate)
 	call unite#force_redraw()
 endfunction
 "}}}
+"let s:kind.action_table.preview = { "{{{
+let s:kind.action_table.preview = {
+			\ 'description'   : 'preview',
+			\ 'is_quit'       : 0,
+			\ }
+function! s:kind.action_table.preview.func(candidate) 
+	try
+		let valname   = a:candidate.action__valname
+		exe 'help '.valname
+	catch
+		call unite#clear_message()
+		call unite#print_message('can not find "'.valname.'" help.')
+	endtry
+endfunction
+"}}}
 let s:kind_settings_common = deepcopy(s:kind)
 "}}}
 "s:kind_settings_list "{{{
