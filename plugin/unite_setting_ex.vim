@@ -1,5 +1,6 @@
 let s:unite_kind = {
 			\ 'bool'     : 'settings_ex_bool',
+			\ 'var'      : 'settings_ex_var',
 			\ 'list'     : 'settings_ex_list',
 			\ 'select'   : 'settings_ex_select',
 			\ }
@@ -38,7 +39,7 @@ endfunction "}}}
 function! s:save(dict_name) "{{{
 	exe 'let tmp_d = '.a:dict_name
 	let file_ = tmp_d.__file
-	call writefile([string(tmp_d)], file_)
+	call writefile([string(tmp_d)], expand("file_"))
 endfunction "}}}
 function! s:delete(dict_name, valname, kind, nums) "{{{
 
@@ -133,7 +134,7 @@ function! s:get_source_word(dict_name, valname, kind) "{{{
 		let rtn = s:get_source_word_from_bool(a:dict_name, a:valname, a:kind)
 	elseif type == 'list' || type == 'select'
 		let rtn = s:get_source_word_from_strs(a:dict_name, a:valname, a:kind)
-	elseif type == 'val'
+	elseif type == 'var'
 		let rtn = s:get_source_word_from_val(a:dict_name, a:valname, a:kind)
 	else
 		let rtn = '"'.a:valname.'"'
@@ -162,11 +163,12 @@ function! s:get_source_word_from_strs(dict_name, valname, kind) "{{{
 	return s:get_source_word_sub( a:dict_name, a:valname, a:kind, join(strs))
 endfunction "}}}
 function! s:get_source_word_from_val(dict_name, valname, kind) "{{{
-	return s:get_source_word_sub( a:dict_name, a:valname, a:kind, unite_setting_ex#get(a:dict_name, a:valname, a:kind))
+	let data = unite_setting_ex#get(a:dict_name, a:valname, a:kind)
+	return s:get_source_word_sub( a:dict_name, a:valname, a:kind, string(data))
 endfunction "}}}
 function! s:get_source_word_sub(dict_name, valname, kind, str) "{{{
 	exe 'let tmp_d = '.a:dict_name
-	return printf(' %-30s %50s - %s', 
+	return printf(' %-100s %50s - %s', 
 				\ tmp_d[a:valname].__description,
 				\ s:get_source_word_sub_type(a:dict_name, a:valname, a:kind),
 				\ a:str,
@@ -252,6 +254,31 @@ function! s:kind.action_table.a_toggle.func(candidates) "{{{
 	call s:common_out(dict_name)
 endfunction "}}}
 let s:kind_settings_ex_bool = deepcopy(s:kind)
+"}}}
+" s:kind_settings_ex_var  "{{{
+let s:kind = { 
+			\ 'name'           : 'settings_ex_var',
+			\ 'default_action' : 'edit',
+			\ 'action_table'   : {},
+			\ }
+let s:kind.action_table.edit = {
+			\ 'description' : 'ê›íËï“èW',
+			\ 'is_quit'     : 0,
+			\ }"
+function! s:kind.action_table.edit.func(candidate) "{{{
+	let dict_name = a:candidate.action__dict_name
+	let valname   = a:candidate.action__valname
+	let kind      = a:candidate.action__kind
+	let tmp       = input("",string(s:get_orig(dict_name, valname, kind)))
+
+	if tmp != ""
+		exe 'let val = '.tmp
+		call s:set(dict_name, valname, kind, val)
+	endif
+
+	call s:common_out(dict_name)
+endfunction "}}}
+let s:kind_settings_ex_var = deepcopy(s:kind)
 "}}}
 "s:kind_settings_ex_select "{{{
 let s:kind = { 
@@ -489,6 +516,7 @@ let s:source_settings_ex_list_select = deepcopy(s:source)
 
 call unite#define_kind   ( s:kind_settings_ex_select        )  | unlet s:kind_settings_ex_select
 call unite#define_kind   ( s:kind_settings_ex_bool          )  | unlet s:kind_settings_ex_bool
+call unite#define_kind   ( s:kind_settings_ex_var           )  | unlet s:kind_settings_ex_var 
 call unite#define_kind   ( s:kind_settings_ex_list          )  | unlet s:kind_settings_ex_list
 call unite#define_kind   ( s:kind_settings_ex_list_select   )  | unlet s:kind_settings_ex_list_select
 call unite#define_source ( s:source_settings_ex             )  | unlet s:source_settings_ex

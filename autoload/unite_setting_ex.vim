@@ -60,13 +60,15 @@ function! unite_setting_ex#load(dict_name) "{{{
 	let file_ = origin_.__file
 
 	" “Ç‚İ‚İ
-	let lists  = readfile( file_ )
-	exe 'let tmp_d = '.join(lists)
+	if filereadable(file_)
+		let lists  = readfile( file_ )
+		exe 'let tmp_d = '.join(lists)
 
-	" ã‘‚«
-	for key in keys(tmp_d)
-		let origin_[key] = tmp_d[key]
-	endfor
+		" ã‘‚«
+		for key in keys(tmp_d)
+			let origin_[key] = tmp_d[key]
+		endfor
 
-	exe 'let '.a:dict_name.' = tmp_d'
+		exe 'let '.a:dict_name.' = origin_'
+	endif
 endfunction "}}}
