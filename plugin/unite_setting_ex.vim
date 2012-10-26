@@ -38,8 +38,8 @@ function! s:save(dict_name) "{{{
 	exe 'let tmp_d = '.a:dict_name
 
 	let file_ = tmp_d.__file
-	let tmps = split(string(tmp_d), '},')
-	let tmps = map(tmps, "'\\'.v:val.'},'")
+	let tmps = split(string(tmp_d), '},\zs')
+	let tmps = map(tmps, "'\\'.v:val")
 	call insert(tmps, 'let '.a:dict_name.' = ')
 
 	call writefile(tmps ,expand(file_))
