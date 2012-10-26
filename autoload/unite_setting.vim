@@ -27,4 +27,3 @@ function! unite_setting#get_nums_form_bit(bit) "{{{
 
 endfunction "}}}
 
-

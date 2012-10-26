@@ -55,9 +55,6 @@ if 0 "{{{
 		call unite_setting_ex#add('g:unite_data' , 'g:unite_split_rule'                            , '' , 'var'  , get(g: , 'unite_split_rule'                            , 0) )
 		call unite_setting_ex#add('g:unite_data' , 'g:unite_winheight'                             , '' , 'var'  , get(g: , 'unite_winheight'                             , 0) )
 		call unite_setting_ex#add('g:unite_data' , 'g:unite_winwidth'                              , '' , 'var'  , get(g: , 'unite_winwidth'                              , 0) )
-	else
-		let g:unite_data['g:unite_winwidth'] = unite_setting_ex#get_format('' , 'var'  , get(g: , 'unite_winwidth'                              , 0) )
-	endif
 endif "}}}
 
 nnoremap ;uu<CR> :<C-u>call unite#start([['settings_ex', 'g:unite_data']])<CR>

@@ -13,15 +13,6 @@ function! s:get_lists(datas) "{{{
 	return rtns
 endfunction "}}}
 "main
-function! unite_setting_ex#get_format(description, type, val) "{{{
-	return {
-				\ '__type' : a:type, 
-				\ '__description' : a:description,
-				\ '__default' : a:val,
-				\ '__common' : a:val,
-				\ }
-endfunction "}}}
-
 function! unite_setting_ex#add(dict_name, valname, description, type, val) "{{{
 
 	exe 'let tmp_d = '.a:dict_name
@@ -38,23 +29,7 @@ function! unite_setting_ex#add(dict_name, valname, description, type, val) "{{{
 	exe 'let '.a:dict_name.' = tmp_d'
 
 endfunction "}}}
-function! unite_setting_ex#add_var(dict_name, valname, description, type) "{{{
 
-	exe 'let tmp_d = '.a:dict_name
-	exe 'let data = '.a:valname
-
-	let tmp_d[a:valname] = get(tmp_d, a:valname, {})
-
-	let tmp_d[a:valname].__type        = a:type
-	let tmp_d[a:valname].__description = a:description
-	let tmp_d[a:valname].__default     = a:val
-	let tmp_d[a:valname].__common      = get(tmp_d[a:valname], '__common', data)
-
-	call add(tmp_d.__order, a:valname)
-
-	exe 'let '.a:dict_name.' = tmp_d'
-
-endfunction "}}}
 function! unite_setting_ex#get(dict_name, valname, kind) "{{{
 	exe 'let tmp_d = '.a:dict_name
 	let type_ = tmp_d[a:valname].__type
