@@ -59,4 +59,3 @@ endif "}}}
 
 nnoremap ;uu<CR> :<C-u>call unite#start([['settings_ex', 'g:unite_data']])<CR>
 
-
