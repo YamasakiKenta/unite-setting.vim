@@ -40,7 +40,9 @@ function! s:save(dict_name) "{{{
 	let file_ = tmp_d.__file
 	let tmps = split(string(tmp_d), '},\zs')
 	let tmps = map(tmps, "'\\'.v:val")
-	call insert(tmps, 'let '.a:dict_name.' = ')
+	call insert(tmps, 'let g:tmp_unite_setting = ')
+
+	echo file_
 
 	call writefile(tmps ,expand(file_))
 endfunction "}}}
