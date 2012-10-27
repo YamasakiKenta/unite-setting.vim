@@ -1,17 +1,6 @@
 "sub 
 function! s:get_lists(datas) "{{{
 
-	if 0
-		if a:datas[0] < 0
-			let rtns = a:datas[1:]
-		else
-			let rtns = copy(unite_setting#get_nums_form_bit(a:datas[0]*2))
-
-			call filter (rtns, "exists('a:datas[v:val]')")
-			call map    (rtns, "a:datas[v:val]")
-		endif
-	endif
-
 	if type(a:datas[0]) == type([])
 		let nums = a:datas[0]
 	else

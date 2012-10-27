@@ -86,32 +86,19 @@ endfunction "}}}
 
 function! s:get_bits(dict_name, valname, kind) "{{{
 
-	if 0
-		let tmp_d   = s:get_orig(a:dict_name, a:valname, a:kind)
-		let tmp_num = tmp_d[0]
-		let bits    = []
-		let num     = 1
+	let tmp_d = s:get_orig(a:dict_name, a:valname, a:kind)
+	let bits  = map(range(len(tmp_d)), "0")
 
-		for i in range(len(tmp_d[1:]))
-			call add(bits, tmp_num % 2 > 0 ? num : 0 )
-			let tmp_num = tmp_num / 2
-			let num = num * 2
-		endfor
-	else 
-		let tmp_d = s:get_orig(a:dict_name, a:valname, a:kind)
-		let bits  = map(range(len(tmp_d)), "0")
-
-		" ★　バグ対応
-		if type(tmp_d[0]) != type([])
-			let tmp_d[0] = [1]
-		endif
-
-		for num_ in tmp_d[0]
-			let num_ = num_ < len(tmp_d) ? num_ : 1
-			let bits[num_] = num_
-		endfor
-
+	" ★　バグ対応
+	if 0 && type(tmp_d[0]) != type([])
+		let tmp_d[0] = [1]
 	endif
+
+	for num_ in tmp_d[0]
+		let num_ = num_ < len(tmp_d) ? num_ : 1
+		let bits[num_] = num_
+	endfor
+
 
 	return bits
 endfunction "}}}
@@ -122,29 +109,14 @@ function! s:get_kind(dict_name, valname, kind) "{{{
 	return '__common'
 endfunction "}}}
 function! s:get_num_from_bits(bits) "{{{
-	if 0
-		let sum  = 0
-		let num_ = 1
-		for i_ in range(len(a:bits))
-			if a:bits[i_] > 0
-				let sum += num_
-			endif
-			let num_ = num_ * 2
-		endfor
-		let sum = sum / 2
+	let nums  = []
+	for i_ in range(len(a:bits))
+		if a:bits[i_] > 0
+			call add(nums, i_)
+		endif
+	endfor
 
-		return sum
-	else
-		let nums  = []
-		let num_ = 1
-		for i_ in range(len(a:bits))
-			if a:bits[i_] > 0
-				call add(nums, i_)
-			endif
-		endfor
-
-		return nums
-	endif
+	return nums
 endfunction "}}}
 function! s:get_orig(dict_name, valname, kind) "{{{
 	exe 'let tmp_d = '.a:dict_name
