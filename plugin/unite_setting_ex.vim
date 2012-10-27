@@ -1,7 +1,7 @@
 let s:unite_kind = {
-			\ 'bool'     : 'settings_ex_bool',
-			\ 'list'     : 'settings_ex_list',
-			\ 'select'   : 'settings_ex_select',
+			\ 'bool'     : 'kind_settings_ex_bool',
+			\ 'list'     : 'kind_settings_ex_list',
+			\ 'select'   : 'kind_settings_ex_select',
 			\ }
 
 function! Sub_set_settings_ex_select_list_toggle(candidates) "{{{
@@ -284,20 +284,20 @@ function! s:set_next(dict_name, valname, kind) "{{{
 	call s:set(a:dict_name, a:valname, a:kind, val )
 endfunction "}}}
 
-" s:k_settings_ex_common "{{{
+" s:kind_settings_ex_common "{{{
 let s:kind = { 
-			\ 'name'           : 'k_settings_ex_common',
+			\ 'name'           : 'kind_settings_ex_common',
 			\ 'default_action' : 'a_toggle',
 			\ 'action_table'   : {},
 			\ }
-let s:k_settings_ex_common = deepcopy(s:kind)
+let s:kind_settings_ex_common = deepcopy(s:kind)
 "}}}
 " s:kind_settings_ex_bool "{{{
 let s:kind = { 
-			\ 'name'           : 'settings_ex_bool',
+			\ 'name'           : 'kind_settings_ex_bool',
 			\ 'default_action' : 'a_toggle',
 			\ 'action_table'   : {},
-			\ 'parents': ['k_settings_ex_common'],
+			\ 'parents': ['kind_settings_ex_common'],
 			\ }
 let s:kind.action_table.a_toggle = {
 			\ 'is_selectable' : 1,
@@ -320,7 +320,7 @@ let s:kind = {
 			\ 'name'           : 'settings_ex_var',
 			\ 'default_action' : 'edit',
 			\ 'action_table'   : {},
-			\ 'parents': ['k_settings_ex_common'],
+			\ 'parents': ['kind_settings_ex_common'],
 			\ }
 let s:kind.action_table.edit = {
 			\ 'description' : 'ê›íËï“èW',
@@ -346,7 +346,7 @@ let s:kind = {
 			\ 'name'           : 'settings_ex_var_list',
 			\ 'default_action' : 'select',
 			\ 'action_table'   : {},
-			\ 'parents': ['k_settings_ex_common'],
+			\ 'parents': ['kind_settings_ex_common'],
 			\ }
 let s:kind.action_table.select = {
 			\ 'description' : 'ê›íËï“èW',
@@ -361,16 +361,16 @@ function! s:kind.action_table.select.func(candidate) "{{{
 
 	let valname = dict_name.'['''.valname.''']['''.kind.''']'
 
-	call unite#start_temporary([['settings_var', valname]])
+	call unite#start_temporary([['kind_settings_var', valname]])
 endfunction "}}}
 let s:kind_settings_ex_var_list = deepcopy(s:kind)
 "}}}
 "s:kind_settings_ex_select "{{{
 let s:kind = { 
-			\ 'name'           : 'settings_ex_select',
+			\ 'name'           : 'kind_settings_ex_select',
 			\ 'default_action' : 'a_toggle',
 			\ 'action_table'   : {},
-			\ 'parents': ['k_settings_ex_common', 'settings_common'],
+			\ 'parents': ['kind_settings_ex_common', 'kind_settings_common'],
 			\ }
 let s:kind.action_table.a_toggle = {
 			\ 'description' : 'ëIë',
@@ -401,10 +401,10 @@ let s:kind_settings_ex_select = deepcopy(s:kind)
 "}}}
 " s:kind_settings_ex_list "{{{
 let s:kind = { 
-			\ 'name'           : 'settings_ex_list',
+			\ 'name'           : 'kind_settings_ex_list',
 			\ 'default_action' : 'a_toggle',
 			\ 'action_table'   : {},
-			\ 'parents': ['k_settings_ex_common', 'settings_common'],
+			\ 'parents': ['kind_settings_ex_common', 'kind_settings_common'],
 			\ }
 " action
 let s:kind.action_table.a_toggle = {
@@ -444,7 +444,7 @@ let s:kind = {
 			\ 'name'           : 'settings_ex_list_select',
 			\ 'default_action' : 'a_toggles',
 			\ 'action_table'   : {},
-			\ 'parents': ['k_settings_ex_common'],
+			\ 'parents': ['kind_settings_ex_common'],
 			\ }
 let s:kind.action_table.a_toggles = {
 			\ 'is_selectable' : 1,
@@ -601,7 +601,7 @@ endfunction "}}}
 let s:source_settings_ex_list_select = deepcopy(s:source)
 "}}}
 call unite#define_kind   ( s:kind_settings_ex_select        )  | unlet s:kind_settings_ex_select
-call unite#define_kind   ( s:k_settings_ex_common        )  | unlet s:k_settings_ex_common
+call unite#define_kind   ( s:kind_settings_ex_common        )  | unlet s:kind_settings_ex_common
 call unite#define_kind   ( s:kind_settings_ex_bool          )  | unlet s:kind_settings_ex_bool
 call unite#define_kind   ( s:kind_settings_ex_var           )  | unlet s:kind_settings_ex_var 
 call unite#define_kind   ( s:kind_settings_ex_var_list      )  | unlet s:kind_settings_ex_var_list

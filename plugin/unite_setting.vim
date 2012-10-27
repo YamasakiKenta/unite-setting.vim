@@ -1,10 +1,10 @@
 let s:valname_to_source_kind_tabel = {
-			\ type(0)              : 'settings_common',
-			\ type("")             : 'settings_common',
-			\ type(function("tr")) : 'settings_common',
-			\ type(0.0)            : 'settings_common',
-			\ type([])             : 'settings_list',
-			\ type({})             : 'settings_list',
+			\ type(0)              : 'kind_settings_common',
+			\ type("")             : 'kind_settings_common',
+			\ type(function("tr")) : 'kind_settings_common',
+			\ type(0.0)            : 'kind_settings_common',
+			\ type([])             : 'kind_settings_list',
+			\ type({})             : 'kind_settings_list',
 			\ }
 
 function! s:get_source_word(valname) "{{{
@@ -18,7 +18,7 @@ endfunction "}}}
 
 " s:kind_settings_common "{{{
 let s:kind = { 
-			\ 'name'           : 'settings_common',
+			\ 'name'           : 'kind_settings_common',
 			\ 'default_action' : 'edit',
 			\ 'action_table'   : {},
 			\ }
@@ -86,10 +86,10 @@ let s:kind_settings_common = deepcopy(s:kind)
 "}}}
 "s:kind_settings_list "{{{
 let s:kind = { 
-			\ 'name'           : 'settings_list',
+			\ 'name'           : 'kind_settings_list',
 			\ 'default_action' : 'select',
 			\ 'action_table'   : {},
-			\ 'parents': ['settings_common'],
+			\ 'parents': ['kind_settings_common'],
 			\ }
 "let s:kind.action_table.select = { "{{{
 let s:kind.action_table.select = {
@@ -98,14 +98,14 @@ let s:kind.action_table.select = {
 			\ }
 function! s:kind.action_table.select.func(candidate)
 	let valname = a:candidate.action__valname
-	call unite#start_temporary([['settings_var', valname]])
+	call unite#start_temporary([['kind_settings_var', valname]])
 endfunction "}}}
 let s:kind_settings_list = deepcopy(s:kind)
 "}}}
 
 "s:source_settings_var "{{{
 let s:source = {
-			\ 'name'        : 'settings_var',
+			\ 'name'        : 'kind_settings_var',
 			\ 'description' : 'show var',
 			\ 'syntax'      : 'uniteSource__settings',
 			\ 'hooks'       : {},
@@ -119,7 +119,7 @@ function! s:source.gather_candidates(args, context) "{{{
 
 	let valname = a:context.source__valname
 
-	call unite#print_source_message(valname, 'settings_var')
+	call unite#print_source_message(valname, 'kind_settings_var')
 
 	exe 'let tmp = '.valname
 
@@ -160,7 +160,7 @@ function! s:source.change_candidates(args, context) "{{{
 	if new_ != ''
 		let rtns = [{
 					\ 'word' : printf("[add]%45s : %s", valname, new_),
-					\ 'kind' : 'settings_common',
+					\ 'kind' : 'kind_settings_common',
 					\ 'action__valname'   : valname,
 					\ 'action__new'   : new_
 					\ }]
