@@ -176,5 +176,3 @@ call unite#define_source ( s:source_settings_var      ) | unlet s:source_setting
 call unite#define_kind   ( s:kind_settings_common     ) | unlet s:kind_settings_common     
 call unite#define_kind   ( s:kind_settings_list       ) | unlet s:kind_settings_list       
 
-let g:test_list = [{'a':123, 'b':456, 'd':[1,2,3,{'eee':4}]}, 'bbb', 'ccc']
-

@@ -15,7 +15,6 @@ function! Sub_set_settings_ex_select_list_toggle(candidates) "{{{
 	let tmps = s:get_orig(dict_name, valname, kind)
 
 	let nums = []
-	echo candidates
 	for candidate in candidates
 		if ( candidate.action__num > 0 )
 			call add(nums, candidate.action__num)
@@ -207,9 +206,6 @@ function! s:get_strs_on_off(dict_name, valname, kind) "{{{
 	let strs = copy(datas)
 	let strs[1:] = map(copy(datas[1:]), "' '.v:val.' '")
 	
-	"echo flgs
-	"echo strs
-	"echo datas
 	for num_ in flgs
 		let strs[num_] = '<'.datas[num_].'>'
 	endfor
@@ -388,7 +384,6 @@ function! s:kind.action_table.a_toggle.func(candidate) "{{{
 				\ 'dict_name' : a:candidate.action__dict_name,
 				\ 'valname'   : a:candidate.action__valname,
 				\ 'kind'      : a:candidate.action__kind,
-				\ 'only_'     : 0,
 				\ }
 	call unite#start_temporary([['settings_ex_list_select', tmp_d]])
 endfunction "}}}
@@ -450,7 +445,7 @@ endfunction "}}}
 let s:kind_settings_ex_list_select = deepcopy(s:kind)
 "}}}
 "
-"s:source_settings_ex "{{{
+"s:settings_ex "{{{
 let s:source = {
 			\ 'name'        : 'settings_ex',
 			\ 'description' : '',
@@ -460,15 +455,9 @@ let s:source = {
 			\ }
 let s:source.hooks.on_syntax = function("unite_setting#sub_setting_syntax")
 function! s:source.hooks.on_init(args, context) "{{{
-	if len(a:args) > 0
-		let a:context.source__dict_name = a:args[0]
-	else
-		let a:context.source__dict_name = 'g:unite_pf_data'
-	endif
+	let a:context.source__dict_name = get(a:args, 0, 'g:unite_setting_default_data')
 endfunction "}}}
 function! s:source.hooks.on_close(args, context) "{{{
-	echo 'save'
-	call input("")
 	let dict_name = a:context.source__dict_name 
 	call s:save(dict_name)
 endfunction "}}}
@@ -493,9 +482,9 @@ function! s:source.gather_candidates(args, context) "{{{
 				\ }")
 
 endfunction "}}}
-let s:source_settings_ex = deepcopy(s:source)
+let s:settings_ex = deepcopy(s:source)
 "}}}
-"s:source_settings_ex_list_select"{{{
+"s:settings_ex_list_select"{{{
 let s:source = {
 			\ 'name'        : 'settings_ex_list_select',
 			\ 'description' : 'ï°êîëIë',
@@ -508,25 +497,27 @@ function! s:source.hooks.on_init(args, context) "{{{
 		let a:context.source__dict_name = a:args[0].dict_name
 		let a:context.source__valname   = a:args[0].valname
 		let a:context.source__kind      = a:args[0].kind
-		let a:context.source__only      = a:args[0].only_
+		let a:context.source__only      = get(a:args[0], 'only_', 0)
 	endif
 endfunction "}}}
 function! s:source.gather_candidates(args, context) "{{{
 
-	" ê›íËÇ∑ÇÈçÄñ⁄
-	if len(a:args) > 0
-		let dict_name = a:args[0].dict_name
-		let valname   = a:args[0].valname
-		let kind      = a:args[0].kind
-	endif
+	let dict_name = a:context.source__dict_name 
+	let valname   = a:context.source__valname   
+	let kind      = a:context.source__kind      
+	let only_     = a:context.source__only      
 
 	" à¯êîÇéÊìæÇ∑ÇÈ
 	let words = s:get_orig(dict_name, valname, kind)[1:]
 
-	let num_ = 0
-
 	let strs  = s:get_strs_on_off(dict_name, valname, kind)
-	call insert(strs, ' NULL ')
+
+	if only_
+		let num_ = 1
+	else
+		let num_ = 0
+		call insert(strs, ' NULL ')
+	endif
 
 	let rtns = []
 	for word in strs 
@@ -536,7 +527,6 @@ function! s:source.gather_candidates(args, context) "{{{
 					\ 'action__dict_name' : a:context.source__dict_name,
 					\ 'action__valname'   : a:context.source__valname,
 					\ 'action__kind'      : a:context.source__kind,
-					\ 'action__only'      : a:context.source__only,
 					\ 'action__num'       : num_,
 					\ 'action__new'       : '',
 					\ }]
@@ -562,7 +552,6 @@ function! s:source.change_candidates(args, context) "{{{
 					\ 'action__dict_name' : a:context.source__dict_name,
 					\ 'action__valname'   : a:context.source__valname,
 					\ 'action__kind'      : a:context.source__kind,
-					\ 'action__only'      : a:context.source__only,
 					\ 'action__num'       : 1,
 					\ }]
 	endif
@@ -570,16 +559,16 @@ function! s:source.change_candidates(args, context) "{{{
 	return rtns
 
 endfunction "}}}
-let s:source_settings_ex_list_select = deepcopy(s:source)
+let s:settings_ex_list_select = deepcopy(s:source)
 "}}}
-"
-call unite#define_kind   ( s:kind_settings_ex_select        )  | unlet s:kind_settings_ex_select
-call unite#define_kind   ( s:kind_settings_ex_common        )  | unlet s:kind_settings_ex_common
+
 call unite#define_kind   ( s:kind_settings_ex_bool          )  | unlet s:kind_settings_ex_bool
-call unite#define_kind   ( s:kind_settings_ex_var           )  | unlet s:kind_settings_ex_var 
-call unite#define_kind   ( s:kind_settings_ex_var_list      )  | unlet s:kind_settings_ex_var_list
+call unite#define_kind   ( s:kind_settings_ex_common        )  | unlet s:kind_settings_ex_common
 call unite#define_kind   ( s:kind_settings_ex_list          )  | unlet s:kind_settings_ex_list
 call unite#define_kind   ( s:kind_settings_ex_list_select   )  | unlet s:kind_settings_ex_list_select
-call unite#define_source ( s:source_settings_ex             )  | unlet s:source_settings_ex
-call unite#define_source ( s:source_settings_ex_list_select )  | unlet s:source_settings_ex_list_select
+call unite#define_kind   ( s:kind_settings_ex_select        )  | unlet s:kind_settings_ex_select
+call unite#define_kind   ( s:kind_settings_ex_var           )  | unlet s:kind_settings_ex_var 
+call unite#define_kind   ( s:kind_settings_ex_var_list      )  | unlet s:kind_settings_ex_var_list
+call unite#define_source ( s:settings_ex                    )  | unlet s:settings_ex
+call unite#define_source ( s:settings_ex_list_select        )  | unlet s:settings_ex_list_select
 

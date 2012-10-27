@@ -1,15 +1,14 @@
 "sub 
 function! s:get_lists(datas) "{{{
 
-	if type(a:datas[0]) == type([])
-		let nums = a:datas[0]
-	else
-		let nums = unite_setting#get_nums_form_bit(a:datas[0]*2)
-	endif
+	let nums = type(a:datas[0]) == type([]) ? 
+				\ a:datas[0] : 
+				\ unite_setting#get_nums_form_bit(a:datas[0]*2)
 
 	let rtns = []
 	for num_ in nums
-		let num_ = num_ < len(a:datas[0]) ? num_ : 1
+		" š 
+		let num_ = num_ < len(nums) ? num_ : 1
 		call add(rtns, a:datas[num_])
 	endfor
 
