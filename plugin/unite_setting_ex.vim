@@ -39,12 +39,12 @@ endfunction "}}}
 function! s:save(dict_name) "{{{
 	exe 'let tmp_d = '.a:dict_name
 
-	let file_ = tmp_d.__file
-	let tmps = split(string(tmp_d), '},\zs')
-	let tmps = map(tmps, "'\\'.v:val")
+	let tmps  = split(string(tmp_d), '},\zs')
+	let tmps  = map(tmps, "'\\'.v:val")
+
 	call insert(tmps, 'let g:tmp_unite_setting = ')
 
-	call writefile(tmps ,expand(file_))
+	call writefile(tmps ,expand(tmp_d.__file))
 endfunction "}}}
 function! s:delete(dict_name, valname, kind, nums) "{{{
 
@@ -258,6 +258,19 @@ let s:kind = {
 			\ 'default_action' : 'a_toggle',
 			\ 'action_table'   : {},
 			\ }
+let s:kind.action_table.a_toggle = {
+			\ 'is_selectable' : 1,
+			\ 'description'   : 'ê›íËÇÃêÿë÷',
+			\ 'is_quit'       : 0,
+			\ }
+function! s:kind.action_table.a_toggle.func(candidates) "{{{
+	for candidate in a:candidates
+		let dict_name = candidate.action__dict_name
+		let valname   = candidate.action__valname
+		let kind      = candidate.action__kind
+	endfor
+	call s:common_out(dict_name)
+endfunction "}}}
 let s:kind_settings_ex_common = deepcopy(s:kind)
 "}}}
 " s:kind_settings_ex_bool "{{{
@@ -329,7 +342,7 @@ function! s:kind.action_table.select.func(candidate) "{{{
 
 	let valname = dict_name.'['''.valname.''']['''.kind.''']'
 
-	call unite#start_temporary([['kind_settings_var', valname]])
+	call unite#start_temporary([['settings_var', valname]])
 endfunction "}}}
 let s:kind_settings_ex_var_list = deepcopy(s:kind)
 "}}}
