@@ -32,8 +32,10 @@ function! s:kind.action_table.edit.func(candidate)
 
 	if !exists(valname)
 		let tmp_str = matchstr(valname, '.*\ze[.\{-}\]$')
+		let new_    = a:candidate.action__new
 		exe 'let type_ = type('.tmp_str.')'
 
+		" š ‰Šú“ü—Í‚Ì•ÏX
 		if type_ == type([])
 			exe 'call add('.tmp_str.', 0)'
 		elseif type_ == type({})
@@ -160,6 +162,7 @@ function! s:source.change_candidates(args, context) "{{{
 					\ 'word' : printf("[add]%45s : %s", valname, new_),
 					\ 'kind' : 'settings_common',
 					\ 'action__valname'   : valname,
+					\ 'action__new'   : new_
 					\ }]
 	endif
 

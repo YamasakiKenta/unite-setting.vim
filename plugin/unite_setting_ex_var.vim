@@ -1,3 +1,4 @@
+if 0
 let s:valname_to_source_kind_tabel = {
 			\ type(0)              : 'settings_ex_var',
 			\ type("")             : 'settings_ex_var',
@@ -88,3 +89,4 @@ let s:source_settings_ex_var = deepcopy(s:source)
 "
 call unite#define_kind   ( s:kind_settings_ex_vars          )  | unlet s:kind_settings_ex_vars
 call unite#define_source ( s:source_settings_ex_var         )  | unlet s:source_settings_ex_var
+endif

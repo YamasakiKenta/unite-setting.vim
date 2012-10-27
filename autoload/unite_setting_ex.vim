@@ -1,14 +1,28 @@
 "sub 
 function! s:get_lists(datas) "{{{
 
-	if a:datas[0] < 0
-		let rtns = a:datas[1:]
-	else
-		let rtns = copy(unite_setting#get_nums_form_bit(a:datas[0]*2))
+	if 0
+		if a:datas[0] < 0
+			let rtns = a:datas[1:]
+		else
+			let rtns = copy(unite_setting#get_nums_form_bit(a:datas[0]*2))
 
-		call filter (rtns, "exists('a:datas[v:val]')")
-		call map    (rtns, "a:datas[v:val]")
+			call filter (rtns, "exists('a:datas[v:val]')")
+			call map    (rtns, "a:datas[v:val]")
+		endif
 	endif
+
+	if type(a:datas[0]) == type([])
+		let nums = a:datas[0]
+	else
+		let nums = unite_setting#get_nums_form_bit(a:datas[0]*2)
+	endif
+
+	let rtns = []
+	for num_ in nums
+		let num_ = num_ < len(a:datas[0]) ? num_ : 1
+		call add(rtns, a:datas[num_])
+	endfor
 
 	return rtns
 endfunction "}}}
@@ -56,4 +70,22 @@ function! unite_setting_ex#load(dict_name, file) "{{{
 	exe 'so '.expand(a:file)
 	exe 'let '.a:dict_name.' = g:tmp_unite_setting'
 	exe 'let '.a:dict_name.'.__file = expand(a:file)'
+
+	" š –³—‚â‚è’uŠ· 
+	exe 'let tmp_d = '.a:dict_name
+
+	for tmp in keys(tmp_d)
+		if !exists('tmp_d[tmp].__common')
+			continue
+		endif
+
+		if type(tmp_d[tmp].__common) == type([])
+			if type(tmp_d[tmp].__common[0]) != type([])
+				let tmp_d[tmp].__common[0] = [1]
+			endif
+		endif
+	endfor
+
+	exe 'let '.a:dict_name.' = tmp_d'
+
 endfunction "}}}
