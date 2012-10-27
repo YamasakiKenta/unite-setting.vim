@@ -600,6 +600,7 @@ function! s:source.change_candidates(args, context) "{{{
 endfunction "}}}
 let s:source_settings_ex_list_select = deepcopy(s:source)
 "}}}
+"
 call unite#define_kind   ( s:kind_settings_ex_select        )  | unlet s:kind_settings_ex_select
 call unite#define_kind   ( s:kind_settings_ex_common        )  | unlet s:kind_settings_ex_common
 call unite#define_kind   ( s:kind_settings_ex_bool          )  | unlet s:kind_settings_ex_bool
