@@ -119,22 +119,6 @@ function! s:get_kind(dict_name, valname_ex, kind) "{{{
 	endif
 	return '__common'
 endfunction "}}}
-function! s:get_type(dict_name, valname_ex, kind) "{{{
-	
-	if  exists(a:dict_name.'[a:valname_ex].__type')
-		exe 'let type_ = '.a:dict_name.'[a:valname_ex].__type'
-	else
-		exe 'let tmp = '.a:valname_ex
-		let type_ = type(tmp)
-		if type([]) == type_ || type({}) == type_
-			let type_ = 'list'
-		elseif type(0) == type_ && ( tmp == 0 || tmp == 1 ) 
-			let type_ = 'bool'
-		endif
-	endif
-
-	retu type_
-endfunction "}}}
 function! s:get_num_from_bits(bits) "{{{
 	let nums  = []
 	for i_ in range(len(a:bits))
@@ -246,6 +230,22 @@ function! s:get_strs_on_off(dict_name, valname_ex, kind) "{{{
 	unlet strs[0]
 
 	return strs
+endfunction "}}}
+function! s:get_type(dict_name, valname_ex, kind) "{{{
+	
+	if  exists(a:dict_name.'[a:valname_ex].__type')
+		exe 'let type_ = '.a:dict_name.'[a:valname_ex].__type'
+	else
+		exe 'let tmp = '.a:valname_ex
+		let type_ = type(tmp)
+		if type([]) == type_ || type({}) == type_
+			let type_ = 'list'
+		elseif type(0) == type_ && ( tmp == 0 || tmp == 1 ) 
+			let type_ = 'bool'
+		endif
+	endif
+
+	retu type_
 endfunction "}}}
 function! s:set_type(dict_name, valname_ex, kind, type) "{{{
 		exe 'let tmp_d = '.a:dict_name
