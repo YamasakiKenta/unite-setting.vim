@@ -122,6 +122,15 @@ function! s:kind.action_table.select.func(candidate)
 	let valname = a:candidate.action__valname
 	call unite#start_temporary([['settings_var', valname]])
 endfunction "}}}
+"let s:kind.action_table.select_all = { "{{{
+let s:kind.action_table.select_all = {
+			\ 'description' : 'select_all',
+			\ 'is_quit'     : 0,
+			\ }
+function! s:kind.action_table.select_all.func(candidate)
+	let valname = a:candidate.action__valname
+	call unite#start_temporary([['settings_var_all', valname]])
+endfunction "}}}
 let s:kind_settings_list = deepcopy(s:kind)
 "}}}
 
