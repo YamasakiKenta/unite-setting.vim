@@ -479,7 +479,7 @@ function! s:source.gather_candidates(args, context) "{{{
 	let dict_name = a:context.source__dict_name
 	exe 'let tmp_d = '.dict_name
 
-	call unite#print_source_message(dict_name, 'settings_ex')
+	call unite#print_source_message(dict_name, self.name)
 
 	let orders  = tmp_d.__order
 	let kind    = '__common'

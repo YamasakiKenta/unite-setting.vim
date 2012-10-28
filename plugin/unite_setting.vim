@@ -171,7 +171,7 @@ function! s:source_settings_var.gather_candidates(args, context) "{{{
 
 	let valname = a:context.source__valname
 
-	call unite#print_source_message(valname, 'settings_var')
+	call unite#print_source_message(valname, self.name)
 
 	let valnames = s:get_vlnamegs(valname)
 
@@ -189,7 +189,7 @@ function! s:source_settings_var_all.gather_candidates(args, context) "{{{
 
 	let valname = a:context.source__valname
 
-	call unite#print_source_message(valname, 'settings_var')
+	call unite#print_source_message(valname, self.name)
 
 	let num_     = 0
 	let valnames = [valname]
