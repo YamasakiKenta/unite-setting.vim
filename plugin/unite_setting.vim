@@ -97,6 +97,7 @@ function! s:kind.action_table.preview.func(candidate)
 	try
 		let valname   = a:candidate.action__valname
 		exe 'help '.valname
+		wincmd p
 	catch
 		call unite#clear_message()
 		call unite#print_message('can not find "'.valname.'" help.')

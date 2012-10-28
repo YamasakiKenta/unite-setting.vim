@@ -4,6 +4,7 @@ function! s:get_lists(datas) "{{{
 	if type(a:datas[0]) == type([])
 		let nums = a:datas[0]
 	else
+		" š
 		let nums = unite_setting#get_nums_form_bit(a:datas[0]*2)
 	endif
 
