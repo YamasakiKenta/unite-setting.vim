@@ -268,21 +268,62 @@ let s:kind = {
 			\ 'action_table'   : {},
 			\ 'parents': ['kind_settings_common'],
 			\ }
-let s:kind.action_table.a_toggle = {
+let s:kind.action_table.set_select = {
 			\ 'is_selectable' : 1,
-			\ 'description'   : 'ê›íËÇÃêÿë÷',
+			\ 'description'   : '',
 			\ 'is_quit'       : 0,
 			\ }
-function! s:kind.action_table.a_toggle.func(candidates) "{{{
+function! s:set_type(dict_name, valname_ex, kind, type) "{{{
+		exe 'let tmp_d = '.a:dict_name
+		let tmp_d[a:valname_ex].__type = a:type
+		exe 'let '.a:dict_name.' = tmp_d'
+endfunction "}}}
+function! s:kind.action_table.set_select.func(candidates) "{{{
 	for candidate in a:candidates
-		let dict_name = candidate.action__dict_name
-		let valname_ex   = candidate.action__valname_ex
-		let kind      = candidate.action__kind
+		let dict_name  = candidate.action__dict_name
+		let valname_ex = candidate.action__valname_ex
+		let kind       = candidate.action__kind
+
+		call s:set_type(a:dict_name, a:valname_ex, a:kind, 'select')
 	endfor
+
+	call s:common_out(dict_name)
+endfunction "}}}
+let s:kind.action_table.set_list = {
+			\ 'is_selectable' : 1,
+			\ 'description'   : '',
+			\ 'is_quit'       : 0,
+			\ }
+function! s:kind.action_table.set_list.func(candidates) "{{{
+	for candidate in a:candidates
+		let dict_name  = candidate.action__dict_name
+		let valname_ex = candidate.action__valname_ex
+		let kind       = candidate.action__kind
+
+		call s:set_type(a:dict_name, a:valname_ex, a:kind, 'list')
+	endfor
+
+	call s:common_out(dict_name)
+endfunction "}}}
+let s:kind.action_table.set_bool = {
+			\ 'is_selectable' : 1,
+			\ 'description'   : '',
+			\ 'is_quit'       : 0,
+			\ }
+function! s:kind.action_table.set_bool.func(candidates) "{{{
+	for candidate in a:candidates
+		let dict_name  = candidate.action__dict_name
+		let valname_ex = candidate.action__valname_ex
+		let kind       = candidate.action__kind
+
+		call s:set_type(a:dict_name, a:valname_ex, a:kind, 'bool')
+	endfor
+
 	call s:common_out(dict_name)
 endfunction "}}}
 let s:kind_settings_ex_common = deepcopy(s:kind)
 "}}}
+
 " s:kind_settings_ex_bool "{{{
 let s:kind = { 
 			\ 'name'           : 'kind_settings_ex_bool',
