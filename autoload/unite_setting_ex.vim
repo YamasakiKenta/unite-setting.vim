@@ -1,45 +1,48 @@
 "sub 
 function! s:get_lists(datas) "{{{
 
-	if a:datas[0] < 0
-		let rtns = a:datas[1:]
+	if type(a:datas[0]) == type([])
+		let nums = a:datas[0]
 	else
-		let rtns = copy(unite_setting#get_nums_form_bit(a:datas[0]*2))
-
-		call filter (rtns, "exists('a:datas[v:val]')")
-		call map    (rtns, "a:datas[v:val]")
+		let nums = unite_setting#get_nums_form_bit(a:datas[0]*2)
 	endif
+
+	let rtns = []
+	for num_ in nums
+		let num_ = num_ < len(a:datas[0]) ? num_ : 1
+		call add(rtns, a:datas[num_])
+	endfor
 
 	return rtns
 endfunction "}}}
 "main
-function! unite_setting_ex#add(dict_name, valname, description, type, val) "{{{
+function! unite_setting_ex#add(dict_name, valname_ex, description, type, val) "{{{
 
 	exe 'let tmp_d = '.a:dict_name
 
-	let tmp_d[a:valname] = get(tmp_d, a:valname, {})
+	let tmp_d[a:valname_ex] = get(tmp_d, a:valname_ex, {})
 
-	let tmp_d[a:valname].__type        = a:type
-	let tmp_d[a:valname].__description = a:description
-	let tmp_d[a:valname].__default     = a:val
-	let tmp_d[a:valname].__common      = get(tmp_d[a:valname], '__common', a:val)
+	let tmp_d[a:valname_ex].__type        = a:type
+	let tmp_d[a:valname_ex].__description = a:description
+	let tmp_d[a:valname_ex].__default     = a:val
+	let tmp_d[a:valname_ex].__common      = get(tmp_d[a:valname_ex], '__common', a:val)
 
-	call add(tmp_d.__order, a:valname)
+	call add(tmp_d.__order, a:valname_ex)
 
 	exe 'let '.a:dict_name.' = tmp_d'
 
 endfunction "}}}
 
-function! unite_setting_ex#get(dict_name, valname, kind) "{{{
+function! unite_setting_ex#get(dict_name, valname_ex, kind) "{{{
 	exe 'let tmp_d = '.a:dict_name
-	let type_ = tmp_d[a:valname].__type
+	let type_ = tmp_d[a:valname_ex].__type
 
 	" ‘¶İ‚µ‚È‚¢ê‡‚ÍAcommon ‚ğ‘ã“ü‚·‚é
-	if !exists('tmp_d[a:valname][a:kind]')
-		let tmp_d[a:valname][a:kind] = tmp_d[a:valname].__common
+	if !exists('tmp_d[a:valname_ex][a:kind]')
+		let tmp_d[a:valname_ex][a:kind] = tmp_d[a:valname_ex].__common
 	endif
 
-	let val = tmp_d[a:valname][a:kind]
+	let val = tmp_d[a:valname_ex][a:kind]
 
 	if type_ == 'list'
 		let rtns = s:get_lists(val)
