@@ -62,5 +62,3 @@ else
 	call unite_setting_ex#add('g:unite_data' , 'g:unite_winwidth'                              , '' , 'var'  , get(g: , 'unite_winwidth'                              , 0) )
 endif
 
-echo g:unite_enable_split_vertically
-let g:unite_enable_split_vertically = 1
