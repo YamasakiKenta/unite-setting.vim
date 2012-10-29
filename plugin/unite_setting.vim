@@ -144,6 +144,22 @@ function! s:kind.action_table.preview.func(candidate)
 	endtry
 endfunction
 "}}}
+"let s:kind.action_table.yank = { "{{{
+let s:kind.action_table.yank = {
+			\ 'description'   : 'yank',
+			\ 'is_quit'       : 0,
+			\ }
+function! s:kind.action_table.yank.func(candidate) 
+		let valname   = a:candidate.action__valname
+
+		let @" = valname
+		echo 'Yanked: ' . valname
+
+		if has('clipboard')
+			let @* = valname
+		endif
+endfunction
+"}}}
 let s:kind_settings_common = deepcopy(s:kind)
 "}}}
 "s:kind_settings_list "{{{

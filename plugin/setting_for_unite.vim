@@ -1,6 +1,10 @@
-call unite_setting_ex#load('g:unite_data', '~/unite_setting.vim')
+nnoremap ;uu<CR> :<C-u>call unite#start([['settings_ex', 'g:unite_data']])<CR>
 
-if 0 "{{{
+let file_ = expand('~/unite_setting.vim')
+"if filereadable(file_) 
+if 0
+	call unite_setting_ex#load('g:unite_data', file_)
+else
 	call unite_setting_ex#add('g:unite_data', 'g:unite_update_time',
 				\ 'Update time interval of candidates for each input of narrowing text.  In Msec.',
 				\ 'select', [1, 500, 750, 1000])
@@ -55,7 +59,6 @@ if 0 "{{{
 	call unite_setting_ex#add('g:unite_data' , 'g:unite_split_rule'                            , '' , 'var'  , get(g: , 'unite_split_rule'                            , 0) )
 	call unite_setting_ex#add('g:unite_data' , 'g:unite_winheight'                             , '' , 'var'  , get(g: , 'unite_winheight'                             , 0) )
 	call unite_setting_ex#add('g:unite_data' , 'g:unite_winwidth'                              , '' , 'var'  , get(g: , 'unite_winwidth'                              , 0) )
-endif "}}}
+endif
 
-nnoremap ;uu<CR> :<C-u>call unite#start([['settings_ex', 'g:unite_data']])<CR>
 

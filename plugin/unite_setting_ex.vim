@@ -132,7 +132,15 @@ endfunction "}}}
 function! s:get_orig(dict_name, valname_ex, kind) "{{{
 	exe 'let tmp_d = '.a:dict_name
 	let kind = s:get_kind(a:dict_name, a:valname_ex, a:kind)
-	return tmp_d[a:valname_ex][kind]
+
+	if exists('tmp_d[a:valname_ex][kind]')
+		let rtn = tmp_d[a:valname_ex][kind]
+	else
+		exe 'let rtn = '.a:valname_ex
+	endif
+
+	return rtn
+
 endfunction "}}}
 function! s:get_source_kind(dict_name, valname_ex, kind) "{{{
 	exe 'let tmp_d = '.a:dict_name
@@ -169,7 +177,7 @@ function! s:get_source_word_from_bool(dict_name, valname_ex, kind) "{{{
 endfunction "}}}
 function! s:get_source_word_from_strs(dict_name, valname_ex, kind) "{{{
 
-	let strs  = s:get_strs_on_off(a:dict_name, a:valname_ex, a:kind)
+	let strs = s:get_strs_on_off(a:dict_name, a:valname_ex, a:kind)
 
 	return s:get_source_word_sub( a:dict_name, a:valname_ex, a:kind, join(strs))
 endfunction "}}}
@@ -208,28 +216,38 @@ function! s:get_strs_on_off(dict_name, valname_ex, kind) "{{{
 	let datas = copy(s:get_orig(a:dict_name, a:valname_ex, a:kind))
 	let flgs  = datas[0]
 
+	echo datas
+
 	" ★　バグ対応
 	if type(flgs) != type([])
 		unlet flgs
-		let flgs = [1]
+		let flgs = []
 	endif
 
 	" ★　バグ対応
 	if type(datas) != type([])
-		echo 'error - '.a:valname_ex.' - '.a:kind
 		unlet datas
 		let datas = []
 	endif
 
-	let strs = [0] + map(copy(datas[1:]), "' '.v:val.' '")
-	
+	if len(datas) > 0
+		let strs = [0] + map(copy(datas[1:]), "' '.v:val.' '")
+	endif
+
 	for num_ in flgs
 		let strs[num_] = '<'.datas[num_].'>'
 	endfor
 
+	if !exists('strs')
+		let strs = [""]
+	endif
+
+	echo datas
+
 	unlet strs[0]
 
 	return strs
+
 endfunction "}}}
 function! s:get_type(dict_name, valname_ex, kind) "{{{
 	
@@ -242,6 +260,8 @@ function! s:get_type(dict_name, valname_ex, kind) "{{{
 			let type_ = 'list'
 		elseif type(0) == type_ && ( tmp == 0 || tmp == 1 ) 
 			let type_ = 'bool'
+		else
+			let type_ = 'var'
 		endif
 	endif
 
@@ -257,7 +277,13 @@ endfunction "}}}
 
 function! s:set(dict_name, valname_ex, kind, val) "{{{
 
-	exe 'let '.a:dict_name.'["'.a:valname_ex.'"]["'.a:kind.'"]'.' = a:val'
+	if exists(a:dict_name.'["'.a:valname_ex.'"]["'.a:kind.'"]')
+		let valname = a:dict_name.'["'.a:valname_ex.'"]["'.a:kind.'"]'
+	else
+		let valname = a:valname_ex
+	endif
+
+	exe 'let '.valname.' = a:val'
 
 	if exists(a:valname_ex) || a:valname_ex =~ '^g:'
 		let tmp = unite_setting_ex#get(a:dict_name, a:valname_ex, a:kind)
