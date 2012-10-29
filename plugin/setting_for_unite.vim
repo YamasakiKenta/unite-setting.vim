@@ -2,12 +2,13 @@ nnoremap ;uu<CR> :<C-u>call unite#start([['settings_ex', 'g:unite_data']])<CR>
 
 let file_ = expand('~/unite_setting.vim')
 "if filereadable(file_) 
-if 0
+if 1
 	call unite_setting_ex#load('g:unite_data', file_)
 else
+	let g:unite_data = {}
 	call unite_setting_ex#add('g:unite_data', 'g:unite_update_time',
 				\ 'Update time interval of candidates for each input of narrowing text.  In Msec.',
-				\ 'select', [1, 500, 750, 1000])
+				\ 'select', [[1], 500, 750, 1000])
 
 	call unite_setting_ex#add('g:unite_data', 'g:unite_enable_start_insert',
 				\ 'If this variable is 1, unite buffer will be in Insert Mode',
@@ -61,4 +62,5 @@ else
 	call unite_setting_ex#add('g:unite_data' , 'g:unite_winwidth'                              , '' , 'var'  , get(g: , 'unite_winwidth'                              , 0) )
 endif
 
-
+echo g:unite_enable_split_vertically
+let g:unite_enable_split_vertically = 1

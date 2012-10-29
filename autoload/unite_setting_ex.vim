@@ -91,6 +91,18 @@ function! unite_setting_ex#load(dict_name, file) "{{{
 	if filereadable(file_)
 		exe 'so '.file_
 	endif
+
+	let tmp = 0
+	for valname in g:tmp_unite_setting.__order
+		if valname =~ 'g:'
+			unlet tmp 
+			let tmp = unite_setting_ex#get('g:tmp_unite_setting', valname, '__common')
+			exe 'let '.valname.' = tmp'
+		endif
+	endfor
+
 	exe 'let '.a:dict_name.' = g:tmp_unite_setting'
 	exe 'let '.a:dict_name.'.__file = expand(a:file)'
+
+	unlet g:tmp_unite_setting
 endfunction "}}}

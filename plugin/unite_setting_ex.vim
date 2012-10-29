@@ -216,8 +216,6 @@ function! s:get_strs_on_off(dict_name, valname_ex, kind) "{{{
 	let datas = copy(s:get_orig(a:dict_name, a:valname_ex, a:kind))
 	let flgs  = datas[0]
 
-	echo datas
-
 	" ÅöÅ@ÉoÉOëŒâû
 	if type(flgs) != type([])
 		unlet flgs
@@ -241,8 +239,6 @@ function! s:get_strs_on_off(dict_name, valname_ex, kind) "{{{
 	if !exists('strs')
 		let strs = [""]
 	endif
-
-	echo datas
 
 	unlet strs[0]
 
@@ -330,7 +326,9 @@ function! s:kind.action_table.set_select.func(candidates) "{{{
 		let valname_ex = candidate.action__valname_ex
 		let kind       = candidate.action__kind
 
-		call s:set_type(dict_name, valname_ex, kind, 'select')
+		call s:cnv_list_ex_select(dict_name, valname_ex, kind, 'select')
+
+
 	endfor
 
 	call s:common_out(dict_name)
@@ -348,10 +346,25 @@ function! s:kind.action_table.set_list_ex.func(candidates) "{{{
 		let valname_ex = candidate.action__valname_ex
 		let kind       = candidate.action__kind
 
-		call s:set_type(dict_name, valname_ex, kind, 'list_ex')
+		call s:cnv_list_ex_select(dict_name, valname_ex, kind, 'list_ex')
+
 	endfor
 
 	call s:common_out(dict_name)
+endfunction "}}}
+function! s:cnv_list_ex_select(dict_name, valname_ex, kind, type) "{{{
+		let tmp =  unite_setting_ex#get(a:dict_name, a:valname_ex, a:kind) 
+		
+		if type(tmp) == type([])
+			let val = [[1]] + tmp
+		else
+			let val = [[1], tmp]
+		endif
+
+		call s:set_type(a:dict_name, a:valname_ex, a:kind, a:type)
+
+		call s:set(a:dict_name, a:valname_ex, a:kind, val)
+		
 endfunction "}}}
 "}}}
 "let s:kind.action_table.set_bool = {"{{{
