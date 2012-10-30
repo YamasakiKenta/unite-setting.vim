@@ -211,6 +211,15 @@ function! s:get_source_word_sub_type(dict_name, valname_ex, kind) "{{{
 
 	return star.''.a:valname_ex.''.star
 endfunction "}}}
+function! s:get_str(val) "{{{
+	let type_ = type(a:val)
+	if type_ == type(0) || type_ == type('a')
+		let str = a:val
+	else
+		let str = string(a:val)
+	endif
+	return str
+endfunction "}}}
 function! s:get_strs_on_off(dict_name, valname_ex, kind) "{{{
 
 	let datas = copy(s:get_orig(a:dict_name, a:valname_ex, a:kind))
@@ -229,11 +238,11 @@ function! s:get_strs_on_off(dict_name, valname_ex, kind) "{{{
 	endif
 
 	if len(datas) > 0
-		let strs = [0] + map(copy(datas[1:]), "' '.v:val.' '")
+		let strs = [0] + map(copy(datas[1:]), "' '.s:get_str(v:val).' '")
 	endif
 
 	for num_ in flgs
-		let strs[num_] = '<'.datas[num_].'>'
+		let strs[num_] = '<'.s:get_str(datas[num_]).'>'
 	endfor
 
 	if !exists('strs')
