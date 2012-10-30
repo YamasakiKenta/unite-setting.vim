@@ -1,4 +1,4 @@
-call unite_setting_ex#load('g:unite_setting_default_data', expand('~/unite_setting_data_def.vim'))
+"call unite_setting_ex#load('g:unite_setting_default_data', expand('~/unite_setting_data_def.vim'))
 
 let s:unite_kind = {
 			\ 'bool'     : 'kind_settings_ex_bool',
@@ -167,7 +167,7 @@ function! s:get_source_word(dict_name, valname_ex, kind) "{{{
 		let rtn = '"'.a:valname_ex.'"'
 	endif
 
-	return rtn
+	return printf("%10s %s", type, rtn)
 endfunction "}}}
 function! s:get_source_word_from_bool(dict_name, valname_ex, kind) "{{{
 	let str =  unite_setting_ex#get(a:dict_name, a:valname_ex, a:kind) ? 
@@ -693,10 +693,10 @@ function! s:source.hooks.on_init(args, context) "{{{
 endfunction "}}}
 function! s:source.gather_candidates(args, context) "{{{
 
-	let dict_name = a:context.source__dict_name 
-	let valname_ex   = a:context.source__valname_ex   
-	let kind      = a:context.source__kind      
-	let only_     = a:context.source__only      
+	let dict_name  = a:context.source__dict_name
+	let valname_ex = a:context.source__valname_ex
+	let kind       = a:context.source__kind
+	let only_      = a:context.source__only
 
 	" à¯êîÇéÊìæÇ∑ÇÈ
 	let words = s:get_orig(dict_name, valname_ex, kind)[1:]
@@ -713,13 +713,14 @@ function! s:source.gather_candidates(args, context) "{{{
 	let rtns = []
 	for word in strs 
 		let rtns += [{
-					\ 'word'              : num_.' - '.word,
-					\ 'kind'              : 'settings_ex_list_select',
-					\ 'action__dict_name' : a:context.source__dict_name,
-					\ 'action__valname_ex'   : a:context.source__valname_ex,
-					\ 'action__kind'      : a:context.source__kind,
-					\ 'action__num'       : num_,
-					\ 'action__new'       : '',
+					\ 'word'               : num_.' - '.word,
+					\ 'kind'               : 'settings_ex_list_select',
+					\ 'action__dict_name'  : dict_name,
+					\ 'action__valname_ex' : valname_ex,
+					\ 'action__kind'       : kind,
+					\ 'action__valname'    : dict_name."['".valname_ex."']['".kind."']['".num_."']",
+					\ 'action__num'        : num_,
+					\ 'action__new'        : '',
 					\ }]
 		let num_ += 1
 	endfor	

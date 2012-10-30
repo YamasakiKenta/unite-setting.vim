@@ -93,7 +93,6 @@ function! s:kind.action_table.edit.func(candidate)
 
 	if !exists(valname)
 		let tmp_str = matchstr(valname, '.*\ze[.\{-}\]$')
-		let new_    = a:candidate.action__new
 		exe 'let type_ = type('.tmp_str.')'
 
 		" š ‰Šú“ü—Í‚Ì•ÏX
