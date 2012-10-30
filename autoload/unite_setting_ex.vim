@@ -56,8 +56,8 @@ function! unite_setting_ex#get(dict_name, valname_ex, kind) "{{{
 
 	" š «‘‚É“o˜^‚ª‚È‚¢ê‡ ( ‚Ç‚¤‚µ‚æ‚¤ ) "{{{
 	if !exists('tmp_d[a:valname_ex]') 
-		if exists('valname_ex')
-			exe 'return '.valname_ex
+		if exists(a:valname_ex)
+			exe 'return '.a:valname_ex
 		else
 			return 0
 		endif

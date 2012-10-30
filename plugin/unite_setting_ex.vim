@@ -288,7 +288,10 @@ function! s:set(dict_name, valname_ex, kind, val) "{{{
 		let valname = a:valname_ex
 	endif
 
+	echo valname a:val
 	exe 'let '.valname.' = a:val'
+	exe 'echo' valname
+
 
 	if exists(a:valname_ex) || a:valname_ex =~ '^g:'
 		let tmp = unite_setting_ex#get(a:dict_name, a:valname_ex, a:kind)
