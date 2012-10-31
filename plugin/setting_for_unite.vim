@@ -1,6 +1,6 @@
 nnoremap ;uu<CR> :<C-u>call unite#start([['settings_ex', 'g:unite_data']])<CR>
 
-let file _  = '~/unite_setting.vim'
+let file_  = '~/unite_setting.vim'
 if filereadable(file_) "{{{
 	call unite_setting_ex#load('g:unite_data', file_)
 else
