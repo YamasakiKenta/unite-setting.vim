@@ -7,6 +7,46 @@ let s:valname_to_source_kind_tabel = {
 			\ type({})             : 'kind_settings_list',
 			\ }
 
+"s:source_tmpl "{{{
+let s:source_tmpl = {
+			\ 'description' : 'show var',
+			\ 'syntax'      : 'uniteSource__settings',
+			\ 'hooks'       : {},
+			\ 'is_quit'     : 0,
+			\ }
+let s:source_tmpl.hooks.on_syntax = function("unite_setting#sub_setting_syntax")
+function! s:source_tmpl.hooks.on_init(args, context) "{{{
+	let a:context.source__valname = get(a:args, 0, 'g:')
+endfunction "}}}
+function! s:source_tmpl.change_candidates(args, context) "{{{
+
+	let new_    = a:context.input
+	let valname = a:context.source__valname
+	exe 'let type = type('.valname.')'
+
+	if type == type([])
+		exe 'let tmps = type('.valname.') ? '.valname.' : []'
+		let num_ = len(tmps)
+		let valname = valname.'['.num_.']'
+	elseif type == type({})
+		let valname = valname.'['''.new_.''']'
+	endif
+
+
+	let rtns = []
+	if new_ != ''
+		let rtns = [{
+					\ 'word' : printf("[add]%45s : %s", valname, new_),
+					\ 'kind' : 'kind_settings_common',
+					\ 'action__valname'   : valname,
+					\ 'action__new'   : new_
+					\ }]
+	endif
+
+	return rtns
+
+endfunction "}}}
+"}}}
 function! s:get_source_kind(valname) "{{{
 	exe 'let tmp = '.a:valname
 	return s:valname_to_source_kind_tabel[type(tmp)]
@@ -15,11 +55,11 @@ function! s:get_source_word(valname) "{{{
 	exe 'let tmp = '.a:valname
 	return printf("%-100s : %s", a:valname, string(tmp))
 endfunction "}}}
-function! s:get_vlnamegs(valname) "{{{
+function! s:get_valnames(valname) "{{{
 	exe 'let tmp = '.a:valname
 	if a:valname == 'g:'
 		let valnames = map(keys(tmp),
-					\ "a:valname.''.v:val")
+					\ "'g:'.v:val")
 	elseif type([]) == type(tmp)
 		let valnames = map(range(len(tmp)),
 					\ "a:valname.'['.v:val.']'")
@@ -53,7 +93,6 @@ function! s:kind.action_table.edit.func(candidate)
 
 	if !exists(valname)
 		let tmp_str = matchstr(valname, '.*\ze[.\{-}\]$')
-		let new_    = a:candidate.action__new
 		exe 'let type_ = type('.tmp_str.')'
 
 		" Åö èâä˙ì¸óÕÇÃïœçX
@@ -97,10 +136,27 @@ function! s:kind.action_table.preview.func(candidate)
 	try
 		let valname   = a:candidate.action__valname
 		exe 'help '.valname
+		wincmd p
 	catch
 		call unite#clear_message()
 		call unite#print_message('can not find "'.valname.'" help.')
 	endtry
+endfunction
+"}}}
+"let s:kind.action_table.yank = { "{{{
+let s:kind.action_table.yank = {
+			\ 'description'   : 'yank',
+			\ 'is_quit'       : 0,
+			\ }
+function! s:kind.action_table.yank.func(candidate) 
+		let valname   = a:candidate.action__valname
+
+		let @" = valname
+		echo 'Yanked: ' . valname
+
+		if has('clipboard')
+			let @* = valname
+		endif
 endfunction
 "}}}
 let s:kind_settings_common = deepcopy(s:kind)
@@ -121,51 +177,18 @@ function! s:kind.action_table.select.func(candidate)
 	let valname = a:candidate.action__valname
 	call unite#start_temporary([['settings_var', valname]])
 endfunction "}}}
-let s:kind_settings_list = deepcopy(s:kind)
-"}}}
-
-"s:source_tmpl "{{{
-let s:source_tmpl = {
-			\ 'description' : 'show var',
-			\ 'syntax'      : 'uniteSource__settings',
-			\ 'hooks'       : {},
+"let s:kind.action_table.select_all = { "{{{
+let s:kind.action_table.select_all = {
+			\ 'description' : 'select_all',
 			\ 'is_quit'     : 0,
 			\ }
-let s:source_tmpl.hooks.on_syntax = function("unite_setting#sub_setting_syntax")
-function! s:source_tmpl.hooks.on_init(args, context) "{{{
-	let a:context.source__valname = get(a:args, 0, 'g:')
+function! s:kind.action_table.select_all.func(candidate)
+	let valname = a:candidate.action__valname
+	call unite#start_temporary([['settings_var_all', valname]])
 endfunction "}}}
-function! s:source_tmpl.change_candidates(args, context) "{{{
-
-	let new_    = a:context.input
-	let valname = a:context.source__valname
-	exe 'let type = type('.valname.')'
-
-	if type == type([])
-		exe 'let tmps = type('.valname.') ? '.valname.' : []'
-		let num_ = len(tmps)
-		let valname = valname.'['.num_.']'
-	elseif type == type({})
-		let valname = valname.'['''.new_.''']'
-	endif
-
-
-	let rtns = []
-	if new_ != ''
-		let rtns = [{
-					\ 'word' : printf("[add]%45s : %s", valname, new_),
-					\ 'kind' : 'kind_settings_common',
-					\ 'action__valname'   : valname,
-					\ 'action__new'   : new_
-					\ }]
-	endif
-
-	return rtns
-
-endfunction "}}}
+let s:kind_settings_list = deepcopy(s:kind)
 "}}}
-"
-let s:source_settings_var = deepcopy(s:source_tmpl)
+let s:source_settings_var = deepcopy(s:source_tmpl) "{{{
 let s:source_settings_var.name        = 'settings_var'
 function! s:source_settings_var.gather_candidates(args, context) "{{{
 
@@ -173,7 +196,7 @@ function! s:source_settings_var.gather_candidates(args, context) "{{{
 
 	call unite#print_source_message(valname, self.name)
 
-	let valnames = s:get_vlnamegs(valname)
+	let valnames = s:get_valnames(valname)
 
 	return map( copy(valnames), "{
 				\ 'word'              : s:get_source_word(v:val),
@@ -182,8 +205,8 @@ function! s:source_settings_var.gather_candidates(args, context) "{{{
 				\ }")
 
 endfunction "}}}
-
-let s:source_settings_var_all = deepcopy(s:source_tmpl)
+"}}}
+let s:source_settings_var_all = deepcopy(s:source_tmpl) "{{{
 let s:source_settings_var_all.name        = 'settings_var_all'
 function! s:source_settings_var_all.gather_candidates(args, context) "{{{
 
@@ -195,7 +218,7 @@ function! s:source_settings_var_all.gather_candidates(args, context) "{{{
 	let valnames = [valname]
 
 	while num_ < len(valnames)
-		let tmps = s:get_vlnamegs(valnames[num_])
+		let tmps = s:get_valnames(valnames[num_])
 
 		if len(tmps) > 0
 			let valnames = s:insert_list(valnames, tmps, num_)
@@ -213,6 +236,7 @@ function! s:source_settings_var_all.gather_candidates(args, context) "{{{
 				\ }")
 
 endfunction "}}}
+"}}}
 
 call unite#define_source ( s:source_settings_var      ) | unlet s:source_settings_var
 call unite#define_source ( s:source_settings_var_all  ) | unlet s:source_settings_var_all
