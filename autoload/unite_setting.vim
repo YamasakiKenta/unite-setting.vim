@@ -11,20 +11,18 @@ function! unite_setting#get_nums_form_bit(bit) "{{{
 	let val  = 0
 
 	while bit > 0 
-		" BIT が有効ならリストに追加する
+		" BIT 縺梧怏蜉ｹ縺ｪ繧峨Μ繧ｹ繝医↓霑ｽ蜉縺吶ｋ
 		if bit % 2 
 			let nums += [val]
 		endif
 
-		" Bit リストの更新
+		" Bit 繝ｪ繧ｹ繝医�ｮ譖ｴ譁ｰ
 		let bit = bit / 2
 
-		" リスト位置の更新
+		" 繝ｪ繧ｹ繝井ｽ咲ｽｮ縺ｮ譖ｴ譁ｰ
 		let val += 1
 	endwhile
 
 	return nums
 
 endfunction "}}}
-
-
