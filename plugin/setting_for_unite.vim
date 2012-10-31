@@ -1,6 +1,7 @@
-call unite_setting_ex#load('g:unite_data', '~/unite_setting.vim')
-
-if 0 "{{{
+let file _  = '~/unite_setting.vim'
+if filereadable(file_) "{{{
+	call unite_setting_ex#load('g:unite_data', file_)
+else
 	call unite_setting_ex#add('g:unite_data', 'g:unite_update_time',
 				\ 'Update time interval of candidates for each input of narrowing text.  In Msec.',
 				\ 'select', [1, 500, 750, 1000])
