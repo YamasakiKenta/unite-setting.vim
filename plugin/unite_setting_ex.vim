@@ -1,4 +1,4 @@
-"call unite_setting_ex#load('g:unite_setting_default_data', expand('~/unite_setting_data_def.vim'))
+call unite_setting_ex#load('g:unite_setting_default_data', expand('~/unite_setting_data_def.vim'))
 
 let s:unite_kind = {
 			\ 'bool'     : 'kind_settings_ex_bool',
@@ -662,6 +662,7 @@ function! s:source.gather_candidates(args, context) "{{{
 		let dict_name = 'g:unite_setting_default_data'
 	endif
 
+	" š 
 	let kind    = '__common'
 
 	" «‘–¼‚ÆAæ“¾ŠÖ”‚ª•K—v‚É‚È‚é
