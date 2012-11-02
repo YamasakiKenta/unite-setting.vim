@@ -87,6 +87,10 @@ function! unite_setting_ex#load(dict_name, file) "{{{
 		exe 'so '.file_
 	endif
 
+	if !exists('g:tmp_unite_setting.__order')
+		let g:tmp_unite_setting.__order = []
+	endif
+	
 	let tmp = 0
 	for valname in g:tmp_unite_setting.__order
 		if valname =~ 'g:'
@@ -96,8 +100,9 @@ function! unite_setting_ex#load(dict_name, file) "{{{
 		endif
 	endfor
 
+	let g:tmp_unite_setting.__file = file_
+
 	exe 'let '.a:dict_name.' = g:tmp_unite_setting'
-	exe 'let '.a:dict_name.'.__file = expand(a:file)'
 
 	unlet g:tmp_unite_setting
 endfunction "}}}

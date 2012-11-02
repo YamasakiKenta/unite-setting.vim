@@ -275,6 +275,10 @@ endfunction "}}}
 function! s:set_type(dict_name, valname_ex, kind, type) "{{{
 		exe 'let tmp_d = '.a:dict_name
 
+		if !exists('tmp_d[a:valname_ex]')
+			let tmp_d[a:valname_ex] = {}
+		endif
+
 		let tmp_d[a:valname_ex].__type = a:type
 
 		exe 'let '.a:dict_name.' = tmp_d'
@@ -768,4 +772,3 @@ call unite#define_kind   ( s:kind_settings_ex_var_list      )  | unlet s:kind_se
 call unite#define_source ( s:settings_ex                    )  | unlet s:settings_ex
 call unite#define_source ( s:settings_ex_list_select        )  | unlet s:settings_ex_list_select
 
-nnoremap ;tt<CR> :Unite settings_ex<CR>
