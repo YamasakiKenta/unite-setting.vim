@@ -4,8 +4,9 @@ function! s:get_lists(datas) "{{{
 	let nums = a:datas[0]
 	let rtns = []
 
+	let max = len(nums) + 1
 	for num_ in nums
-		let num_ = num_ < len(a:datas[0]) ? num_ : 1
+		let num_ = num_ < max ? num_ : 1
 		call add(rtns, a:datas[num_])
 	endfor
 
@@ -44,6 +45,15 @@ function! unite_setting_ex#add(dict_name, valname_ex, description, type, val) "{
 
 	exe 'let '.a:dict_name.' = tmp_d'
 
+endfunction "}}}
+function! unite_setting_ex#add_title(dict_name, valname_ex) "{{{
+	let tmp_d = {}
+	if exists(a:dict_name)
+		exe 'let tmp_d = '.a:dict_name
+	endif
+	let tmp_d.__order       = get(tmp_d , '__order'    , [])
+	call add(tmp_d.__order, a:valname_ex)
+	exe 'let '.a:dict_name.' = tmp_d'
 endfunction "}}}
 
 function! unite_setting_ex#get(dict_name, valname_ex, kind) "{{{

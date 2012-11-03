@@ -256,17 +256,20 @@ function! s:get_strs_on_off(dict_name, valname_ex, kind) "{{{
 endfunction "}}}
 function! s:get_type(dict_name, valname_ex, kind) "{{{
 	
+	let type_ = 'title'
 	if  exists(a:dict_name.'[a:valname_ex].__type')
 		exe 'let type_ = '.a:dict_name.'[a:valname_ex].__type'
 	else
-		exe 'let tmp = '.a:valname_ex
-		let type_ = type(tmp)
-		if type([]) == type_ || type({}) == type_
-			let type_ = 'list'
-		elseif type(0) == type_ && ( tmp == 0 || tmp == 1 ) 
-			let type_ = 'bool'
-		else
-			let type_ = 'var'
+		if exists(a:valname_ex)
+			exe 'let tmp = '.a:valname_ex
+			let type_ = type(tmp)
+			if type([]) == type_ || type({}) == type_
+				let type_ = 'list'
+			elseif type(0) == type_ && ( tmp == 0 || tmp == 1 ) 
+				let type_ = 'bool'
+			else
+				let type_ = 'var'
+			endif
 		endif
 	endif
 
