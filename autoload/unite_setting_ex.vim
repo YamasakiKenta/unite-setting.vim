@@ -33,7 +33,6 @@ function! unite_setting_ex#add(dict_name, valname_ex, description, type, val) "{
 		exe 'let tmp_d = '.a:dict_name
 	endif
 
-	let tmp_d.__order       = get(tmp_d , '__order'    , [])
 	let tmp_d[a:valname_ex] = get(tmp_d , a:valname_ex , {})
 
 	let tmp_d[a:valname_ex].__type        = a:type
@@ -41,26 +40,22 @@ function! unite_setting_ex#add(dict_name, valname_ex, description, type, val) "{
 	let tmp_d[a:valname_ex].__default     = a:val
 	let tmp_d[a:valname_ex].__common      = get(tmp_d[a:valname_ex], '__common', a:val)
 
+	let tmp_d.__order = get(tmp_d , '__order', [])
+	let tmp_d[a:valname_ex].__common
 	call add(tmp_d.__order, a:valname_ex)
 
 	exe 'let '.a:dict_name.' = tmp_d'
 
 endfunction "}}}
-function! unite_setting_ex#add_title(dict_name, valname_ex) "{{{
-	let tmp_d = {}
-	if exists(a:dict_name)
-		exe 'let tmp_d = '.a:dict_name
-	endif
-	let tmp_d.__order       = get(tmp_d , '__order'    , [])
-	call add(tmp_d.__order, a:valname_ex)
-	exe 'let '.a:dict_name.' = tmp_d'
+function! unite_setting_ex#add_title(dict_name, valname_ex, title_name) "{{{
+ call unite_setting_ex#add( a:dict_name, valname_ex,'perforce clients' , '' , a:title_name)
 endfunction "}}}
 
 function! unite_setting_ex#get(dict_name, valname_ex, kind) "{{{
 	exe 'let tmp_d = '.a:dict_name
 
 	" Åö é´èëÇ…ìoò^Ç™Ç»Ç¢èÍçá ( Ç«Ç§ÇµÇÊÇ§ ) "{{{
-	if !exists('tmp_d[a:valname_ex]') 
+	Hhh
 		if exists(a:valname_ex)
 			exe 'return '.a:valname_ex
 		else
@@ -68,8 +63,6 @@ function! unite_setting_ex#get(dict_name, valname_ex, kind) "{{{
 		endif
 	endif
 	"}}}
-
-	"call s:check_common(a:dict_name, a:valname_ex, a:kind)
 
 	" ìoò^Ç™Ç»Ç¢èÍçá
 	if !exists('tmp_d[a:valname_ex][a:kind]')
@@ -90,29 +83,24 @@ function! unite_setting_ex#get(dict_name, valname_ex, kind) "{{{
 	return rtns
 endfunction "}}}
 
+function! unite_setting_ex#init(dict_name, file) "{{{
+	exe 'let '.a:dict_name.' = {"__order" : [], "__file" : a:file }'
+endfunction "}}}
 function! unite_setting_ex#load(dict_name, file) "{{{
-	let g:tmp_unite_setting = {}
-	let file_ = expand(a:file)
-	if filereadable(file_)
-		exe 'so '.file_
-	endif
 
-	if !exists('g:tmp_unite_setting.__order')
-		let g:tmp_unite_setting.__order = []
-	endif
-	
-	let tmp = 0
-	for valname in g:tmp_unite_setting.__order
+	let file_ = expand(a:file)
+	exe 'let tmp_d = '.a:dict_name
+	exe 'so '.file_
+
+	for valname in tmp_d.__order
+	echo valname
+		let tmp_d[valname] = get(g:tmp_unite_setting, valname, tmp_d[valname])
 		if valname =~ 'g:'
-			unlet tmp 
-			let tmp = unite_setting_ex#get('g:tmp_unite_setting', valname, '__common')
-			exe 'let '.valname.' = tmp'
+			exe 'let '.valname." = unite_setting_ex#get(a:dict_name, valname, '__common')"
 		endif
 	endfor
 
-	let g:tmp_unite_setting.__file = file_
-
-	exe 'let '.a:dict_name.' = g:tmp_unite_setting'
+	exe 'let '.a:dict_name.' = tmp_d'
 
 	unlet g:tmp_unite_setting
 endfunction "}}}
