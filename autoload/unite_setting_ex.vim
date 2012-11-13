@@ -4,10 +4,12 @@ function! s:get_lists(datas) "{{{
 	let nums = a:datas[0]
 	let rtns = []
 
-	let max = len(nums) + 1
+	let max = len(a:datas) + 1
+
 	for num_ in nums
-		let num_ = num_ < max ? num_ : 1
-		call add(rtns, a:datas[num_])
+		if num_ < max
+			call add(rtns, a:datas[num_])
+		endif
 	endfor
 
 	return rtns
@@ -41,28 +43,22 @@ function! unite_setting_ex#add(dict_name, valname_ex, description, type, val) "{
 	let tmp_d[a:valname_ex].__common      = get(tmp_d[a:valname_ex], '__common', a:val)
 
 	let tmp_d.__order = get(tmp_d , '__order', [])
-	let tmp_d[a:valname_ex].__common
 	call add(tmp_d.__order, a:valname_ex)
 
 	exe 'let '.a:dict_name.' = tmp_d'
 
 endfunction "}}}
-function! unite_setting_ex#add_title(dict_name, valname_ex, title_name) "{{{
- call unite_setting_ex#add( a:dict_name, valname_ex,'perforce clients' , '' , a:title_name)
+function! unite_setting_ex#add_title(dict_name, title_name) "{{{
+	let valname_ex = 'title_'.a:title_name
+	call unite_setting_ex#add( a:dict_name, valname_ex, 'perforce clients' , '' , a:title_name)
 endfunction "}}}
 
 function! unite_setting_ex#get(dict_name, valname_ex, kind) "{{{
 	exe 'let tmp_d = '.a:dict_name
 
-	" š «‘‚É“o˜^‚ª‚È‚¢ê‡ ( ‚Ç‚¤‚µ‚æ‚¤ ) "{{{
-	Hhh
-		if exists(a:valname_ex)
-			exe 'return '.a:valname_ex
-		else
-			return 0
-		endif
+	if exists(a:valname_ex)
+		exe 'return '.a:valname_ex
 	endif
-	"}}}
 
 	" “o˜^‚ª‚È‚¢ê‡
 	if !exists('tmp_d[a:valname_ex][a:kind]')
@@ -92,13 +88,10 @@ function! unite_setting_ex#load(dict_name, file) "{{{
 	exe 'let tmp_d = '.a:dict_name
 	exe 'so '.file_
 
-	for valname in tmp_d.__order
-	echo valname
-		let tmp_d[valname] = get(g:tmp_unite_setting, valname, tmp_d[valname])
-		if valname =~ 'g:'
-			exe 'let '.valname." = unite_setting_ex#get(a:dict_name, valname, '__common')"
-		endif
-	endfor
+	let tmp_order = tmp_d.__order
+	let tmp_file  = file_
+
+	call extend(tmp_d, g:tmp_unite_setting)
 
 	exe 'let '.a:dict_name.' = tmp_d'
 

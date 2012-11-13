@@ -1,4 +1,4 @@
-call unite_setting_ex#load('g:unite_setting_default_data', expand('~/unite_setting_data_def.vim'))
+"call unite_setting_ex#load('g:unite_setting_default_data', expand('~/unite_setting_data_def.vim'))
 
 let s:unite_kind = {
 			\ 'bool'     : 'kind_settings_ex_bool',
@@ -295,10 +295,7 @@ function! s:set(dict_name, valname_ex, kind, val) "{{{
 		let valname = a:valname_ex
 	endif
 
-	echo valname a:val
 	exe 'let '.valname.' = a:val'
-	exe 'echo' valname
-
 
 	if exists(a:valname_ex) || a:valname_ex =~ '^g:'
 		let tmp = unite_setting_ex#get(a:dict_name, a:valname_ex, a:kind)
@@ -440,6 +437,34 @@ function! s:kind.action_table.set_list.func(candidates) "{{{
 	call s:common_out(dict_name)
 endfunction "}}}
 "}}}
+"let s:kind.action_table.yank_data = { "{{{
+let s:kind.action_table.yank_data = {
+			\ 'description'   : 'yank data',
+			\ 'is_quit'       : 0,
+			\ 'is_selectable' : 1,
+			\ }
+function! s:kind.action_table.yank_data.func(candidates) 
+
+	let @" = ''
+	let @* = ''
+	for candidate in a:candidates
+		let dict_name  = candidate.action__dict_name
+		let valname_ex = candidate.action__valname_ex
+		let kind       = candidate.action__kind
+
+		let data = string(unite_setting_ex#get( dict_name, valname_ex, kind))."\n"
+
+		let @" = @" . data
+
+		if has('clipboard')
+			let @* = @* . data
+		endif
+	endfor
+
+	echo @"
+endfunction
+"}}}
+
 let s:kind_settings_ex_common = deepcopy(s:kind)
 "}}}
 

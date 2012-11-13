@@ -147,16 +147,42 @@ endfunction
 let s:kind.action_table.yank = {
 			\ 'description'   : 'yank',
 			\ 'is_quit'       : 0,
+			\ 'is_selectable' : 1,
 			\ }
-function! s:kind.action_table.yank.func(candidate) 
-		let valname   = a:candidate.action__valname
+function! s:kind.action_table.yank.func(candidates) 
+	let @" = ''
+	let @* = ''
+	for candidate in a:candidates
+		let valname   = candidate.action__valname."\n"
 
-		let @" = valname
-		echo 'Yanked: ' . valname
+		let @" = @" . valname
 
 		if has('clipboard')
-			let @* = valname
+			let @* = @* . valname
 		endif
+	endfor
+	echo @"
+endfunction
+"}}}
+"let s:kind.action_table.yank_data = { "{{{
+let s:kind.action_table.yank_data = {
+			\ 'description'   : 'yank data',
+			\ 'is_quit'       : 0,
+			\ 'is_selectable' : 1,
+			\ }
+function! s:kind.action_table.yank_data.func(candidates) 
+	let @" = ''
+	let @* = ''
+	for candidate in a:candidates
+		exe 'let data = '.string(a:candidate.action__valname)."\n"
+
+		let @" = @" . data
+
+		if has('clipboard')
+			let @* = @* . data
+		endif
+	endfor
+	echo @"
 endfunction
 "}}}
 let s:kind_settings_common = deepcopy(s:kind)
