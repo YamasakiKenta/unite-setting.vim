@@ -56,13 +56,15 @@ endfunction "}}}
 function! unite_setting_ex#get(dict_name, valname_ex, kind) "{{{
 	exe 'let tmp_d = '.a:dict_name
 
-	if exists(a:valname_ex)
-		exe 'return '.a:valname_ex
-	endif
-
 	" “o˜^‚ª‚È‚¢ê‡
 	if !exists('tmp_d[a:valname_ex][a:kind]')
 		let tmp_d[a:valname_ex][a:kind] = tmp_d[a:valname_ex].__common
+
+		" š g:‚Æ‚Ì“¯Šú
+		if exists(a:valname_ex)
+			exe 'return '.a:valname_ex
+		endif
+
 	endif
 
 	let type_ = tmp_d[a:valname_ex].__type
@@ -86,6 +88,11 @@ function! unite_setting_ex#load(dict_name, file) "{{{
 
 	let file_ = expand(a:file)
 	exe 'let tmp_d = '.a:dict_name
+
+	if filereadable(file_)
+		return
+	endif
+
 	exe 'so '.file_
 
 	let tmp_order = tmp_d.__order

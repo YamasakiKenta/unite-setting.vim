@@ -48,23 +48,23 @@ function! s:source_tmpl.change_candidates(args, context) "{{{
 endfunction "}}}
 "}}}
 function! s:get_source_kind(valname) "{{{
-	exe 'let tmp = '.a:valname
-	return s:valname_to_source_kind_tabel[type(tmp)]
+	exe 'let Tmp = '.a:valname
+	return s:valname_to_source_kind_tabel[type(Tmp)]
 endfunction "}}}
 function! s:get_source_word(valname) "{{{
-	exe 'let tmp = '.a:valname
-	return printf("%-100s : %s", a:valname, string(tmp))
+	exe 'let Tmp = '.a:valname
+	return printf("%-100s : %s", a:valname, string(Tmp))
 endfunction "}}}
 function! s:get_valnames(valname) "{{{
-	exe 'let tmp = '.a:valname
+	exe 'let Tmp = '.a:valname
 	if a:valname == 'g:'
-		let valnames = map(keys(tmp),
+		let valnames = map(keys(Tmp),
 					\ "'g:'.v:val")
-	elseif type([]) == type(tmp)
-		let valnames = map(range(len(tmp)),
+	elseif type([]) == type(Tmp)
+		let valnames = map(range(len(Tmp)),
 					\ "a:valname.'['.v:val.']'")
-	elseif type({}) == type(tmp)
-		let valnames = map(keys(tmp),
+	elseif type({}) == type(Tmp)
+		let valnames = map(keys(Tmp),
 					\ "a:valname.'['''.v:val.''']'")
 	else
 		let valnames = []
@@ -151,38 +151,29 @@ let s:kind.action_table.yank = {
 			\ }
 function! s:kind.action_table.yank.func(candidates) 
 	let @" = ''
-	let @* = ''
 	for candidate in a:candidates
 		let valname   = candidate.action__valname."\n"
-
 		let @" = @" . valname
-
-		if has('clipboard')
-			let @* = @* . valname
-		endif
 	endfor
+	let @* = @"
 	echo @"
 endfunction
 "}}}
-"let s:kind.action_table.yank_data = { "{{{
-let s:kind.action_table.yank_data = {
+"let s:kind.action_table.delete = { "{{{
+let s:kind.action_table.delete = {
 			\ 'description'   : 'yank data',
 			\ 'is_quit'       : 0,
 			\ 'is_selectable' : 1,
 			\ }
-function! s:kind.action_table.yank_data.func(candidates) 
+function! s:kind.action_table.delete.func(candidates) 
 	let @" = ''
 	let @* = ''
 	for candidate in a:candidates
-		exe 'let data = '.string(a:candidate.action__valname)."\n"
-
+		exe "let data = 'let ".candidate.action__valname." = '.string(".candidate.action__valname.").'\n'"
+		echo data
 		let @" = @" . data
-
-		if has('clipboard')
-			let @* = @* . data
-		endif
 	endfor
-	echo @"
+	let @* = @"
 endfunction
 "}}}
 let s:kind_settings_common = deepcopy(s:kind)
