@@ -152,11 +152,11 @@ let s:kind.action_table.yank = {
 function! s:kind.action_table.yank.func(candidates) 
 	let @" = ''
 	for candidate in a:candidates
-		let valname   = candidate.action__valname."\n"
+		let valname  = candidate.action__valname."\n"
 		let @" = @" . valname
 	endfor
-	let @* = @"
 	echo @"
+	let @* = @"
 endfunction
 "}}}
 "let s:kind.action_table.delete = { "{{{
@@ -170,9 +170,9 @@ function! s:kind.action_table.delete.func(candidates)
 	let @* = ''
 	for candidate in a:candidates
 		exe "let data = 'let ".candidate.action__valname." = '.string(".candidate.action__valname.").'\n'"
-		echo data
 		let @" = @" . data
 	endfor
+	echo @"
 	let @* = @"
 endfunction
 "}}}
