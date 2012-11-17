@@ -264,40 +264,34 @@ function! s:get_strs_on_off_new(dict_name, valname_ex, kind) "{{{
 		let datas = []
 	endif
 
-	let flgs  = datas[0]
+	let num_flgs  = datas[0]
 
 	" š@ƒoƒO‘Î‰
-	if type(flgs) != type([])
-		unlet flgs
-		let flgs = []
+	if type(num_flgs) != type([])
+		unlet num_flgs
+		let num_flgs = []
 	endif
-
-
-
 
 	if len(datas) > 0
-		let strs = [0] + map(copy(datas[1:]), "' '.s:get_str(v:val).' '")
+
+		let rtns = [0] + map(copy(datas[1:]), "{
+					\ 'str' : ' '.s:get_str(v:val).' ',
+					\ 'flg' : 0,
+					\ }")
 	endif
 
-	for num_ in flgs
-		let strs[num_] = '<'.s:get_str(datas[num_]).'>'
+	for num_ in num_flgs
+		let rtns[num_].str = '<'.s:get_str(datas[num_]).'>'
+		let rtns[num_].flg = 1
 	endfor
 
-	if !exists('strs')
-		let strs = [""]
+	if !exists('rtns')
+		let rtns = [{'str' : '', 'flg' : 0}]
 	endif
 
-	unlet strs[0]
+	unlet rtns[0]
 
-	let datas = []
-	for str in strs
-		call add(datas, {
-					\ 'str' : str,
-					\ 'flg' : 0, 
-					\ })
-	endfor
-
-	return datas
+	return rtns
 
 endfunction "}}}
 function! s:get_type(dict_name, valname_ex, kind) "{{{
