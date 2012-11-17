@@ -176,9 +176,8 @@ function! s:get_source_word_from_bool(dict_name, valname_ex, kind) "{{{
 	return s:get_source_word_sub( a:dict_name, a:valname_ex, a:kind, str)
 endfunction "}}}
 function! s:get_source_word_from_strs(dict_name, valname_ex, kind) "{{{
-
-	let strs = s:get_strs_on_off(a:dict_name, a:valname_ex, a:kind)
-
+	let datas = s:get_strs_on_off_new(a:dict_name, a:valname_ex, a:kind)
+	let strs = map(datas, 'v:val.str')
 	return s:get_source_word_sub( a:dict_name, a:valname_ex, a:kind, join(strs))
 endfunction "}}}
 function! s:get_source_word_from_val(dict_name, valname_ex, kind) "{{{
@@ -219,40 +218,6 @@ function! s:get_str(val) "{{{
 		let str = string(a:val)
 	endif
 	return str
-endfunction "}}}
-function! s:get_strs_on_off(dict_name, valname_ex, kind) "{{{
-
-	let datas = copy(s:get_orig(a:dict_name, a:valname_ex, a:kind))
-	let flgs  = datas[0]
-
-	" ★　バグ対応
-	if type(flgs) != type([])
-		unlet flgs
-		let flgs = []
-	endif
-
-	" ★　バグ対応
-	if type(datas) != type([])
-		unlet datas
-		let datas = []
-	endif
-
-	if len(datas) > 0
-		let strs = [0] + map(copy(datas[1:]), "' '.s:get_str(v:val).' '")
-	endif
-
-	for num_ in flgs
-		let strs[num_] = '<'.s:get_str(datas[num_]).'>'
-	endfor
-
-	if !exists('strs')
-		let strs = [""]
-	endif
-
-	unlet strs[0]
-
-	return strs
-
 endfunction "}}}
 function! s:get_strs_on_off_new(dict_name, valname_ex, kind) "{{{
 
@@ -796,6 +761,7 @@ function! s:source.gather_candidates(args, context) "{{{
 					\ 'action__num'        : num_,
 					\ 'action__new'        : '',
 					\ 'unite__is_marked'   : data.flg,
+					\ 'unite__marked_time' : localtime(),
 					\ }]
 		let num_ += 1
 	endfor	
