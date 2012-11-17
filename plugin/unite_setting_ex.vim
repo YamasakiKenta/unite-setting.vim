@@ -254,6 +254,52 @@ function! s:get_strs_on_off(dict_name, valname_ex, kind) "{{{
 	return strs
 
 endfunction "}}}
+function! s:get_strs_on_off_new(dict_name, valname_ex, kind) "{{{
+
+	let datas = copy(s:get_orig(a:dict_name, a:valname_ex, a:kind))
+
+	" ★　バグ対応
+	if type(datas) != type([])
+		unlet datas
+		let datas = []
+	endif
+
+	let flgs  = datas[0]
+
+	" ★　バグ対応
+	if type(flgs) != type([])
+		unlet flgs
+		let flgs = []
+	endif
+
+
+
+
+	if len(datas) > 0
+		let strs = [0] + map(copy(datas[1:]), "' '.s:get_str(v:val).' '")
+	endif
+
+	for num_ in flgs
+		let strs[num_] = '<'.s:get_str(datas[num_]).'>'
+	endfor
+
+	if !exists('strs')
+		let strs = [""]
+	endif
+
+	unlet strs[0]
+
+	let datas = []
+	for str in strs
+		call add(datas, {
+					\ 'str' : str,
+					\ 'flg' : 0, 
+					\ })
+	endfor
+
+	return datas
+
+endfunction "}}}
 function! s:get_type(dict_name, valname_ex, kind) "{{{
 	
 	let type_ = 'title'
@@ -734,22 +780,20 @@ function! s:source.gather_candidates(args, context) "{{{
 	let kind       = a:context.source__kind
 	let only_      = a:context.source__only
 
-	" 引数を取得する
-	let words = s:get_orig(dict_name, valname_ex, kind)[1:]
-
-	let strs  = s:get_strs_on_off(dict_name, valname_ex, kind)
+	let datas  = s:get_strs_on_off_new(dict_name, valname_ex, kind)
 
 	if only_
 		let num_ = 1
 	else
 		let num_ = 0
-		call insert(strs, ' NULL ')
+		call insert(datas, { 'str' : ' NULL ', 'flg' : 0 })
 	endif
 
+	echo datas
 	let rtns = []
-	for word in strs 
+	for data in datas
 		let rtns += [{
-					\ 'word'               : num_.' - '.word,
+					\ 'word'               : num_.' - '.data.str,
 					\ 'kind'               : 'settings_ex_list_select',
 					\ 'action__dict_name'  : dict_name,
 					\ 'action__valname_ex' : valname_ex,
@@ -757,6 +801,7 @@ function! s:source.gather_candidates(args, context) "{{{
 					\ 'action__valname'    : dict_name."['".valname_ex."']['".kind."']['".num_."']",
 					\ 'action__num'        : num_,
 					\ 'action__new'        : '',
+					\ 'unite__is_marked'   : data.flg,
 					\ }]
 		let num_ += 1
 	endfor	
