@@ -89,7 +89,7 @@ function! unite_setting_ex#load(dict_name, file) "{{{
 	let file_ = expand(a:file)
 	exe 'let tmp_d = '.a:dict_name
 
-	if filereadable(file_)
+	if !filereadable(file_)
 		return
 	endif
 
