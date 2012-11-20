@@ -748,7 +748,6 @@ function! s:source.gather_candidates(args, context) "{{{
 		call insert(datas, { 'str' : ' NULL ', 'flg' : 0 })
 	endif
 
-	echo datas
 	let rtns = []
 	for data in datas
 		let rtns += [{
