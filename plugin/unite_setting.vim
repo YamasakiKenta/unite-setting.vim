@@ -152,7 +152,7 @@ let s:kind.action_table.yank = {
 function! s:kind.action_table.yank.func(candidates) 
 	let @" = ''
 	for candidate in a:candidates
-		let valname  = candidate.action__valname."\n"
+		exe 'let valname = "let ".candidate.action__valname." = ".string('.candidate.action__valname.')."\n"'
 		let @" = @" . valname
 	endfor
 	echo @"
