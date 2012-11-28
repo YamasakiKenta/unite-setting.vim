@@ -443,29 +443,23 @@ function! s:kind.action_table.set_list.func(candidates) "{{{
 endfunction "}}}
 "}}}
 "let s:kind.action_table.yank_data = { "{{{
-let s:kind.action_table.yank_data = {
-			\ 'description'   : 'yank data',
+let s:kind.action_table.yank = {
+			\ 'description'   : 'yank',
 			\ 'is_quit'       : 0,
 			\ 'is_selectable' : 1,
 			\ }
-function! s:kind.action_table.yank_data.func(candidates) 
-
+function! s:kind.action_table.yank.func(candidates) 
 	let @" = ''
-	let @* = ''
 	for candidate in a:candidates
 		let dict_name  = candidate.action__dict_name
 		let valname_ex = candidate.action__valname_ex
 		let kind       = candidate.action__kind
 
-		let data = string(unite_setting_ex#get( dict_name, valname_ex, kind))."\n"
-
+		let data = 'let '.valname_ex.' = '.string(unite_setting_ex#get( dict_name, valname_ex, kind))."\n"
 		let @" = @" . data
 
-		if has('clipboard')
-			let @* = @* . data
-		endif
 	endfor
-
+	let @* = @"
 	echo @"
 endfunction
 "}}}
