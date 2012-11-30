@@ -95,8 +95,8 @@ function! unite_setting_ex#load(dict_name, file) "{{{
 
 	exe 'so '.file_
 
-	let tmp_order = tmp_d.__order
-	let tmp_file  = file_
+	let g:tmp_unite_setting.__order = tmp_d.__order
+	let g:tmp_unite_setting.__file  = file_
 
 	call extend(tmp_d, g:tmp_unite_setting)
 
