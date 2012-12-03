@@ -1,4 +1,7 @@
 "call unite_setting_ex#load('g:unite_setting_default_data', expand('~/unite_setting_data_def.vim'))
+let s:save_cpo = &cpo
+set cpo&vim
+
 
 let s:unite_kind = {
 			\ 'bool'     : 'kind_settings_ex_bool',
@@ -797,4 +800,8 @@ call unite#define_kind   ( s:kind_settings_ex_var           )  | unlet s:kind_se
 call unite#define_kind   ( s:kind_settings_ex_var_list      )  | unlet s:kind_settings_ex_var_list
 call unite#define_source ( s:settings_ex                    )  | unlet s:settings_ex
 call unite#define_source ( s:settings_ex_list_select        )  | unlet s:settings_ex_list_select
+
+
+let &cpo = s:save_cpo
+unlet s:save_cpo
 

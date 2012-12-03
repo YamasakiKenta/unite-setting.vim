@@ -1,3 +1,6 @@
+let s:save_cpo = &cpo
+set cpo&vim
+
 "sub 
 function! s:get_lists(datas) "{{{
 
@@ -89,6 +92,7 @@ function! unite_setting_ex#load(dict_name, file) "{{{
 	let file_ = expand(a:file)
 	exe 'let tmp_d = '.a:dict_name
 
+
 	if !filereadable(file_)
 		return
 	endif
@@ -104,3 +108,7 @@ function! unite_setting_ex#load(dict_name, file) "{{{
 
 	unlet g:tmp_unite_setting
 endfunction "}}}
+
+let &cpo = s:save_cpo
+unlet s:save_cpo
+

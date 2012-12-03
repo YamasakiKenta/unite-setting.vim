@@ -1,3 +1,6 @@
+let s:save_cpo = &cpo
+set cpo&vim
+
 let s:valname_to_source_kind_tabel = {
 			\ type(0)              : 'kind_settings_common',
 			\ type("")             : 'kind_settings_common',
@@ -77,6 +80,8 @@ function! s:insert_list(list1, list2, num_) "{{{
 	return tmps
 endfunction "}}}
 
+
+"
 " s:kind_settings_common "{{{
 let s:kind = { 
 			\ 'name'           : 'kind_settings_common',
@@ -260,4 +265,8 @@ call unite#define_source ( s:source_settings_var_all  ) | unlet s:source_setting
 call unite#define_kind   ( s:kind_settings_common     ) | unlet s:kind_settings_common     
 call unite#define_kind   ( s:kind_settings_list       ) | unlet s:kind_settings_list       
 
+
+
+let &cpo = s:save_cpo
+unlet s:save_cpo
 

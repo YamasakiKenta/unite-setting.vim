@@ -1,3 +1,7 @@
+let s:save_cpo = &cpo
+set cpo&vim
+
+
 if 0 "{{{
 nnoremap ;uu<CR> :<C-u>call unite#start([['settings_ex', 'g:unite_data']])<CR>
 let file_  = '~/unite_setting.vim'
@@ -61,3 +65,8 @@ else
 endif
 
 endif "}}}
+"}}}
+
+let &cpo = s:save_cpo
+unlet s:save_cpo
+
