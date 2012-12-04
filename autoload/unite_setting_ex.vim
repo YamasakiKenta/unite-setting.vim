@@ -1,6 +1,8 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
+let s:Common = vital#of('unite-setting.vim').import('Mind.Common')
+
 "sub 
 function! s:get_lists(datas) "{{{
 
@@ -92,12 +94,11 @@ function! unite_setting_ex#load(dict_name, file) "{{{
 	let file_ = expand(a:file)
 	exe 'let tmp_d = '.a:dict_name
 
-
 	if !filereadable(file_)
 		return
 	endif
 
-	exe 'so '.file_
+	call s:Common.load(file_, {})
 
 	let g:tmp_unite_setting.__order = tmp_d.__order
 	let g:tmp_unite_setting.__file  = file_

@@ -1,7 +1,6 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-
 function! unite_setting#sub_setting_syntax(args, context) "{{{
 	syntax match uniteSource__settings_choose /<.\{-}>/ containedin=uniteSource__settings contained
 	syntax match uniteSource__settings_group /".*"/ containedin=uniteSource__settings contained
