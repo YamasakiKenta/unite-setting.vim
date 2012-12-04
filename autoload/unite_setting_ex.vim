@@ -88,6 +88,7 @@ endfunction "}}}
 
 function! unite_setting_ex#init(dict_name, file) "{{{
 	exe 'let '.a:dict_name.' = {"__order" : [], "__file" : a:file }'
+	return 
 endfunction "}}}
 function! unite_setting_ex#load(dict_name, file) "{{{
 
@@ -105,13 +106,13 @@ function! unite_setting_ex#load(dict_name, file) "{{{
 
 	call extend(tmp_d, g:tmp_unite_setting)
 
-	exe 'let '.a:dict_name.' = tmp_d'
-
 	for valname in filter(copy(tmp_d.__order), 'v:val=~"g:"')
 		exe 'let '.valname." = unite_setting_ex#get(a:dict_name, valname, '__common')"
 	endfor
 
 	unlet g:tmp_unite_setting
+
+	return tmp_d
 endfunction "}}}
 
 let &cpo = s:save_cpo
