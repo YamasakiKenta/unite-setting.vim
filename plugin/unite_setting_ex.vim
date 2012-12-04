@@ -675,10 +675,10 @@ let s:source = {
 			\ }
 let s:source.hooks.on_syntax = function("unite_setting#sub_setting_syntax")
 function! s:source.hooks.on_init(args, context) "{{{
-	let a:context.source__dict_name = get(a:args, 0, 'g:')
+	let a:context.source__dict_name = get(a:args, 0, 'g:unite_setting_default_data')
 endfunction "}}}
 function! s:source.hooks.on_close(args, context) "{{{
-	let dict_name = a:context.source__dict_name 
+	let dict_name = get(a:context, 'source__dict_name')
 	call s:save(dict_name)
 endfunction "}}}
 function! s:source.gather_candidates(args, context) "{{{
@@ -693,7 +693,6 @@ function! s:source.gather_candidates(args, context) "{{{
 		let orders  = tmp_d.__order
 	else
 		let orders = s:get_valnames(dict_name)
-		let dict_name = 'g:unite_setting_default_data'
 	endif
 
 	" Åö 
