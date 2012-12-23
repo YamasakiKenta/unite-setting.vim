@@ -6,15 +6,10 @@ let s:Common = vital#of('unite-setting.vim').import('Mind.Common')
 "sub 
 function! s:get_lists(datas) "{{{
 
-	let nums = a:datas[0]
 	let rtns = []
 
-	let max = len(a:datas) + 1
-
-	for num_ in nums
-		if num_ < max
-			call add(rtns, a:datas[num_])
-		endif
+	for num_ in filter(a:datas[0], 'v:val < len(a:datas)+1')
+		call add(rtns, a:datas[num_])
 	endfor
 
 	return rtns
