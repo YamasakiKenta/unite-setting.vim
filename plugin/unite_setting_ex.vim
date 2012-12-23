@@ -43,12 +43,25 @@ function! Sub_set_settings_ex_select_list_toggle(candidates) "{{{
 	return 
 endfunction "}}}
 
+function! s:cnv_list_ex_select(dict_name, valname_ex, kind, type) "{{{
+		let tmp =  unite_setting_ex#get(a:dict_name, a:valname_ex, a:kind) 
+		
+		if type(tmp) == type([])
+			let val = [[1]] + tmp
+		else
+			let val = [[1], tmp]
+		endif
+
+		call s:set_type(a:dict_name, a:valname_ex, a:kind, a:type)
+
+		call s:set(a:dict_name, a:valname_ex, a:kind, val)
+		
+endfunction "}}}
 function! s:save(dict_name) "{{{
 	exe 'let tmp_d = '.a:dict_name
 	call s:Common.save(tmp_d.__file, tmp_d)
 endfunction "}}}
 function! s:delete(dict_name, valname_ex, kind, nums) "{{{
-
 
 	" ï¿Ç—ë÷Ç¶
 	let nums = copy(a:nums)
@@ -296,7 +309,10 @@ function! s:set(dict_name, valname_ex, kind, val) "{{{
 
 	if exists(a:valname_ex) || a:valname_ex =~ '^g:'
 		let tmp = unite_setting_ex#get(a:dict_name, a:valname_ex, a:kind)
-		exe 'let '.a:valname_ex.' = tmp'
+		exe 'let tmp2 = '.a:valname_ex
+		if type(tmp) == type(tmp2)
+			exe 'let '.a:valname_ex.' = tmp'
+		endif
 	endif
 
 endfunction "}}}
@@ -327,7 +343,6 @@ let s:kind = {
 			\ 'action_table'   : {},
 			\ 'parents': ['kind_settings_common'],
 			\ }
-"let s:kind.action_table.set_select = {"{{{
 let s:kind.action_table.set_select = {
 			\ 'is_selectable' : 1,
 			\ 'description'   : '',
@@ -347,7 +362,6 @@ function! s:kind.action_table.set_select.func(candidates) "{{{
 	call s:common_out(dict_name)
 endfunction "}}}
 "}}}
-"let s:kind.action_table.set_list_ex = {"{{{
 let s:kind.action_table.set_list_ex = {
 			\ 'is_selectable' : 1,
 			\ 'description'   : '',
@@ -365,22 +379,6 @@ function! s:kind.action_table.set_list_ex.func(candidates) "{{{
 
 	call s:common_out(dict_name)
 endfunction "}}}
-function! s:cnv_list_ex_select(dict_name, valname_ex, kind, type) "{{{
-		let tmp =  unite_setting_ex#get(a:dict_name, a:valname_ex, a:kind) 
-		
-		if type(tmp) == type([])
-			let val = [[1]] + tmp
-		else
-			let val = [[1], tmp]
-		endif
-
-		call s:set_type(a:dict_name, a:valname_ex, a:kind, a:type)
-
-		call s:set(a:dict_name, a:valname_ex, a:kind, val)
-		
-endfunction "}}}
-"}}}
-"let s:kind.action_table.set_bool = {"{{{
 let s:kind.action_table.set_bool = {
 			\ 'is_selectable' : 1,
 			\ 'description'   : '',
@@ -689,8 +687,6 @@ function! s:source.gather_candidates(args, context) "{{{
 
 	" é´èëñºÇ∆ÅAéÊìæä÷êîÇ™ïKóvÇ…Ç»ÇÈ
 	"
-	exe s:Debug.exe_line('')
-
 	return map( copy(orders), "{
 				\ 'word'               : s:get_source_word(dict_name, v:val, kind),
 				\ 'kind'               : s:get_source_kind(dict_name, v:val, kind),
