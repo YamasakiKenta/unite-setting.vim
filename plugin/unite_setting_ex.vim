@@ -1,4 +1,3 @@
-"call unite_setting_ex#load('g:unite_setting_default_data', expand('~/unite_setting_data_def.vim'))
 let s:save_cpo = &cpo
 set cpo&vim
 
@@ -675,7 +674,7 @@ let s:source = {
 			\ }
 let s:source.hooks.on_syntax = function("unite_setting#sub_setting_syntax")
 function! s:source.hooks.on_init(args, context) "{{{
-	let a:context.source__dict_name = get(a:args, 0, 'g:unite_setting_default_data')
+	let a:context.source__dict_name = get(a:args, 0, '')
 endfunction "}}}
 function! s:source.hooks.on_close(args, context) "{{{
 	let dict_name = get(a:context, 'source__dict_name')
