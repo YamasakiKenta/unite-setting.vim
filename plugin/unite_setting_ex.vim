@@ -100,11 +100,9 @@ function! s:get_source_valname(dict_name, valname_ex, kind) "{{{
 	endif
 	return valname
 endfunction "}}}
-
 function! s:common_out(dict_name) "{{{
 	call unite#force_redraw()
 endfunction "}}}
-
 function! s:get_bits(dict_name, valname_ex, kind) "{{{
 
 	let tmp_d = s:get_orig(a:dict_name, a:valname_ex, a:kind)
@@ -361,7 +359,6 @@ function! s:kind.action_table.set_select.func(candidates) "{{{
 
 	call s:common_out(dict_name)
 endfunction "}}}
-"}}}
 let s:kind.action_table.set_list_ex = {
 			\ 'is_selectable' : 1,
 			\ 'description'   : '',
@@ -395,7 +392,6 @@ function! s:kind.action_table.set_bool.func(candidates) "{{{
 
 	call s:common_out(dict_name)
 endfunction "}}}
-"}}}
 "let s:kind.action_table.set_var = {"{{{
 let s:kind.action_table.set_var = {
 			\ 'is_selectable' : 1,
@@ -453,10 +449,8 @@ function! s:kind.action_table.yank.func(candidates)
 	echo @"
 endfunction
 "}}}
-
 let s:kind_settings_ex_common = deepcopy(s:kind)
 "}}}
-
 " s:kind_settings_ex_bool "{{{
 let s:kind = { 
 			\ 'name'           : 'kind_settings_ex_bool',
@@ -743,9 +737,9 @@ function! s:source.gather_candidates(args, context) "{{{
 					\ 'action__valname'    : dict_name."['".valname_ex."']['".kind."']['".num_."']",
 					\ 'action__num'        : num_,
 					\ 'action__new'        : '',
-					\ 'unite__is_marked'   : data.flg,
-					\ 'unite__marked_time' : localtime(),
 					\ }]
+					"\ 'unite__is_marked'   : data.flg,
+					"\ 'unite__marked_time' : localtime(),
 		let num_ += 1
 	endfor	
 
@@ -787,7 +781,6 @@ call unite#define_kind   ( s:kind_settings_ex_var           )  | unlet s:kind_se
 call unite#define_kind   ( s:kind_settings_ex_var_list      )  | unlet s:kind_settings_ex_var_list
 call unite#define_source ( s:settings_ex                    )  | unlet s:settings_ex
 call unite#define_source ( s:settings_ex_list_select        )  | unlet s:settings_ex_list_select
-
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
