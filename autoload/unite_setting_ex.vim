@@ -3,7 +3,6 @@ set cpo&vim
 
 let s:Common = vital#of('unite-setting.vim').import('Mind.Common')
 
-"sub 
 function! s:get_lists(datas) "{{{
 
 	let rtns = []
@@ -13,19 +12,6 @@ function! s:get_lists(datas) "{{{
 	endfor
 
 	return rtns
-endfunction "}}}
-"main
-function! s:check_common(dict_name, valname_ex, kind) "{{{
-	let tmp_d
-	if !exists('tmp_d[a:valname_ex].__common')
-		if !exists('tmp_d[a:valname_ex]')
-			if exists('valname_ex')
-				let tmp_d[a:valname_ex].__common = valname_ex
-			else
-				let tmp_d[a:valname_ex].__common = 0
-			endif
-		endif
-	endif
 endfunction "}}}
 
 function! unite_setting_ex#add(dict_name, valname_ex, description, type, val) "{{{
@@ -52,7 +38,6 @@ function! unite_setting_ex#add_title(dict_name, title_name) "{{{
 	let valname_ex = 'title_'.a:title_name
 	call unite_setting_ex#add( a:dict_name, valname_ex, 'perforce clients' , '' , a:title_name)
 endfunction "}}}
-
 function! unite_setting_ex#get(dict_name, valname_ex, kind) "{{{
 	exe 'let tmp_d = '.a:dict_name
 
@@ -80,7 +65,6 @@ function! unite_setting_ex#get(dict_name, valname_ex, kind) "{{{
 
 	return rtns
 endfunction "}}}
-
 function! unite_setting_ex#init(dict_name, file) "{{{
 	exe 'let '.a:dict_name.' = {"__order" : [], "__file" : a:file }'
 	return 
@@ -89,23 +73,22 @@ function! unite_setting_ex#load(dict_name, file) "{{{
 
 	let file_ = expand(a:file)
 	exe 'let tmp_d = '.a:dict_name
-
+	
 	if !filereadable(file_)
 		return
 	endif
 
-	call s:Common.load(file_, {})
+	let load_d = s:Common.load(file_, {})
 
-	let g:tmp_unite_setting.__order = tmp_d.__order
-	let g:tmp_unite_setting.__file  = file_
+	let load_d.__file  = file_
+	let load_d.__order = tmp_d.__order
 
-	call extend(tmp_d, g:tmp_unite_setting)
+	call extend(tmp_d, load_d)
 
+	" ïœêîÇÃèCê≥ÇÇ∑ÇÈ
 	for valname in filter(copy(tmp_d.__order), 'v:val=~"g:"')
 		exe 'let '.valname." = unite_setting_ex#get(a:dict_name, valname, '__common')"
 	endfor
-
-	unlet g:tmp_unite_setting
 
 	return tmp_d
 endfunction "}}}
