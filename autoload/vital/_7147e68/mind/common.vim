@@ -47,12 +47,26 @@ function! s:get_len_sort(lists) "{{{
 endfunction
 "}}}
 function! s:save(name, dict) "{{{
-	let lines = [
-				\ 'let s:save_cpo = &cpo | set cpo&vim',
-				\ 'if exists("g:tmp") | unlet g:tmp | endif',
-				\ 'let g:tmp = '.string(a:dict),
-				\ 'let &cpo = s:save_cpo | unlet s:save_cpo',
-				\ ]
+
+	let tmps  = ['let g:tmp = '] + map(split(string(a:dict), '},\zs'), "'	\\ '.v:val")
+
+	let lines = []
+	call extend(lines, [
+				\ 'let s:save_cpo = &cpo',
+				\ 'set cpo&vim',
+				\ '',
+				\ 'if exists("g:tmp")',
+				\ '	unlet g:tmp',
+				\ 'endif',
+				\ '',
+				\ ])
+
+	call extend(lines, tmps)
+	call extend(lines, [
+				\ '',
+				\ 'let &cpo = s:save_cpo',
+				\ 'unlet s:save_cpo',
+				\ ])
 	call writefile(lines, expand(a:name))
 endfunction
 "}}}

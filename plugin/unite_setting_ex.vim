@@ -1,7 +1,8 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-
+let s:Common = vital#of('unite-setting.vim').import('Mind/Common')
+let s:Debug = vital#of('unite-setting.vim').import('Mind/Debug')
 let s:unite_kind = {
 			\ 'bool'     : 'kind_settings_ex_bool',
 			\ 'list'     : 'kind_settings_ex_var_list',
@@ -44,13 +45,7 @@ endfunction "}}}
 
 function! s:save(dict_name) "{{{
 	exe 'let tmp_d = '.a:dict_name
-
-	let tmps  = split(string(tmp_d), '},\zs')
-	let tmps  = map(tmps, "'\\'.v:val")
-
-	call insert(tmps, 'let g:tmp_unite_setting = ')
-
-	call writefile(tmps ,expand(tmp_d.__file))
+	call s:Common.save(tmp_d.__file, tmp_d)
 endfunction "}}}
 function! s:delete(dict_name, valname_ex, kind, nums) "{{{
 
@@ -145,13 +140,8 @@ function! s:get_orig(dict_name, valname_ex, kind) "{{{
 
 endfunction "}}}
 function! s:get_source_kind(dict_name, valname_ex, kind) "{{{
-	exe 'let tmp_d = '.a:dict_name
 	let type = s:get_type(a:dict_name, a:valname_ex, a:kind)
-	if exists('s:unite_kind[type]')
-		let kind = s:unite_kind[type]
-	else
-		let kind = 'title'
-	endif
+	return get( s:unite_kind, type, 'title')
 	return kind
 endfunction "}}}
 function! s:get_source_word(dict_name, valname_ex, kind) "{{{
@@ -698,6 +688,8 @@ function! s:source.gather_candidates(args, context) "{{{
 	let kind    = '__common'
 
 	" é´èëñºÇ∆ÅAéÊìæä÷êîÇ™ïKóvÇ…Ç»ÇÈ
+	"
+	exe s:Debug.exe_line('')
 
 	return map( copy(orders), "{
 				\ 'word'               : s:get_source_word(dict_name, v:val, kind),
@@ -707,6 +699,7 @@ function! s:source.gather_candidates(args, context) "{{{
 				\ 'action__valname_ex' : v:val,
 				\ 'action__dict_name'  : dict_name,
 				\ }")
+
 
 endfunction "}}}
 let s:settings_ex = deepcopy(s:source)
