@@ -61,32 +61,37 @@ function! s:save(dict_name) "{{{
 	exe 'let tmp_d = '.a:dict_name
 	call s:Common.save(tmp_d.__file, tmp_d)
 endfunction "}}}
-function! s:delete(dict_name, valname_ex, kind, nums) "{{{
+function! s:delete(dict_name, valname_ex, kind, delete_nums) "{{{
 
 	" 並び替え
-	let nums = copy(a:nums)
-	call sort(nums, 's:sort_lager')
+	let delete_nums = copy(a:delete_nums)
+	call sort(delete_nums, 's:sort_lager')
 
 	" 番号の取得
 	let datas = s:get_orig(a:dict_name, a:valname_ex, a:kind)
 
-	" 選択番号の取得
-	let bits = [0]
-	call extend(bits, s:get_bits(a:dict_name, a:valname_ex, a:kind))
+	" 選択番号の削除
+	let nums = datas[0]
 
 	" 削除 ( 大きい数字から削除 ) 
-	for num_ in a:nums
+	for delete_num_ in delete_nums
 		" 番号の更新
-		if exists('datas[num_]')
-			unlet datas[num_]
+		if exists('datas[delete_num_]')
+			unlet datas[delete_num_]
 		endif
-		if exists('bits[num_]')
-			unlet bits[num_]
-		endif
+
+		" 削除
+		for num_ in range(len(nums))
+			if nums[num_] == delete_num_
+				unlet nums[num_]
+			elseif nums[num_] > delete_num_
+				let nums[num_] -= 1
+			endif
+		endfor
 	endfor
 
 	" 選択番号の設定
-	let datas[0] = s:get_num_from_bits(bits)
+	let datas[0] = nums
 
 	" 設定
 	call s:set(a:dict_name, a:valname_ex, a:kind, datas)
@@ -126,16 +131,6 @@ function! s:get_kind(dict_name, valname_ex, kind) "{{{
 		return a:kind
 	endif
 	return '__common'
-endfunction "}}}
-function! s:get_num_from_bits(bits) "{{{
-	let nums  = []
-	for i_ in range(len(a:bits))
-		if a:bits[i_] > 0
-			call add(nums, i_)
-		endif
-	endfor
-
-	return nums
 endfunction "}}}
 function! s:get_orig(dict_name, valname_ex, kind) "{{{
 	exe 'let tmp_d = '.a:dict_name
@@ -248,6 +243,7 @@ function! s:get_strs_on_off_new(dict_name, valname_ex, kind) "{{{
 					\ }")
 	endif
 
+echo datas
 	for num_ in num_flgs
 		let rtns[num_].str = '<'.s:get_str(datas[num_]).'>'
 		let rtns[num_].flg = 1
@@ -616,10 +612,10 @@ let s:kind.action_table.delete = {
 function! s:kind.action_table.delete.func(candidates) "{{{
 
 	" 初期化
-	let valname_ex   = a:candidates[0].action__valname_ex
-	let kind      = a:candidates[0].action__kind
-	let dict_name = a:candidates[0].action__dict_name
-	let nums      = map(copy(a:candidates), 'v:val.action__num')
+	let valname_ex = a:candidates[0].action__valname_ex
+	let kind       = a:candidates[0].action__kind
+	let dict_name  = a:candidates[0].action__dict_name
+	let nums       = map(copy(a:candidates), 'v:val.action__num')
 
 	" 削除する
 	call s:delete(dict_name, valname_ex, kind, nums)
