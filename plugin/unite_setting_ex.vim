@@ -74,20 +74,15 @@ function! s:delete(dict_name, valname_ex, kind, delete_nums) "{{{
 	let nums = datas[0]
 
 	" íœ ( ‘å‚«‚¢”š‚©‚çíœ ) 
-	for delete_num_ in delete_nums
+	for delete_num in delete_nums
 		" ”Ô†‚ÌXV
-		if exists('datas[delete_num_]')
-			unlet datas[delete_num_]
+		if exists('datas[delete_num]')
+			unlet datas[delete_num]
 		endif
 
 		" íœ
-		for num_ in range(len(nums))
-			if nums[num_] == delete_num_
-				unlet nums[num_]
-			elseif nums[num_] > delete_num_
-				let nums[num_] -= 1
-			endif
-		endfor
+		call filter(nums, "v:val != delete_num")
+		call map(nums, "v:val - (v:val > delete_num? 1: 0)")
 	endfor
 
 	" ‘I‘ğ”Ô†‚Ìİ’è
@@ -243,7 +238,6 @@ function! s:get_strs_on_off_new(dict_name, valname_ex, kind) "{{{
 					\ }")
 	endif
 
-echo datas
 	for num_ in num_flgs
 		let rtns[num_].str = '<'.s:get_str(datas[num_]).'>'
 		let rtns[num_].flg = 1
