@@ -646,7 +646,7 @@ let s:source = {
 			\ }
 let s:source.hooks.on_syntax = function("unite_setting#sub_setting_syntax")
 function! s:source.hooks.on_init(args, context) "{{{
-	let a:context.source__dict_name = get(a:args, 0, '')
+	let a:context.source__dict_name = get(a:args, 0, 'g:unite_setting_ex_default_data')
 endfunction "}}}
 function! s:source.hooks.on_close(args, context) "{{{
 	let dict_name = get(a:context, 'source__dict_name')
