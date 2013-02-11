@@ -68,13 +68,10 @@ endfunction "}}}
 function! unite_setting_ex#init(dict_name, file) "{{{
 	exe 'let '.a:dict_name.' = {"__order" : [], "__file" : a:file }'
 endfunction "}}}
-function! unite_setting_ex#init2() "{{{
-	call unite_setting_ex#init('g:unite_setting_ex_default_data', '~/.unite_setting_ex')
-endfunction "}}}
-function! unite_setting_ex#load(dict_name, file) "{{{
+function! unite_setting_ex#load(dict_name, ...) "{{{
 
-	let file_ = expand(a:file)
 	exe 'let tmp_d = '.a:dict_name
+	let file_ = get(tmp_d, '__file', '')
 	
 	if !filereadable(file_)
 		return
@@ -137,7 +134,10 @@ function! s:get_var(valname_ex, type) "{{{
 endfunction
 "}}}
 
-function! unite_setting_ex#add2(data_d, ...)
+function! unite_setting_ex#init2() "{{{
+	call unite_setting_ex#init('g:unite_setting_ex_default_data', '~/.unite_setting_ex')
+endfunction "}}}
+function! unite_setting_ex#add2(data_d, ...) "{{{
 
 	if type(a:data_d) == type({})
 		" ”z—ñ‚É•ÏŠ·‚·‚é
@@ -168,7 +168,12 @@ function! unite_setting_ex#add2(data_d, ...)
 		call unite_setting_ex#add(dict_name, valname_ex, description, type, val)
 	endfor
 
+endfunction 
+"}}}
+function! unite_setting_ex#load2() "{{{
+	call unite_setting_ex#load('g:unite_setting_ex_default_data')
 endfunction "}}}
+
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
