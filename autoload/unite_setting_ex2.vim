@@ -14,7 +14,7 @@ let s:unite_kind = {
 function! unite_setting_ex2#init()
 endfunction
 
-function! Sub_set_settings_ex_select_list_toggle(candidates) "{{{
+function! unite_setting_ex2#select_list_toggle(candidates) "{{{
 
 	let candidates = type(a:candidates) == type([]) ? a:candidates : [a:candidates]
 
@@ -404,44 +404,6 @@ function! s:kind.action_table.edit.func(candidate) "{{{
 endfunction "}}}
 let s:kind_settings_ex_select = deepcopy(s:kind)
 "}}}
-" s:kind_settings_ex_list_select "{{{
-let s:kind = { 
-			\ 'name'           : 'settings_ex_list_select',
-			\ 'default_action' : 'a_toggles',
-			\ 'action_table'   : {},
-			\ 'parents': ['kind_settings_ex_common'],
-			\ }
-let s:kind.action_table.a_toggles = {
-			\ 'is_selectable' : 1,
-			\ 'description' : 'İ’è‚ÌØ‘Ö ( •¡”‘I‘ğ‰Â”\ )',
-			\ 'is_quit'        : 0,
-			\ }
-let s:kind.action_table.a_toggles.func = function("Sub_set_settings_ex_select_list_toggle")
-let s:kind.action_table.a_toggle = {
-			\ 'description' : 'İ’è‚ÌØ‘Ö',
-			\ 'is_quit'        : 0,
-			\ }
-let s:kind.action_table.a_toggle.func = function("Sub_set_settings_ex_select_list_toggle")
-let s:kind.action_table.delete = {
-			\ 'is_selectable' : 1,
-			\ 'description'   : 'delete',
-			\ 'is_quit'        : 0,
-			\ }
-function! s:kind.action_table.delete.func(candidates) "{{{
-
-	" ‰Šú‰»
-	let valname_ex = a:candidates[0].action__valname_ex
-	let kind       = a:candidates[0].action__kind
-	let dict_name  = a:candidates[0].action__dict_name
-	let nums       = map(copy(a:candidates), 'v:val.action__num')
-
-	" íœ‚·‚é
-	call unite_setting_ex2#delete(dict_name, valname_ex, kind, nums)
-
-	call unite_setting_ex2#common_out(dict_name)
-endfunction "}}}
-let s:kind_settings_ex_list_select = deepcopy(s:kind)
-"}}}
 function! unite_setting_ex2#get_valnames(valname) "{{{
 	exe 'let tmp = '.a:valname
 	if a:valname == 'g:'
@@ -590,7 +552,6 @@ endfunction "}}}
 let unite_setting_ex2#settings_ex_list_select = deepcopy(unite_setting_ex2#source)
 "}}}
 
-call unite#define_kind   ( s:kind_settings_ex_list_select   )  | unlet s:kind_settings_ex_list_select
 call unite#define_kind   ( s:kind_settings_ex_select        )  | unlet s:kind_settings_ex_select
 call unite#define_kind   ( s:kind_settings_ex_var           )  | unlet s:kind_settings_ex_var 
 call unite#define_kind   ( s:kind_settings_ex_var_list      )  | unlet s:kind_settings_ex_var_list
