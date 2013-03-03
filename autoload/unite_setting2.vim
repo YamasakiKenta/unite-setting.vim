@@ -10,7 +10,36 @@ let s:valname_to_source_kind_tabel = {
 			\ type({})             : 'kind_settings_list',
 			\ }
 
-"unite_setting2#source_tmpl "{{{
+function! unite_setting2#get_source_kind(valname) "{{{
+	exe 'let Tmp = '.a:valname
+	return s:valname_to_source_kind_tabel[type(Tmp)]
+endfunction "}}}
+function! unite_setting2#get_source_word(valname) "{{{
+	exe 'let Tmp = '.a:valname
+	return printf("%-100s : %s", a:valname, string(Tmp))
+endfunction "}}}
+function! unite_setting2#get_valnames(valname) "{{{
+	exe 'let Tmp = '.a:valname
+	if a:valname == 'g:'
+		let valnames = map(keys(Tmp),
+					\ "'g:'.v:val")
+	elseif type([]) == type(Tmp)
+		let valnames = map(range(len(Tmp)),
+					\ "a:valname.'['.v:val.']'")
+	elseif type({}) == type(Tmp)
+		let valnames = map(keys(Tmp),
+					\ "a:valname.'['''.v:val.''']'")
+	else
+		let valnames = []
+	endif
+
+	return valnames
+endfunction "}}}
+function! unite_setting2#insert_list(list1, list2, num_) "{{{
+	exe 'let tmps = a:list1[0:'.a:num_.'] + a:list2 + a:list1['.(a:num_+1).':]'
+	return tmps
+endfunction "}}}
+
 let unite_setting2#source_tmpl = {
 			\ 'description' : 'show var',
 			\ 'syntax'      : 'uniteSource__settings',
@@ -49,70 +78,6 @@ function! unite_setting2#source_tmpl.change_candidates(args, context) "{{{
 	return rtns
 
 endfunction "}}}
-"}}}
-function! unite_setting2#get_source_kind(valname) "{{{
-	exe 'let Tmp = '.a:valname
-	return s:valname_to_source_kind_tabel[type(Tmp)]
-endfunction "}}}
-function! unite_setting2#get_source_word(valname) "{{{
-	exe 'let Tmp = '.a:valname
-	return printf("%-100s : %s", a:valname, string(Tmp))
-endfunction "}}}
-function! unite_setting2#get_valnames(valname) "{{{
-	exe 'let Tmp = '.a:valname
-	if a:valname == 'g:'
-		let valnames = map(keys(Tmp),
-					\ "'g:'.v:val")
-	elseif type([]) == type(Tmp)
-		let valnames = map(range(len(Tmp)),
-					\ "a:valname.'['.v:val.']'")
-	elseif type({}) == type(Tmp)
-		let valnames = map(keys(Tmp),
-					\ "a:valname.'['''.v:val.''']'")
-	else
-		let valnames = []
-	endif
-
-	return valnames
-endfunction "}}}
-function! unite_setting2#insert_list(list1, list2, num_) "{{{
-	exe 'let tmps = a:list1[0:'.a:num_.'] + a:list2 + a:list1['.(a:num_+1).':]'
-	return tmps
-endfunction "}}}
-
-
-"
-"unite_setting2#kind_settings_list "{{{
-let unite_setting2#kind = { 
-			\ 'name'           : 'kind_settings_list',
-			\ 'default_action' : 'select',
-			\ 'action_table'   : {},
-			\ 'parents': ['kind_settings_common'],
-			\ }
-"let unite_setting2#kind.action_table.select = { "{{{
-let unite_setting2#kind.action_table.select = {
-			\ 'description' : 'select',
-			\ 'is_quit'     : 0,
-			\ }
-function! unite_setting2#kind.action_table.select.func(candidate)
-	let valname = a:candidate.action__valname
-	call unite#start_temporary([['settings_var', valname]])
-endfunction "}}}
-"let unite_setting2#kind.action_table.select_all = { "{{{
-let unite_setting2#kind.action_table.select_all = {
-			\ 'description' : 'select_all',
-			\ 'is_quit'     : 0,
-			\ }
-function! unite_setting2#kind.action_table.select_all.func(candidate)
-	let valname = a:candidate.action__valname
-	call unite#start_temporary([['settings_var_all', valname]])
-endfunction "}}}
-let unite_setting2#kind_settings_list = deepcopy(unite_setting2#kind)
-"}}}
-
-call unite#define_kind   ( unite_setting2#kind_settings_list       ) | unlet unite_setting2#kind_settings_list       
-
-
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
