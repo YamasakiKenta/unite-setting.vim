@@ -2,29 +2,29 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 function! unite#sources#settings_ex#define()
-	return settings_ex
+	return s:settings_ex
 endfunction
 
-let settings_ex = {
+let s:settings_ex = {
 			\ 'name'        : 'settings_ex',
 			\ 'description' : '',
 			\ 'syntax'      : 'uniteSource__settings',
 			\ 'hooks'       : {},
 			\ 'is_quit'     : 0,
 			\ }
-let settings_ex.hooks.on_syntax = function("unite_setting#sub_setting_syntax")
-function! settings_ex.hooks.on_init(args, context) "{{{
+let s:settings_ex.hooks.on_syntax = function("unite_setting#sub_setting_syntax")
+function! s:settings_ex.hooks.on_init(args, context) "{{{
 	if !exists('g:unite_setting_ex_default_data')
 		echo 'LOAD...'
 		call unite_setting_ex#init2()
 	endif
 	let a:context.source__dict_name = get(a:args, 0, 'g:unite_setting_ex_default_data')
 endfunction "}}}
-function! settings_ex.hooks.on_close(args, context) "{{{
+function! s:settings_ex.hooks.on_close(args, context) "{{{
 	let dict_name = get(a:context, 'source__dict_name')
 	call unite_setting_ex2#save(dict_name)
 endfunction "}}}
-function! settings_ex.gather_candidates(args, context) "{{{
+function! s:settings_ex.gather_candidates(args, context) "{{{
 	" ê›íËÇ∑ÇÈçÄñ⁄
 	let dict_name = a:context.source__dict_name
 	exe 'let tmp_d = '.dict_name

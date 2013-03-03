@@ -1,7 +1,7 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-function! unite#kinds#settings_ex_var_list#define()
+function! unite#kinds#kind_settings_ex_var_list#define()
 	return s:kind_settings_ex_var
 endfunction
 let s:kind_settings_ex_var = { 

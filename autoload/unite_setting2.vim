@@ -1,7 +1,7 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-let unite_setting2#valname_to_source_kind_tabel = {
+let s:valname_to_source_kind_tabel = {
 			\ type(0)              : 'kind_settings_common',
 			\ type("")             : 'kind_settings_common',
 			\ type(function("tr")) : 'kind_settings_common',
@@ -52,7 +52,7 @@ endfunction "}}}
 "}}}
 function! unite_setting2#get_source_kind(valname) "{{{
 	exe 'let Tmp = '.a:valname
-	return unite_setting2#valname_to_source_kind_tabel[type(Tmp)]
+	return s:valname_to_source_kind_tabel[type(Tmp)]
 endfunction "}}}
 function! unite_setting2#get_source_word(valname) "{{{
 	exe 'let Tmp = '.a:valname
@@ -210,58 +210,7 @@ function! unite_setting2#kind.action_table.select_all.func(candidate)
 endfunction "}}}
 let unite_setting2#kind_settings_list = deepcopy(unite_setting2#kind)
 "}}}
-let unite_setting2#source_settings_var = deepcopy(unite_setting2#source_tmpl) "{{{
-let unite_setting2#source_settings_var.name        = 'settings_var'
-function! unite_setting2#source_settings_var.gather_candidates(args, context) "{{{
 
-	let valname = a:context.source__valname
-
-	call unite#print_source_message(valname, self.name)
-
-	let valnames = unite_setting2#get_valnames(valname)
-
-	return map( copy(valnames), "{
-				\ 'word'              : unite_setting2#get_source_word(v:val),
-				\ 'kind'              : unite_setting2#get_source_kind(v:val),
-				\ 'action__valname'   : v:val,
-				\ }")
-
-endfunction "}}}
-"}}}
-let unite_setting2#source_settings_var_all = deepcopy(unite_setting2#source_tmpl) "{{{
-let unite_setting2#source_settings_var_all.name        = 'settings_var_all'
-function! unite_setting2#source_settings_var_all.gather_candidates(args, context) "{{{
-
-	let valname = a:context.source__valname
-
-	call unite#print_source_message(valname, self.name)
-
-	let num_     = 0
-	let valnames = [valname]
-
-	while num_ < len(valnames)
-		let tmps = unite_setting2#get_valnames(valnames[num_])
-
-		if len(tmps) > 0
-			let valnames = unite_setting2#insert_list(valnames, tmps, num_)
-			unlet valnames[num_]
-		else
-			let num_ = num_ + 1
-		endif
-
-	endwhile
-
-	return map(copy(valnames), "{
-				\ 'word'              : unite_setting2#get_source_word(v:val),
-				\ 'kind'              : unite_setting2#get_source_kind(v:val),
-				\ 'action__valname'   : v:val,
-				\ }")
-
-endfunction "}}}
-"}}}
-
-call unite#define_source ( unite_setting2#source_settings_var      ) | unlet unite_setting2#source_settings_var
-call unite#define_source ( unite_setting2#source_settings_var_all  ) | unlet unite_setting2#source_settings_var_all
 call unite#define_kind   ( unite_setting2#kind_settings_common     ) | unlet unite_setting2#kind_settings_common     
 call unite#define_kind   ( unite_setting2#kind_settings_list       ) | unlet unite_setting2#kind_settings_list       
 
