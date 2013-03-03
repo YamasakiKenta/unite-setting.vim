@@ -345,58 +345,6 @@ function! unite_setting_ex2#get_valnames(valname) "{{{
 	return valnames
 endfunction "}}}
 "
-"source - unite_setting_ex2#settings_ex "{{{
-let unite_setting_ex2#source = {
-			\ 'name'        : 'settings_ex',
-			\ 'description' : '',
-			\ 'syntax'      : 'uniteSource__settings',
-			\ 'hooks'       : {},
-			\ 'is_quit'     : 0,
-			\ }
-let unite_setting_ex2#source.hooks.on_syntax = function("unite_setting#sub_setting_syntax")
-function! unite_setting_ex2#source.hooks.on_init(args, context) "{{{
-	if !exists('g:unite_setting_ex_default_data')
-		echo 'LOAD...'
-		call unite_setting_ex#init2()
-	endif
-	let a:context.source__dict_name = get(a:args, 0, 'g:unite_setting_ex_default_data')
-endfunction "}}}
-function! unite_setting_ex2#source.hooks.on_close(args, context) "{{{
-	let dict_name = get(a:context, 'source__dict_name')
-	call unite_setting_ex2#save(dict_name)
-endfunction "}}}
-function! unite_setting_ex2#source.gather_candidates(args, context) "{{{
-	" 設定する項目
-	let dict_name = a:context.source__dict_name
-	exe 'let tmp_d = '.dict_name
-
-	call unite#print_source_message(dict_name, self.name)
-
-	" ★ データに登録がない場合は、どうしよう
-	if exists('tmp_d.__order')
-		let orders  = tmp_d.__order
-	else
-		let orders = unite_setting_ex2#get_valnames(dict_name)
-	endif
-
-	" ★ 
-	let kind    = '__common'
-
-	" 辞書名と、取得関数が必要になる
-	"
-	return map( copy(orders), "{
-				\ 'word'               : unite_setting_ex2#get_source_word(dict_name, v:val, kind),
-				\ 'kind'               : unite_setting_ex2#get_source_kind(dict_name, v:val, kind),
-				\ 'action__kind'       : kind,
-				\ 'action__valname'    : unite_setting_ex2#get_source_valname(dict_name, v:val, kind),
-				\ 'action__valname_ex' : v:val,
-				\ 'action__dict_name'  : dict_name,
-				\ }")
-
-
-endfunction "}}}
-let unite_setting_ex2#settings_ex = deepcopy(unite_setting_ex2#source)
-"}}}
 "source - unite_setting_ex2#settings_ex_list_select"{{{
 let unite_setting_ex2#source = {
 			\ 'name'        : 'settings_ex_list_select',
@@ -475,7 +423,6 @@ endfunction "}}}
 let unite_setting_ex2#settings_ex_list_select = deepcopy(unite_setting_ex2#source)
 "}}}
 
-call unite#define_source ( unite_setting_ex2#settings_ex                    )  | unlet unite_setting_ex2#settings_ex
 call unite#define_source ( unite_setting_ex2#settings_ex_list_select        )  | unlet unite_setting_ex2#settings_ex_list_select
 
 let &cpo = unite_setting_ex2#save_cpo
