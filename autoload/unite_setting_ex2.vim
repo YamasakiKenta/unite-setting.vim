@@ -327,32 +327,6 @@ function! unite_setting_ex2#set_next(dict_name, valname_ex, kind) "{{{
 	call unite_setting_ex2#set(a:dict_name, a:valname_ex, a:kind, val )
 endfunction "}}}
 
-" s:kind_settings_ex_var  "{{{
-let s:kind = { 
-			\ 'name'           : 'kind_settings_ex_var',
-			\ 'default_action' : 'edit',
-			\ 'action_table'   : {},
-			\ 'parents': ['kind_settings_ex_common'],
-			\ }
-let s:kind.action_table.edit = {
-			\ 'description' : 'ê›íËï“èW',
-			\ 'is_quit'     : 0,
-			\ }"
-function! s:kind.action_table.edit.func(candidate) "{{{
-	let dict_name  = a:candidate.action__dict_name
-	let valname_ex = a:candidate.action__valname_ex
-	let kind       = a:candidate.action__kind
-	let tmp        = input("",string(unite_setting_ex2#get_orig(dict_name, valname_ex, kind)))
-
-	if tmp != ""
-		exe 'let val = '.tmp
-		call unite_setting_ex2#set(dict_name, valname_ex, kind, val)
-	endif
-
-	call unite_setting_ex2#common_out(dict_name)
-endfunction "}}}
-let s:kind_settings_ex_var = deepcopy(s:kind)
-"}}}
 " s:kind_settings_ex_var_list  "{{{
 let s:kind = { 
 			\ 'name'           : 'kind_settings_ex_var_list',
