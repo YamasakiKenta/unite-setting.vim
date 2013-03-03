@@ -60,6 +60,7 @@ function! unite_setting_ex2#cnv_list_ex_select(dict_name, valname_ex, kind, type
 		call unite_setting_ex2#set(a:dict_name, a:valname_ex, a:kind, val)
 		
 endfunction "}}}
+let g:test3 = [[1], 'test', 'test2']
 function! unite_setting_ex2#save(dict_name) "{{{
 	exe 'let tmp_d = '.a:dict_name
 	call unite_setting_ex2#Common.save(tmp_d.__file, tmp_d)
@@ -292,6 +293,10 @@ function! unite_setting_ex2#set_type(dict_name, valname_ex, kind, type) "{{{
 
 		let tmp_d[a:valname_ex].__type = a:type
 
+		if a:type == 'bool'
+			let tmp_d[a:valname_ex][a:kind] = s:set_type_bool(tmp_d[a:valname_ex][a:kind])
+		endif
+
 		exe 'let '.a:dict_name.' = tmp_d'
 endfunction "}}}
 
@@ -351,6 +356,11 @@ function! unite_setting_ex2#get_valnames(valname) "{{{
 
 	return valnames
 endfunction "}}}
+
+function! s:set_type_bool(val) "{{{
+	return type(a:val) == type(0) ? a:val : 0
+endfunction
+"}}}
 
 let &cpo = unite_setting_ex2#save_cpo
 unlet unite_setting_ex2#save_cpo
