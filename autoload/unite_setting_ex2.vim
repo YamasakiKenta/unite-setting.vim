@@ -404,45 +404,6 @@ function! s:kind.action_table.edit.func(candidate) "{{{
 endfunction "}}}
 let s:kind_settings_ex_select = deepcopy(s:kind)
 "}}}
-" s:kind_settings_ex_list "{{{
-let s:kind = { 
-			\ 'name'           : 'kind_settings_ex_list',
-			\ 'default_action' : 'a_toggle',
-			\ 'action_table'   : {},
-			\ 'parents': ['kind_settings_ex_common', 'kind_settings_common'],
-			\ }
-" action
-let s:kind.action_table.a_toggle = {
-			\ 'description' : 'ëIë',
-			\ 'is_quit'     : 0,
-			\ }
-function! s:kind.action_table.a_toggle.func(candidate) "{{{
-	let tmp_d = {
-				\ 'dict_name' : a:candidate.action__dict_name,
-				\ 'valname_ex'   : a:candidate.action__valname_ex,
-				\ 'kind'      : a:candidate.action__kind,
-				\ }
-	call unite#start_temporary([['settings_ex_list_select', tmp_d]])
-endfunction "}}}
-let s:kind.action_table.edit = {
-			\ 'description' : 'ê›íËï“èW',
-			\ 'is_quit'     : 0,
-			\ }"
-function! s:kind.action_table.edit.func(candidate) "{{{
-	let dict_name = a:candidate.action__dict_name
-	let valname_ex   = a:candidate.action__valname_ex
-	let kind      = a:candidate.action__kind
-	let tmp       = input("",string(unite_setting_ex2#get_orig(dict_name, valname_ex, kind)))
-
-	if tmp != ""
-		exe 'let val = '.tmp
-		call unite_setting_ex2#set(dict_name, valname_ex, kind, val)
-	endif
-
-	call unite_setting_ex2#common_out(dict_name)
-endfunction "}}}
-let s:kind_settings_ex_list = deepcopy(s:kind)
-"}}}
 " s:kind_settings_ex_list_select "{{{
 let s:kind = { 
 			\ 'name'           : 'settings_ex_list_select',
@@ -629,7 +590,6 @@ endfunction "}}}
 let unite_setting_ex2#settings_ex_list_select = deepcopy(unite_setting_ex2#source)
 "}}}
 
-call unite#define_kind   ( s:kind_settings_ex_list          )  | unlet s:kind_settings_ex_list
 call unite#define_kind   ( s:kind_settings_ex_list_select   )  | unlet s:kind_settings_ex_list_select
 call unite#define_kind   ( s:kind_settings_ex_select        )  | unlet s:kind_settings_ex_select
 call unite#define_kind   ( s:kind_settings_ex_var           )  | unlet s:kind_settings_ex_var 
