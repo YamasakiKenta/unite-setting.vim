@@ -646,6 +646,10 @@ let s:source = {
 			\ }
 let s:source.hooks.on_syntax = function("unite_setting#sub_setting_syntax")
 function! s:source.hooks.on_init(args, context) "{{{
+	if !exists('g:unite_setting_ex_default_data')
+		echo 'LOAD...'
+		call unite_setting_ex#init2()
+	endif
 	let a:context.source__dict_name = get(a:args, 0, 'g:unite_setting_ex_default_data')
 endfunction "}}}
 function! s:source.hooks.on_close(args, context) "{{{
