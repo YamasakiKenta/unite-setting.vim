@@ -4,7 +4,6 @@ set cpo&vim
 function! unite#kinds#kind_settings_ex_select#define()
 	return s:kind_settings_ex_select
 endfunction
-"s:kind_settings_ex_select_settings_ex_select "{{{
 let s:kind_settings_ex_select = { 
 			\ 'name'           : 'kind_settings_ex_select',
 			\ 'default_action' : 'a_toggle',
@@ -36,8 +35,6 @@ function! s:kind_settings_ex_select.action_table.edit.func(candidate) "{{{
 				\ }
 	call unite#start_temporary([['settings_ex_list_select', tmp_d]], {'default_action' : 'a_toggle'})
 endfunction "}}}
-let s:kind_settings_ex_select_settings_ex_select = deepcopy(s:kind_settings_ex_select)
-"}}}
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
