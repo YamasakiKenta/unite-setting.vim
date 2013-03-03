@@ -1,7 +1,7 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-let s:valname_to_source_kind_tabel = {
+let unite_setting2#valname_to_source_kind_tabel = {
 			\ type(0)              : 'kind_settings_common',
 			\ type("")             : 'kind_settings_common',
 			\ type(function("tr")) : 'kind_settings_common',
@@ -10,18 +10,18 @@ let s:valname_to_source_kind_tabel = {
 			\ type({})             : 'kind_settings_list',
 			\ }
 
-"s:source_tmpl "{{{
-let s:source_tmpl = {
+"unite_setting2#source_tmpl "{{{
+let unite_setting2#source_tmpl = {
 			\ 'description' : 'show var',
 			\ 'syntax'      : 'uniteSource__settings',
 			\ 'hooks'       : {},
 			\ 'is_quit'     : 0,
 			\ }
-let s:source_tmpl.hooks.on_syntax = function("unite_setting#sub_setting_syntax")
-function! s:source_tmpl.hooks.on_init(args, context) "{{{
+let unite_setting2#source_tmpl.hooks.on_syntax = function("unite_setting#sub_setting_syntax")
+function! unite_setting2#source_tmpl.hooks.on_init(args, context) "{{{
 	let a:context.source__valname = get(a:args, 0, 'g:')
 endfunction "}}}
-function! s:source_tmpl.change_candidates(args, context) "{{{
+function! unite_setting2#source_tmpl.change_candidates(args, context) "{{{
 
 	let new_    = a:context.input
 	let valname = a:context.source__valname
@@ -50,15 +50,15 @@ function! s:source_tmpl.change_candidates(args, context) "{{{
 
 endfunction "}}}
 "}}}
-function! s:get_source_kind(valname) "{{{
+function! unite_setting2#get_source_kind(valname) "{{{
 	exe 'let Tmp = '.a:valname
-	return s:valname_to_source_kind_tabel[type(Tmp)]
+	return unite_setting2#valname_to_source_kind_tabel[type(Tmp)]
 endfunction "}}}
-function! s:get_source_word(valname) "{{{
+function! unite_setting2#get_source_word(valname) "{{{
 	exe 'let Tmp = '.a:valname
 	return printf("%-100s : %s", a:valname, string(Tmp))
 endfunction "}}}
-function! s:get_valnames(valname) "{{{
+function! unite_setting2#get_valnames(valname) "{{{
 	exe 'let Tmp = '.a:valname
 	if a:valname == 'g:'
 		let valnames = map(keys(Tmp),
@@ -75,25 +75,25 @@ function! s:get_valnames(valname) "{{{
 
 	return valnames
 endfunction "}}}
-function! s:insert_list(list1, list2, num_) "{{{
+function! unite_setting2#insert_list(list1, list2, num_) "{{{
 	exe 'let tmps = a:list1[0:'.a:num_.'] + a:list2 + a:list1['.(a:num_+1).':]'
 	return tmps
 endfunction "}}}
 
 
 "
-" s:kind_settings_common "{{{
-let s:kind = { 
+" unite_setting2#kind_settings_common "{{{
+let unite_setting2#kind = { 
 			\ 'name'           : 'kind_settings_common',
 			\ 'default_action' : 'edit',
 			\ 'action_table'   : {},
 			\ }
-"let s:kind.action_table.edit = { "{{{
-let s:kind.action_table.edit = {
+"let unite_setting2#kind.action_table.edit = { "{{{
+let unite_setting2#kind.action_table.edit = {
 			\ 'description'   : 'val setting',
 			\ 'is_quit'       : 0,
 			\ }
-function! s:kind.action_table.edit.func(candidate) 
+function! unite_setting2#kind.action_table.edit.func(candidate) 
 	let valname   = a:candidate.action__valname
 
 	if !exists(valname)
@@ -118,12 +118,12 @@ function! s:kind.action_table.edit.func(candidate)
 	call unite#force_redraw()
 endfunction
 "}}}
-"let s:kind.action_table.delete = { "{{{
-let s:kind.action_table.delete = {
+"let unite_setting2#kind.action_table.delete = { "{{{
+let unite_setting2#kind.action_table.delete = {
 			\ 'description'   : 'delete',
 			\ 'is_quit'       : 0,
 			\ }
-function! s:kind.action_table.delete.func(candidate) 
+function! unite_setting2#kind.action_table.delete.func(candidate) 
 
 	let valname   = a:candidate.action__valname
 
@@ -132,12 +132,12 @@ function! s:kind.action_table.delete.func(candidate)
 	call unite#force_redraw()
 endfunction
 "}}}
-"let s:kind.action_table.preview = { "{{{
-let s:kind.action_table.preview = {
+"let unite_setting2#kind.action_table.preview = { "{{{
+let unite_setting2#kind.action_table.preview = {
 			\ 'description'   : 'preview',
 			\ 'is_quit'       : 0,
 			\ }
-function! s:kind.action_table.preview.func(candidate) 
+function! unite_setting2#kind.action_table.preview.func(candidate) 
 	try
 		let valname   = a:candidate.action__valname
 		exe 'help '.valname
@@ -148,13 +148,13 @@ function! s:kind.action_table.preview.func(candidate)
 	endtry
 endfunction
 "}}}
-"let s:kind.action_table.yank = { "{{{
-let s:kind.action_table.yank = {
+"let unite_setting2#kind.action_table.yank = { "{{{
+let unite_setting2#kind.action_table.yank = {
 			\ 'description'   : 'yank',
 			\ 'is_quit'       : 0,
 			\ 'is_selectable' : 1,
 			\ }
-function! s:kind.action_table.yank.func(candidates) 
+function! unite_setting2#kind.action_table.yank.func(candidates) 
 	let @" = ''
 	for candidate in a:candidates
 		exe 'let valname = "let ".candidate.action__valname." = ".string('.candidate.action__valname.')."\n"'
@@ -164,13 +164,13 @@ function! s:kind.action_table.yank.func(candidates)
 	let @* = @"
 endfunction
 "}}}
-"let s:kind.action_table.delete = { "{{{
-let s:kind.action_table.delete = {
+"let unite_setting2#kind.action_table.delete = { "{{{
+let unite_setting2#kind.action_table.delete = {
 			\ 'description'   : 'yank data',
 			\ 'is_quit'       : 0,
 			\ 'is_selectable' : 1,
 			\ }
-function! s:kind.action_table.delete.func(candidates) 
+function! unite_setting2#kind.action_table.delete.func(candidates) 
 	let @" = ''
 	let @* = ''
 	for candidate in a:candidates
@@ -181,56 +181,56 @@ function! s:kind.action_table.delete.func(candidates)
 	let @* = @"
 endfunction
 "}}}
-let s:kind_settings_common = deepcopy(s:kind)
+let unite_setting2#kind_settings_common = deepcopy(unite_setting2#kind)
 "}}}
-"s:kind_settings_list "{{{
-let s:kind = { 
+"unite_setting2#kind_settings_list "{{{
+let unite_setting2#kind = { 
 			\ 'name'           : 'kind_settings_list',
 			\ 'default_action' : 'select',
 			\ 'action_table'   : {},
 			\ 'parents': ['kind_settings_common'],
 			\ }
-"let s:kind.action_table.select = { "{{{
-let s:kind.action_table.select = {
+"let unite_setting2#kind.action_table.select = { "{{{
+let unite_setting2#kind.action_table.select = {
 			\ 'description' : 'select',
 			\ 'is_quit'     : 0,
 			\ }
-function! s:kind.action_table.select.func(candidate)
+function! unite_setting2#kind.action_table.select.func(candidate)
 	let valname = a:candidate.action__valname
 	call unite#start_temporary([['settings_var', valname]])
 endfunction "}}}
-"let s:kind.action_table.select_all = { "{{{
-let s:kind.action_table.select_all = {
+"let unite_setting2#kind.action_table.select_all = { "{{{
+let unite_setting2#kind.action_table.select_all = {
 			\ 'description' : 'select_all',
 			\ 'is_quit'     : 0,
 			\ }
-function! s:kind.action_table.select_all.func(candidate)
+function! unite_setting2#kind.action_table.select_all.func(candidate)
 	let valname = a:candidate.action__valname
 	call unite#start_temporary([['settings_var_all', valname]])
 endfunction "}}}
-let s:kind_settings_list = deepcopy(s:kind)
+let unite_setting2#kind_settings_list = deepcopy(unite_setting2#kind)
 "}}}
-let s:source_settings_var = deepcopy(s:source_tmpl) "{{{
-let s:source_settings_var.name        = 'settings_var'
-function! s:source_settings_var.gather_candidates(args, context) "{{{
+let unite_setting2#source_settings_var = deepcopy(unite_setting2#source_tmpl) "{{{
+let unite_setting2#source_settings_var.name        = 'settings_var'
+function! unite_setting2#source_settings_var.gather_candidates(args, context) "{{{
 
 	let valname = a:context.source__valname
 
 	call unite#print_source_message(valname, self.name)
 
-	let valnames = s:get_valnames(valname)
+	let valnames = unite_setting2#get_valnames(valname)
 
 	return map( copy(valnames), "{
-				\ 'word'              : s:get_source_word(v:val),
-				\ 'kind'              : s:get_source_kind(v:val),
+				\ 'word'              : unite_setting2#get_source_word(v:val),
+				\ 'kind'              : unite_setting2#get_source_kind(v:val),
 				\ 'action__valname'   : v:val,
 				\ }")
 
 endfunction "}}}
 "}}}
-let s:source_settings_var_all = deepcopy(s:source_tmpl) "{{{
-let s:source_settings_var_all.name        = 'settings_var_all'
-function! s:source_settings_var_all.gather_candidates(args, context) "{{{
+let unite_setting2#source_settings_var_all = deepcopy(unite_setting2#source_tmpl) "{{{
+let unite_setting2#source_settings_var_all.name        = 'settings_var_all'
+function! unite_setting2#source_settings_var_all.gather_candidates(args, context) "{{{
 
 	let valname = a:context.source__valname
 
@@ -240,10 +240,10 @@ function! s:source_settings_var_all.gather_candidates(args, context) "{{{
 	let valnames = [valname]
 
 	while num_ < len(valnames)
-		let tmps = s:get_valnames(valnames[num_])
+		let tmps = unite_setting2#get_valnames(valnames[num_])
 
 		if len(tmps) > 0
-			let valnames = s:insert_list(valnames, tmps, num_)
+			let valnames = unite_setting2#insert_list(valnames, tmps, num_)
 			unlet valnames[num_]
 		else
 			let num_ = num_ + 1
@@ -252,18 +252,18 @@ function! s:source_settings_var_all.gather_candidates(args, context) "{{{
 	endwhile
 
 	return map(copy(valnames), "{
-				\ 'word'              : s:get_source_word(v:val),
-				\ 'kind'              : s:get_source_kind(v:val),
+				\ 'word'              : unite_setting2#get_source_word(v:val),
+				\ 'kind'              : unite_setting2#get_source_kind(v:val),
 				\ 'action__valname'   : v:val,
 				\ }")
 
 endfunction "}}}
 "}}}
 
-call unite#define_source ( s:source_settings_var      ) | unlet s:source_settings_var
-call unite#define_source ( s:source_settings_var_all  ) | unlet s:source_settings_var_all
-call unite#define_kind   ( s:kind_settings_common     ) | unlet s:kind_settings_common     
-call unite#define_kind   ( s:kind_settings_list       ) | unlet s:kind_settings_list       
+call unite#define_source ( unite_setting2#source_settings_var      ) | unlet unite_setting2#source_settings_var
+call unite#define_source ( unite_setting2#source_settings_var_all  ) | unlet unite_setting2#source_settings_var_all
+call unite#define_kind   ( unite_setting2#kind_settings_common     ) | unlet unite_setting2#kind_settings_common     
+call unite#define_kind   ( unite_setting2#kind_settings_list       ) | unlet unite_setting2#kind_settings_list       
 
 
 
