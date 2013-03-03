@@ -241,10 +241,17 @@ function! unite_setting_ex2#get_strs_on_off_new(dict_name, valname_ex, kind) "{{
 					\ }")
 	endif
 
-	for num_ in num_flgs
-		let rtns[num_].str = '<'.unite_setting_ex2#get_str(datas[num_]).'>'
-		let rtns[num_].flg = 1
-	endfor
+	try 
+		for num_ in num_flgs
+			let rtns[num_].str = '<'.unite_setting_ex2#get_str(get(datas, num_, '*ERROR')).'>'
+			let rtns[num_].flg = 1
+		endfor
+	catch
+		" š V‹K’Ç‰Á‚Ìê‡ƒGƒ‰[‚ª”­¶‚·‚é
+		echo num_
+		echo rtns
+	endtry
+
 
 	if !exists('rtns')
 		let rtns = [{'str' : '', 'flg' : 0}]
