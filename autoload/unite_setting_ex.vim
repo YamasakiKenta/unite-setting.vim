@@ -8,7 +8,9 @@ function! s:get_lists(datas) "{{{
 	let rtns = []
 
 	for num_ in filter(a:datas[0], 'v:val < len(a:datas)+1')
-		call add(rtns, a:datas[num_])
+		if exists('a:datas[num_]')
+			call add(rtns, a:datas[num_])
+		endif
 	endfor
 
 	return rtns
