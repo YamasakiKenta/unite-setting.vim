@@ -327,23 +327,6 @@ function! unite_setting_ex2#set_next(dict_name, valname_ex, kind) "{{{
 	call unite_setting_ex2#set(a:dict_name, a:valname_ex, a:kind, val )
 endfunction "}}}
 
-" s:kind_settings_ex_var_list  "{{{
-let s:kind = { 
-			\ 'name'           : 'kind_settings_ex_var_list',
-			\ 'default_action' : 'select',
-			\ 'action_table'   : {},
-			\ 'parents': ['kind_settings_ex_common'],
-			\ }
-let s:kind.action_table.select = {
-			\ 'description' : 'ê›íËï“èW',
-			\ 'is_quit'     : 0,
-			\ }"
-function! s:kind.action_table.select.func(candidate) "{{{
-	let valname   = a:candidate.action__valname
-	call unite#start_temporary([['settings_var', valname]])
-endfunction "}}}
-let s:kind_settings_ex_var_list = deepcopy(s:kind)
-"}}}
 function! unite_setting_ex2#get_valnames(valname) "{{{
 	exe 'let tmp = '.a:valname
 	if a:valname == 'g:'
@@ -492,8 +475,6 @@ endfunction "}}}
 let unite_setting_ex2#settings_ex_list_select = deepcopy(unite_setting_ex2#source)
 "}}}
 
-call unite#define_kind   ( s:kind_settings_ex_var           )  | unlet s:kind_settings_ex_var 
-call unite#define_kind   ( s:kind_settings_ex_var_list      )  | unlet s:kind_settings_ex_var_list
 call unite#define_source ( unite_setting_ex2#settings_ex                    )  | unlet unite_setting_ex2#settings_ex
 call unite#define_source ( unite_setting_ex2#settings_ex_list_select        )  | unlet unite_setting_ex2#settings_ex_list_select
 
