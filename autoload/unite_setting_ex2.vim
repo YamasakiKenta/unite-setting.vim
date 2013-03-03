@@ -370,40 +370,6 @@ function! s:kind.action_table.select.func(candidate) "{{{
 endfunction "}}}
 let s:kind_settings_ex_var_list = deepcopy(s:kind)
 "}}}
-"s:kind_settings_ex_select "{{{
-let s:kind = { 
-			\ 'name'           : 'kind_settings_ex_select',
-			\ 'default_action' : 'a_toggle',
-			\ 'action_table'   : {},
-			\ 'parents': ['kind_settings_ex_common', 'kind_settings_common'],
-			\ }
-let s:kind.action_table.a_toggle = {
-			\ 'description' : '‘I‘ð',
-			\ 'is_quit'     : 0,
-			\ }
-function! s:kind.action_table.a_toggle.func(candidate) "{{{
-	let dict_name  = a:candidate.action__dict_name
-	let valname_ex = a:candidate.action__valname_ex
-	let kind       = a:candidate.action__kind
-
-	call unite_setting_ex2#set_next(dict_name, valname_ex, kind)
-	call unite_setting_ex2#common_out(dict_name)
-endfunction "}}}
-let s:kind.action_table.edit = {
-			\ 'description' : 'edit',
-			\ 'is_quit'     : 0,
-			\ }
-function! s:kind.action_table.edit.func(candidate) "{{{
-	let tmp_d = {
-				\ 'dict_name' : a:candidate.action__dict_name,
-				\ 'valname_ex'   : a:candidate.action__valname_ex,
-				\ 'kind'      : a:candidate.action__kind,
-				\ 'only_'     : 1,
-				\ }
-	call unite#start_temporary([['settings_ex_list_select', tmp_d]], {'default_action' : 'a_toggle'})
-endfunction "}}}
-let s:kind_settings_ex_select = deepcopy(s:kind)
-"}}}
 function! unite_setting_ex2#get_valnames(valname) "{{{
 	exe 'let tmp = '.a:valname
 	if a:valname == 'g:'
@@ -552,7 +518,6 @@ endfunction "}}}
 let unite_setting_ex2#settings_ex_list_select = deepcopy(unite_setting_ex2#source)
 "}}}
 
-call unite#define_kind   ( s:kind_settings_ex_select        )  | unlet s:kind_settings_ex_select
 call unite#define_kind   ( s:kind_settings_ex_var           )  | unlet s:kind_settings_ex_var 
 call unite#define_kind   ( s:kind_settings_ex_var_list      )  | unlet s:kind_settings_ex_var_list
 call unite#define_source ( unite_setting_ex2#settings_ex                    )  | unlet unite_setting_ex2#settings_ex
