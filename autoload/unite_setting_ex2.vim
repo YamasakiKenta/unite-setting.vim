@@ -147,7 +147,6 @@ endfunction "}}}
 function! unite_setting_ex2#get_source_kind(dict_name, valname_ex, kind) "{{{
 	let type = unite_setting_ex2#get_type(a:dict_name, a:valname_ex, a:kind)
 	return get( s:unite_kind, type, 'title')
-	return kind
 endfunction "}}}
 function! unite_setting_ex2#get_source_word(dict_name, valname_ex, kind) "{{{
 	exe 'let tmp_d = '.a:dict_name
