@@ -1,8 +1,9 @@
 let unite_setting_ex2#save_cpo = &cpo
 set cpo&vim
 
-let unite_setting_ex2#Common = vital#of('unite-setting.vim').import('Mind/Common')
-let unite_setting_ex2#Debug = vital#of('unite-setting.vim').import('Mind/Debug')
+let s:L = vital#of('unite-setting.vim')
+let s:Common = s:L.import('Mind.Common')
+
 let s:unite_kind = {
 			\ 'bool'     : 'kind_settings_ex_bool',
 			\ 'list'     : 'kind_settings_ex_var_list',
@@ -63,7 +64,7 @@ endfunction "}}}
 let g:test3 = [[1], 'test', 'test2']
 function! unite_setting_ex2#save(dict_name) "{{{
 	exe 'let tmp_d = '.a:dict_name
-	call unite_setting_ex2#Common.save(tmp_d.__file, tmp_d)
+	call s:Common.save(tmp_d.__file, tmp_d)
 endfunction "}}}
 function! unite_setting_ex2#delete(dict_name, valname_ex, kind, delete_nums) "{{{
 
@@ -146,7 +147,7 @@ function! unite_setting_ex2#get_orig(dict_name, valname_ex, kind) "{{{
 endfunction "}}}
 function! unite_setting_ex2#get_source_kind(dict_name, valname_ex, kind) "{{{
 	let type = unite_setting_ex2#get_type(a:dict_name, a:valname_ex, a:kind)
-	return get( s:unite_kind, type, 'title')
+	return get( s:unite_kind, type, 'k_title')
 endfunction "}}}
 function! unite_setting_ex2#get_source_word(dict_name, valname_ex, kind) "{{{
 	exe 'let tmp_d = '.a:dict_name

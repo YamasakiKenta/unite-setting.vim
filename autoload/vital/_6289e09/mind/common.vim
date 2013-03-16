@@ -72,6 +72,10 @@ endfunction
 "}}}
 function! s:load(name, default) "{{{
 	" ファイルを読み込む
+	if exists('g:tmp')
+		unlet g:tmp
+	endif
+
 	if filereadable(expand(a:name))
 		exe 'so '.a:name
 	endif
@@ -294,13 +298,17 @@ function! s:add_uniq(datas, val) "{{{
 	" 辞書型の値に同じ値がない場合は、先頭に追加する
 	let dict_d = s:_get_dict_from_list
 
-	for val in s:Common.get_list(a:val)
+	for val in s:get_list(a:val)
 		if !exists('dict_d[val]')
 			call add(datas, val)
 		endif
 	endfor
 
 	return datas
+endfunction
+"}}}
+function! s:get_now_filename() "{{{
+	return perforce#common#get_kk(expand("%:p"))
 endfunction
 "}}}
 let &cpo = s:save_cpo
