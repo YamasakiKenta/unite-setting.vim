@@ -4,6 +4,7 @@ setl enc=utf8
 
 let s:L = vital#of('unite-setting.vim')
 let s:Common = s:L.import('Mind.Common')
+let s:Sjis = s:L.import('Mind.Sjis')
 
 let s:unite_kind = {
 			\ 'bool'     : 'kind_settings_ex_bool',
@@ -165,7 +166,7 @@ function! unite_setting_ex2#get_source_word(dict_name, valname_ex, kind) "{{{
 		let rtn = '"'.a:valname_ex.'"'
 	endif
 
-	return printf("%10s %s", type, rtn)
+	return s:Sjis.printf("%10s %s", type, rtn)
 endfunction "}}}
 function! unite_setting_ex2#get_source_word_from_bool(dict_name, valname_ex, kind) "{{{
 	let str =  unite_setting_ex#get(a:dict_name, a:valname_ex, a:kind) ? 
@@ -189,7 +190,7 @@ function! unite_setting_ex2#get_source_word_sub(dict_name, valname_ex, kind, str
 		let description = tmp_d[a:valname_ex].__description
 	endif
 
-	return printf(' %-100s %50s - %s', 
+	return s:Sjis.printf(' %-100s %50s - %s', 
 				\ description,
 				\ unite_setting_ex2#get_source_word_sub_type(a:dict_name, a:valname_ex, a:kind),
 				\ a:str,
