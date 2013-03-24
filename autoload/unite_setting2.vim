@@ -1,5 +1,6 @@
 let s:save_cpo = &cpo
 set cpo&vim
+setl enc=utf8
 
 let s:valname_to_source_kind_tabel = {
 			\ type(0)              : 'kind_settings_common',

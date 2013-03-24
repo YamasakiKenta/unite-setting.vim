@@ -1,5 +1,6 @@
 let s:save_cpo = &cpo
 set cpo&vim
+setl enc=utf8
 
 function! unite#kinds#kind_settings_ex_list_select#define()
 	return s:kind_settings_ex_list_select
@@ -12,14 +13,14 @@ let s:kind_settings_ex_list_select = {
 			\ }
 let s:kind_settings_ex_list_select.action_table.a_toggles = {
 			\ 'is_selectable' : 1,
-			\ 'description' : 'İ’è‚ÌØ‘Ö ( •¡”‘I‘ğ‰Â”\ )',
+			\ 'description' : 'è¨­å®šã®åˆ‡æ›¿ ( è¤‡æ•°é¸æŠå¯èƒ½ )',
 			\ 'is_quit'        : 0,
 			\ }
 let s:kind_settings_ex_list_select.action_table.a_toggles.func 
 			\ = function("unite_setting_ex2#select_list_toggle")
 
 let s:kind_settings_ex_list_select.action_table.a_toggle = {
-			\ 'description' : 'İ’è‚ÌØ‘Ö',
+			\ 'description' : 'è¨­å®šã®åˆ‡æ›¿',
 			\ 'is_quit'        : 0,
 			\ }
 let s:kind_settings_ex_list_select.action_table.a_toggle.func 
@@ -32,13 +33,13 @@ let s:kind_settings_ex_list_select.action_table.delete = {
 			\ }
 function! s:kind_settings_ex_list_select.action_table.delete.func(candidates) "{{{
 
-	" ‰Šú‰»
+	" åˆæœŸåŒ–
 	let valname_ex = a:candidates[0].action__valname_ex
 	let kind       = a:candidates[0].action__kind
 	let dict_name  = a:candidates[0].action__dict_name
 	let nums       = map(copy(a:candidates), 'v:val.action__num')
 
-	" íœ‚·‚é
+	" å‰Šé™¤ã™ã‚‹
 	call unite_setting_ex2#delete(dict_name, valname_ex, kind, nums)
 
 	call unite_setting_ex2#common_out(dict_name)

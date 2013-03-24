@@ -1,5 +1,6 @@
 let s:save_cpo = &cpo
 set cpo&vim
+setl enc=utf8
 
 let s:Common = vital#of('unite-setting.vim').import('Mind.Common')
 
@@ -43,11 +44,11 @@ endfunction "}}}
 function! unite_setting_ex#get(dict_name, valname_ex, kind) "{{{
 	exe 'let tmp_d = '.a:dict_name
 
-	" “o˜^‚ª‚È‚¢ê‡
+	" ç™»éŒ²ãŒãªã„å ´åˆ
 	if !exists('tmp_d[a:valname_ex][a:kind]')
 		let tmp_d[a:valname_ex][a:kind] = tmp_d[a:valname_ex].__common
 
-		" š g:‚Æ‚Ì“¯Šú
+		" â˜… g:ã¨ã®åŒæœŸ
 		if exists(a:valname_ex)
 			exe 'return '.a:valname_ex
 		endif
@@ -88,7 +89,7 @@ function! unite_setting_ex#load(dict_name, ...) "{{{
 
 	call extend(tmp_d, load_d)
 
-	" •Ï”‚ÌC³‚ğ‚·‚é
+	" å¤‰æ•°ã®ä¿®æ­£ã‚’ã™ã‚‹
 	for valname in filter(copy(tmp_d.__order), 'v:val=~"g:"')
 		exe 'let '.valname." = unite_setting_ex#get(a:dict_name, valname, '__common')"
 	endfor
@@ -144,15 +145,15 @@ endfunction "}}}
 function! unite_setting_ex#add2(data_d, ...) "{{{
 
 	if type(a:data_d) == type({})
-		" ”z—ñ‚É•ÏŠ·‚·‚é
+		" é…åˆ—ã«å¤‰æ›ã™ã‚‹
 		let data_ds = [a:data_d]
 	else
-		" •Ï”–¼‚Ì‚İ‚Ìê‡
+		" å¤‰æ•°åã®ã¿ã®å ´åˆ
 
 		let data_ds = []
 		let data_d = {}
 
-		" ”z—ñ‚É•ÏŠ·‚·‚é
+		" é…åˆ—ã«å¤‰æ›ã™ã‚‹
 		let valname_exs = extend([a:data_d], a:000)
 		for valname_ex in valname_exs
 			let  data_d.valname_ex = valname_ex
