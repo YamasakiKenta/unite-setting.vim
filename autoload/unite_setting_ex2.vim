@@ -1,6 +1,5 @@
 let unite_setting_ex2#save_cpo = &cpo
 set cpo&vim
-setl enc=utf8
 
 let s:L = vital#of('unite-setting.vim')
 let s:Common = s:L.import('Mind.Common')
@@ -34,7 +33,7 @@ function! unite_setting_ex2#select_list_toggle(candidates) "{{{
 		endif
 	endfor
 
-	" æ–°è¦è¿½åŠ ã®å ´åˆ
+	" V‹K’Ç‰Á‚Ìê‡
 	if candidates[0].action__new != ''
 		call insert(tmps, candidates[0].action__new, 1)
 		call map(nums, "v:val+1")
@@ -70,32 +69,32 @@ function! unite_setting_ex2#save(dict_name) "{{{
 endfunction "}}}
 function! unite_setting_ex2#delete(dict_name, valname_ex, kind, delete_nums) "{{{
 
-	" ä¸¦ã³æ›¿ãˆ
+	" •À‚Ñ‘Ö‚¦
 	let delete_nums = copy(a:delete_nums)
 	call sort(delete_nums, 'unite_setting_ex2#sort_lager')
 
-	" ç•ªå·ã®å–å¾—
+	" ”Ô†‚Ìæ“¾
 	let datas = unite_setting_ex2#get_orig(a:dict_name, a:valname_ex, a:kind)
 
-	" é¸æŠç•ªå·ã®å‰Šé™¤
+	" ‘I‘ğ”Ô†‚Ìíœ
 	let nums = datas[0]
 
-	" å‰Šé™¤ ( å¤§ãã„æ•°å­—ã‹ã‚‰å‰Šé™¤ ) 
+	" íœ ( ‘å‚«‚¢”š‚©‚çíœ ) 
 	for delete_num in delete_nums
-		" ç•ªå·ã®æ›´æ–°
+		" ”Ô†‚ÌXV
 		if exists('datas[delete_num]')
 			unlet datas[delete_num]
 		endif
 
-		" å‰Šé™¤
+		" íœ
 		call filter(nums, "v:val != delete_num")
 		call map(nums, "v:val - (v:val > delete_num? 1: 0)")
 	endfor
 
-	" é¸æŠç•ªå·ã®è¨­å®š
+	" ‘I‘ğ”Ô†‚Ìİ’è
 	let datas[0] = nums
 
-	" è¨­å®š
+	" İ’è
 	call unite_setting_ex2#set(a:dict_name, a:valname_ex, a:kind, datas)
 
 endfunction "}}}
@@ -115,7 +114,7 @@ function! unite_setting_ex2#get_bits(dict_name, valname_ex, kind) "{{{
 	let tmp_d = unite_setting_ex2#get_orig(a:dict_name, a:valname_ex, a:kind)
 	let bits  = map(range(len(tmp_d)), "0")
 
-	" â˜…ã€€ãƒã‚°å¯¾å¿œ
+	" š@ƒoƒO‘Î‰
 	if 0 && type(tmp_d[0]) != type([])
 		let tmp_d[0] = [1]
 	endif
@@ -162,7 +161,7 @@ function! unite_setting_ex2#get_source_word(dict_name, valname_ex, kind) "{{{
 	elseif type == 'var'|| type == 'list'
 		let rtn = unite_setting_ex2#get_source_word_from_val(a:dict_name, a:valname_ex, a:kind)
 	else
-		" â˜… ã‚¿ã‚¤ãƒˆãƒ«ã‚’ã‚ã‘ã‚‹
+		" š ƒ^ƒCƒgƒ‹‚ğ‚í‚¯‚é
 		let rtn = '"'.a:valname_ex.'"'
 	endif
 
@@ -222,7 +221,7 @@ function! unite_setting_ex2#get_strs_on_off_new(dict_name, valname_ex, kind) "{{
 
 	let datas = copy(unite_setting_ex2#get_orig(a:dict_name, a:valname_ex, a:kind))
 
-	" â˜…ã€€ãƒã‚°å¯¾å¿œ
+	" š@ƒoƒO‘Î‰
 	if type(datas) != type([])
 		unlet datas
 		let datas = []
@@ -230,7 +229,7 @@ function! unite_setting_ex2#get_strs_on_off_new(dict_name, valname_ex, kind) "{{
 
 	let num_flgs  = datas[0]
 
-	" â˜…ã€€ãƒã‚°å¯¾å¿œ
+	" š@ƒoƒO‘Î‰
 	if type(num_flgs) != type([])
 		unlet num_flgs
 		let num_flgs = []
@@ -250,7 +249,7 @@ function! unite_setting_ex2#get_strs_on_off_new(dict_name, valname_ex, kind) "{{
 			let rtns[num_].flg = 1
 		endfor
 	catch
-		" â˜… æ–°è¦è¿½åŠ ã®å ´åˆã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã™ã‚‹
+		" š V‹K’Ç‰Á‚Ìê‡ƒGƒ‰[‚ª”­¶‚·‚é
 		echo num_
 		echo rtns
 	endtry

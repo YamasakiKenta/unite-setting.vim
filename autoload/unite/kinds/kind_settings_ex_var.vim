@@ -1,6 +1,5 @@
 let s:save_cpo = &cpo
 set cpo&vim
-setl enc=utf8
 
 function! unite#kinds#kind_settings_ex_var#define()
 	return s:kind_settings_ex_var
@@ -13,7 +12,7 @@ let s:kind_settings_ex_var = {
 			\ 'parents': ['kind_settings_ex_common'],
 			\ }
 let s:kind_settings_ex_var.action_table.edit = {
-			\ 'description' : '設定編集',
+			\ 'description' : '�ݒ�ҏW',
 			\ 'is_quit'     : 0,
 			\ }"
 function! s:kind_settings_ex_var.action_table.edit.func(candidate) "{{{

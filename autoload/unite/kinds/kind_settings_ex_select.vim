@@ -1,6 +1,5 @@
 let s:save_cpo = &cpo
 set cpo&vim
-setl enc=utf8
 
 function! unite#kinds#kind_settings_ex_select#define()
 	return s:kind_settings_ex_select
@@ -12,7 +11,7 @@ let s:kind_settings_ex_select = {
 			\ 'parents': ['kind_settings_ex_common', 'kind_settings_common'],
 			\ }
 let s:kind_settings_ex_select.action_table.a_toggle = {
-			\ 'description' : 'é¸æŠ',
+			\ 'description' : '‘I‘ğ',
 			\ 'is_quit'     : 0,
 			\ }
 function! s:kind_settings_ex_select.action_table.a_toggle.func(candidate) "{{{

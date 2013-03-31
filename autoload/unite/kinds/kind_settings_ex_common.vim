@@ -1,6 +1,5 @@
 let s:save_cpo = &cpo
 set cpo&vim
-setl enc=utf8
 
 function! unite#kinds#kind_settings_ex_common#define()
 	return s:kind_settings_ex_common

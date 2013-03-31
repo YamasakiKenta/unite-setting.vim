@@ -1,6 +1,5 @@
 let s:save_cpo = &cpo
 set cpo&vim
-setl enc=utf8
 
 function! unite#kinds#kind_settings_common#define()
 	return s:kind_settings_common
@@ -21,7 +20,7 @@ function! s:kind_settings_common.action_table.edit.func(candidate)  "{{{
 		let tmp_str = matchstr(valname, '.*\ze[.\{-}\]$')
 		exe 'let type_ = type('.tmp_str.')'
 
-		" â˜… åˆæœŸå…¥åŠ›ã®å¤‰æ›´
+		" š ‰Šú“ü—Í‚Ì•ÏX
 		if type_ == type([])
 			exe 'call add('.tmp_str.', 0)'
 		elseif type_ == type({})

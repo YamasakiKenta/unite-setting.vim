@@ -1,6 +1,5 @@
 let s:save_cpo = &cpo
 set cpo&vim
-setl enc=utf8
 
 command! -nargs=+ SettingExAdd call s:setting_ex_add(<f-args>)
 

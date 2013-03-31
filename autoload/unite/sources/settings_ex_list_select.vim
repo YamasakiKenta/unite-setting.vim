@@ -1,13 +1,12 @@
 let s:save_cpo = &cpo
 set cpo&vim
-setl enc=utf8
 
 function! unite#sources#settings_ex_list_select#define()
 	return s:settings_ex_list_select
 endfunction
 let s:settings_ex_list_select = {
 			\ 'name'        : 'settings_ex_list_select',
-			\ 'description' : 'è¤‡æ•°é¸æŠ',
+			\ 'description' : '•¡”‘I‘ğ',
 			\ 'syntax'      : 'uniteSource__settings',
 			\ 'hooks'       : {},
 			\ }

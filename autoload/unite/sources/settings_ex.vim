@@ -1,6 +1,5 @@
 let s:save_cpo = &cpo
 set cpo&vim
-setl enc=utf8
 
 function! unite#sources#settings_ex#define()
 	return s:settings_ex
@@ -26,23 +25,23 @@ function! s:settings_ex.hooks.on_close(args, context) "{{{
 	call unite_setting_ex2#save(dict_name)
 endfunction "}}}
 function! s:settings_ex.gather_candidates(args, context) "{{{
-	" è¨­å®šã™ã‚‹é …ç›®
+	" İ’è‚·‚é€–Ú
 	let dict_name = a:context.source__dict_name
 	exe 'let tmp_d = '.dict_name
 
 	call unite#print_source_message(dict_name, self.name)
 
-	" â˜… ãƒ‡ãƒ¼ã‚¿ã«ç™»éŒ²ãŒãªã„å ´åˆã¯ã€ã©ã†ã—ã‚ˆã†
+	" š ƒf[ƒ^‚É“o˜^‚ª‚È‚¢ê‡‚ÍA‚Ç‚¤‚µ‚æ‚¤
 	if exists('tmp_d.__order')
 		let orders  = tmp_d.__order
 	else
 		let orders = unite_setting_ex2#get_valnames(dict_name)
 	endif
 
-	" â˜… 
+	" š 
 	let kind    = '__common'
 
-	" è¾æ›¸åã¨ã€å–å¾—é–¢æ•°ãŒå¿…è¦ã«ãªã‚‹
+	" «‘–¼‚ÆAæ“¾ŠÖ”‚ª•K—v‚É‚È‚é
 	"
 	return map( copy(orders), "{
 				\ 'word'               : unite_setting_ex2#get_source_word(dict_name, v:val, kind),

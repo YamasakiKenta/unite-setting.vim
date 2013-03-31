@@ -1,6 +1,5 @@
 let s:save_cpo = &cpo
 set cpo&vim
-setl enc=utf8
 
 function! unite#kinds#kind_settings_ex_list#define()
 	return s:kind_settings_ex_list
@@ -14,7 +13,7 @@ let s:kind_settings_ex_list = {
 			\ }
 " action
 let s:kind_settings_ex_list.action_table.a_toggle = {
-			\ 'description' : 'é¸æŠ',
+			\ 'description' : '‘I‘ğ',
 			\ 'is_quit'     : 0,
 			\ }
 function! s:kind_settings_ex_list.action_table.a_toggle.func(candidate) "{{{
@@ -26,7 +25,7 @@ function! s:kind_settings_ex_list.action_table.a_toggle.func(candidate) "{{{
 	call unite#start_temporary([['settings_ex_list_select', tmp_d]])
 endfunction "}}}
 let s:kind_settings_ex_list.action_table.edit = {
-			\ 'description' : 'è¨­å®šç·¨é›†',
+			\ 'description' : 'İ’è•ÒW',
 			\ 'is_quit'     : 0,
 			\ }"
 function! s:kind_settings_ex_list.action_table.edit.func(candidate) "{{{

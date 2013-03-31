@@ -1,13 +1,12 @@
 let s:save_cpo = &cpo
 set cpo&vim
-setl enc=utf8
 
 function! unite#kinds#kind_settings_title#define()
 	return s:kind
 endfunction
 
 
-" p4_settings.vim ã§ä½¿ç”¨ã™ã‚‹
+" p4_settings.vim ‚Åg—p‚·‚é
 let s:kind = { 
 			\ 'name'           : 'k_title',
 			\ 'default_action' : 'a_null',

@@ -62,11 +62,7 @@ function! unite_setting_ex#get(dict_name, valname_ex, kind) "{{{
 	elseif type_ == 'select'
 		let rtns = join(s:get_lists(val))
 	elseif type_ == 'bool'
-		try
-			let rtns = val > 0 ? 1 : 0
-		catch
-			let rtns = 0
-		endtry
+		let rtns = val > 0 ? 1 : 0
 	else
 		let rtns = val
 	endif

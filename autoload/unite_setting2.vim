@@ -1,6 +1,5 @@
 let s:save_cpo = &cpo
 set cpo&vim
-setl enc=utf8
 
 let s:L = vital#of('unite-setting.vim')
 let s:Sjis = s:L.import('Mind.Sjis')

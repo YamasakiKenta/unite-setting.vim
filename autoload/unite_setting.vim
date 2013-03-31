@@ -1,6 +1,5 @@
 let s:save_cpo = &cpo
 set cpo&vim
-setl enc=utf8
 
 function! unite_setting#sub_setting_syntax(args, context) "{{{
 	syntax match uniteSource__settings_choose /<.\{-}>/ containedin=uniteSource__settings contained
