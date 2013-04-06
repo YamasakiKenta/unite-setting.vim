@@ -1,9 +1,9 @@
 let unite_setting_ex2#save_cpo = &cpo
 set cpo&vim
 
-let s:L = vital#of('unite-setting.vim')
-let s:Common = s:L.import('Mind.Common')
-let s:Sjis = s:L.import('Mind.Sjis')
+let s:V = vital#of('unite-setting.vim')
+let s:Common = s:V.import('Mind.Common')
+let s:Sjis = s:V.import('Mind.Sjis')
 
 let s:unite_kind = {
 			\ 'bool'     : 'kind_settings_ex_bool',
