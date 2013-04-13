@@ -14,7 +14,8 @@ function! s:get_lists(datas) "{{{
 	endfor
 
 	return rtns
-endfunction "}}}
+endfunction
+"}}}
 
 function! unite_setting_ex#add(dict_name, valname_ex, description, type, val) "{{{
 
@@ -35,11 +36,13 @@ function! unite_setting_ex#add(dict_name, valname_ex, description, type, val) "{
 
 	exe 'let '.a:dict_name.' = tmp_d'
 
-endfunction "}}}
+endfunction
+"}}}
 function! unite_setting_ex#add_title(dict_name, title_name) "{{{
 	let valname_ex = 'title_'.a:title_name
 	call unite_setting_ex#add( a:dict_name, valname_ex, 'perforce clients' , '' , a:title_name)
-endfunction "}}}
+endfunction
+"}}}
 function! unite_setting_ex#get(dict_name, valname_ex, kind) "{{{
 	exe 'let tmp_d = '.a:dict_name
 
@@ -72,10 +75,12 @@ function! unite_setting_ex#get(dict_name, valname_ex, kind) "{{{
 	endif
 
 	return rtns
-endfunction "}}}
+endfunction
+"}}}
 function! unite_setting_ex#init(dict_name, file) "{{{
 	exe 'let '.a:dict_name.' = {"__order" : [], "__file" : a:file }'
-endfunction "}}}
+endfunction
+"}}}
 function! unite_setting_ex#load(dict_name, ...) "{{{
 
 	exe 'let tmp_d = '.a:dict_name
@@ -98,7 +103,8 @@ function! unite_setting_ex#load(dict_name, ...) "{{{
 	endfor
 
 	return tmp_d
-endfunction "}}}
+endfunction
+"}}}
 function! s:get_kind(valname_ex) "{{{
 	exe 'let tmp = '.string(a:valname_ex)
 	let _type = type(tmp)
@@ -144,7 +150,8 @@ endfunction
 
 function! unite_setting_ex#init2() "{{{
 	call unite_setting_ex#init('g:unite_setting_ex_default_data', '~/.unite_setting_ex')
-endfunction "}}}
+endfunction
+"}}}
 function! unite_setting_ex#add2(data_d, ...) "{{{
 
 	if type(a:data_d) == type({})
@@ -180,7 +187,8 @@ endfunction
 "}}}
 function! unite_setting_ex#load2() "{{{
 	call unite_setting_ex#load('g:unite_setting_ex_default_data')
-endfunction "}}}
+endfunction
+"}}}
 
 
 let &cpo = s:save_cpo

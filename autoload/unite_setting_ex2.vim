@@ -46,7 +46,8 @@ function! unite_setting_ex2#select_list_toggle(candidates) "{{{
 
 	call unite_setting_ex2#common_out(dict_name)
 	return 
-endfunction "}}}
+endfunction
+"}}}
 
 function! unite_setting_ex2#cnv_list_ex_select(dict_name, valname_ex, kind, type) "{{{
 		let tmp =  unite_setting_ex#get(a:dict_name, a:valname_ex, a:kind) 
@@ -61,12 +62,14 @@ function! unite_setting_ex2#cnv_list_ex_select(dict_name, valname_ex, kind, type
 
 		call unite_setting_ex2#set(a:dict_name, a:valname_ex, a:kind, val)
 		
-endfunction "}}}
+endfunction
+"}}}
 let g:test3 = [[1], 'test', 'test2']
 function! unite_setting_ex2#save(dict_name) "{{{
 	exe 'let tmp_d = '.a:dict_name
 	call s:Common.save(tmp_d.__file, tmp_d)
-endfunction "}}}
+endfunction
+"}}}
 function! unite_setting_ex2#delete(dict_name, valname_ex, kind, delete_nums) "{{{
 
 	" ï¿Ç—ë÷Ç¶
@@ -97,7 +100,8 @@ function! unite_setting_ex2#delete(dict_name, valname_ex, kind, delete_nums) "{{
 	" ê›íË
 	call unite_setting_ex2#set(a:dict_name, a:valname_ex, a:kind, datas)
 
-endfunction "}}}
+endfunction
+"}}}
 function! unite_setting_ex2#get_source_valname(dict_name, valname_ex, kind) "{{{
 	if exists(a:valname_ex)
 		let valname = a:valname_ex
@@ -105,10 +109,12 @@ function! unite_setting_ex2#get_source_valname(dict_name, valname_ex, kind) "{{{
 		let valname = a:dict_name.'['''.a:valname_ex.''']['''.a:kind.''']'
 	endif
 	return valname
-endfunction "}}}
+endfunction
+"}}}
 function! unite_setting_ex2#common_out(dict_name) "{{{
 	call unite#force_redraw()
-endfunction "}}}
+endfunction
+"}}}
 function! unite_setting_ex2#get_bits(dict_name, valname_ex, kind) "{{{
 
 	let tmp_d = unite_setting_ex2#get_orig(a:dict_name, a:valname_ex, a:kind)
@@ -126,13 +132,15 @@ function! unite_setting_ex2#get_bits(dict_name, valname_ex, kind) "{{{
 
 
 	return bits
-endfunction "}}}
+endfunction
+"}}}
 function! unite_setting_ex2#get_kind(dict_name, valname_ex, kind) "{{{
 	if exists(a:dict_name.'[a:valname_ex][a:kind]')
 		return a:kind
 	endif
 	return '__common'
-endfunction "}}}
+endfunction
+"}}}
 function! unite_setting_ex2#get_orig(dict_name, valname_ex, kind) "{{{
 	exe 'let tmp_d = '.a:dict_name
 	let kind = unite_setting_ex2#get_kind(a:dict_name, a:valname_ex, a:kind)
@@ -145,11 +153,13 @@ function! unite_setting_ex2#get_orig(dict_name, valname_ex, kind) "{{{
 
 	return rtn
 
-endfunction "}}}
+endfunction
+"}}}
 function! unite_setting_ex2#get_source_kind(dict_name, valname_ex, kind) "{{{
 	let type = unite_setting_ex2#get_type(a:dict_name, a:valname_ex, a:kind)
 	return get( s:unite_kind, type, 'k_title')
-endfunction "}}}
+endfunction
+"}}}
 function! unite_setting_ex2#get_source_word(dict_name, valname_ex, kind) "{{{
 	exe 'let tmp_d = '.a:dict_name
 	let type = unite_setting_ex2#get_type(a:dict_name, a:valname_ex, a:kind)
@@ -166,22 +176,26 @@ function! unite_setting_ex2#get_source_word(dict_name, valname_ex, kind) "{{{
 	endif
 
 	return s:Sjis.printf("%10s %s", type, rtn)
-endfunction "}}}
+endfunction
+"}}}
 function! unite_setting_ex2#get_source_word_from_bool(dict_name, valname_ex, kind) "{{{
 	let str =  unite_setting_ex#get(a:dict_name, a:valname_ex, a:kind) ? 
 				\ '<TRUE>  FALSE ' :
 				\ ' TRUE  <FALSE>'
 	return unite_setting_ex2#get_source_word_sub( a:dict_name, a:valname_ex, a:kind, str)
-endfunction "}}}
+endfunction
+"}}}
 function! unite_setting_ex2#get_source_word_from_strs(dict_name, valname_ex, kind) "{{{
 	let datas = unite_setting_ex2#get_strs_on_off_new(a:dict_name, a:valname_ex, a:kind)
 	let strs = map(datas, 'v:val.str')
 	return unite_setting_ex2#get_source_word_sub( a:dict_name, a:valname_ex, a:kind, join(strs))
-endfunction "}}}
+endfunction
+"}}}
 function! unite_setting_ex2#get_source_word_from_val(dict_name, valname_ex, kind) "{{{
 	let data = unite_setting_ex#get(a:dict_name, a:valname_ex, a:kind)
 	return unite_setting_ex2#get_source_word_sub( a:dict_name, a:valname_ex, a:kind, string(data))
-endfunction "}}}
+endfunction
+"}}}
 function! unite_setting_ex2#get_source_word_sub(dict_name, valname_ex, kind, str) "{{{
 	exe 'let tmp_d = '.a:dict_name
 	let description = ''
@@ -194,7 +208,8 @@ function! unite_setting_ex2#get_source_word_sub(dict_name, valname_ex, kind, str
 				\ unite_setting_ex2#get_source_word_sub_type(a:dict_name, a:valname_ex, a:kind),
 				\ a:str,
 				\ )
-endfunction "}}}
+endfunction
+"}}}
 function! unite_setting_ex2#get_source_word_sub_type(dict_name, valname_ex, kind) "{{{
 	let kind = unite_setting_ex2#get_kind( a:dict_name, a:valname_ex, a:kind) 
 
@@ -207,7 +222,8 @@ function! unite_setting_ex2#get_source_word_sub_type(dict_name, valname_ex, kind
 	endif
 
 	return star.''.a:valname_ex.''.star
-endfunction "}}}
+endfunction
+"}}}
 function! unite_setting_ex2#get_str(val) "{{{
 	let type_ = type(a:val)
 	if type_ == type(0) || type_ == type('a')
@@ -216,7 +232,8 @@ function! unite_setting_ex2#get_str(val) "{{{
 		let str = string(a:val)
 	endif
 	return str
-endfunction "}}}
+endfunction
+"}}}
 function! unite_setting_ex2#get_strs_on_off_new(dict_name, valname_ex, kind) "{{{
 
 	let datas = copy(unite_setting_ex2#get_orig(a:dict_name, a:valname_ex, a:kind))
@@ -263,7 +280,8 @@ function! unite_setting_ex2#get_strs_on_off_new(dict_name, valname_ex, kind) "{{
 
 	return rtns
 
-endfunction "}}}
+endfunction
+"}}}
 function! unite_setting_ex2#get_type(dict_name, valname_ex, kind) "{{{
 	
 	let type_ = 'title'
@@ -284,7 +302,8 @@ function! unite_setting_ex2#get_type(dict_name, valname_ex, kind) "{{{
 	endif
 
 	retu type_
-endfunction "}}}
+endfunction
+"}}}
 function! unite_setting_ex2#set_type(dict_name, valname_ex, kind, type) "{{{
 		exe 'let tmp_d = '.a:dict_name
 
@@ -299,7 +318,8 @@ function! unite_setting_ex2#set_type(dict_name, valname_ex, kind, type) "{{{
 		endif
 
 		exe 'let '.a:dict_name.' = tmp_d'
-endfunction "}}}
+endfunction
+"}}}
 
 function! unite_setting_ex2#set(dict_name, valname_ex, kind, val) "{{{
 
@@ -319,7 +339,8 @@ function! unite_setting_ex2#set(dict_name, valname_ex, kind, val) "{{{
 		endif
 	endif
 
-endfunction "}}}
+endfunction
+"}}}
 function! unite_setting_ex2#set_next(dict_name, valname_ex, kind) "{{{
 	exe 'let tmp_d = '.a:dict_name
 	let type = unite_setting_ex2#get_type(a:dict_name, a:valname_ex, a:kind)
@@ -338,7 +359,8 @@ function! unite_setting_ex2#set_next(dict_name, valname_ex, kind) "{{{
 	endif
 
 	call unite_setting_ex2#set(a:dict_name, a:valname_ex, a:kind, val )
-endfunction "}}}
+endfunction
+"}}}
 
 function! unite_setting_ex2#get_valnames(valname) "{{{
 	exe 'let tmp = '.a:valname
@@ -356,7 +378,8 @@ function! unite_setting_ex2#get_valnames(valname) "{{{
 	endif
 
 	return valnames
-endfunction "}}}
+endfunction
+"}}}
 
 function! s:set_type_bool(val) "{{{
 	return type(a:val) == type(0) ? a:val : 0

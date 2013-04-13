@@ -19,7 +19,8 @@ let s:kind.action_table.a_null = {
 			\ 'is_quit' : 0,
 			\ }
 function! s:kind.action_table.a_null.func(candidate) "{{{
-endfunction "}}}
+endfunction
+"}}}
 
 let &cpo = s:save_cpo
 unlet s:save_cpo

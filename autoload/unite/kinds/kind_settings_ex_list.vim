@@ -23,7 +23,8 @@ function! s:kind_settings_ex_list.action_table.a_toggle.func(candidate) "{{{
 				\ 'kind'      : a:candidate.action__kind,
 				\ }
 	call unite#start_temporary([['settings_ex_list_select', tmp_d]])
-endfunction "}}}
+endfunction
+"}}}
 let s:kind_settings_ex_list.action_table.edit = {
 			\ 'description' : 'ê›íËï“èW',
 			\ 'is_quit'     : 0,
@@ -40,7 +41,8 @@ function! s:kind_settings_ex_list.action_table.edit.func(candidate) "{{{
 	endif
 
 	call unite_setting_ex2#common_out(dict_name)
-endfunction "}}}
+endfunction
+"}}}
 
 let &cpo = s:save_cpo
 unlet s:save_cpo

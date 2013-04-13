@@ -16,11 +16,13 @@ let s:valname_to_source_kind_tabel = {
 function! unite_setting2#get_source_kind(valname) "{{{
 	exe 'let Tmp = '.a:valname
 	return s:valname_to_source_kind_tabel[type(Tmp)]
-endfunction "}}}
+endfunction
+"}}}
 function! unite_setting2#get_source_word(valname) "{{{
 	exe 'let Tmp = '.a:valname
 	return printf("%-100s : %s", a:valname, string(Tmp))
-endfunction "}}}
+endfunction
+"}}}
 function! unite_setting2#get_valnames(valname) "{{{
 	exe 'let Tmp = '.a:valname
 	if a:valname == 'g:'
@@ -37,11 +39,13 @@ function! unite_setting2#get_valnames(valname) "{{{
 	endif
 
 	return valnames
-endfunction "}}}
+endfunction
+"}}}
 function! unite_setting2#insert_list(list1, list2, num_) "{{{
 	exe 'let tmps = a:list1[0:'.a:num_.'] + a:list2 + a:list1['.(a:num_+1).':]'
 	return tmps
-endfunction "}}}
+endfunction
+"}}}
 
 let unite_setting2#source_tmpl = {
 			\ 'description' : 'show var',
@@ -52,7 +56,8 @@ let unite_setting2#source_tmpl = {
 let unite_setting2#source_tmpl.hooks.on_syntax = function("unite_setting#sub_setting_syntax")
 function! unite_setting2#source_tmpl.hooks.on_init(args, context) "{{{
 	let a:context.source__valname = get(a:args, 0, 'g:')
-endfunction "}}}
+endfunction
+"}}}
 function! unite_setting2#source_tmpl.change_candidates(args, context) "{{{
 
 	let new_    = a:context.input
@@ -80,7 +85,8 @@ function! unite_setting2#source_tmpl.change_candidates(args, context) "{{{
 
 	return rtns
 
-endfunction "}}}
+endfunction
+"}}}
 
 let &cpo = s:save_cpo
 unlet s:save_cpo

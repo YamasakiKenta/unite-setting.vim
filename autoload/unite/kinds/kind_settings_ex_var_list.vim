@@ -17,7 +17,8 @@ let s:kind_settings_ex_var.action_table.select = {
 function! s:kind_settings_ex_var.action_table.select.func(candidate) "{{{
 	let valname   = a:candidate.action__valname
 	call unite#start_temporary([['settings_var', valname]])
-endfunction "}}}
+endfunction
+"}}}
 
 let &cpo = s:save_cpo
 unlet s:save_cpo

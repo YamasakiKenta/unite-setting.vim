@@ -27,7 +27,8 @@ function! s:kind_settings_ex_var.action_table.edit.func(candidate) "{{{
 	endif
 
 	call unite_setting_ex2#common_out(dict_name)
-endfunction "}}}
+endfunction
+"}}}
 
 let &cpo = s:save_cpo
 unlet s:save_cpo

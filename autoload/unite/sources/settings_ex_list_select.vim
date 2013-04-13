@@ -18,7 +18,8 @@ function! s:settings_ex_list_select.hooks.on_init(args, context) "{{{
 		let a:context.source__kind      = a:args[0].kind
 		let a:context.source__only      = get(a:args[0], 'only_', 0)
 	endif
-endfunction "}}}
+endfunction
+"}}}
 function! s:settings_ex_list_select.gather_candidates(args, context) "{{{
 
 	let dict_name  = a:context.source__dict_name
@@ -54,7 +55,8 @@ function! s:settings_ex_list_select.gather_candidates(args, context) "{{{
 
 	return rtns
 
-endfunction "}}}
+endfunction
+"}}}
 function! s:settings_ex_list_select.change_candidates(args, context) "{{{
 
 	let new_ = a:context.input
@@ -77,7 +79,8 @@ function! s:settings_ex_list_select.change_candidates(args, context) "{{{
 
 	return rtns
 
-endfunction "}}}
+endfunction
+"}}}
 
 let &cpo = s:save_cpo
 unlet s:save_cpo

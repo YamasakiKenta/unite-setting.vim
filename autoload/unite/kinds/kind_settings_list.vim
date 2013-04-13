@@ -17,7 +17,8 @@ let s:kind_settings_list.action_table.select = {
 function! s:kind_settings_list.action_table.select.func(candidate) "{{{
 	let valname = a:candidate.action__valname
 	call unite#start_temporary([['settings_var', valname]])
-endfunction "}}}
+endfunction
+"}}}
 let s:kind_settings_list.action_table.select_all = {
 			\ 'description' : 'select_all',
 			\ 'is_quit'     : 0,
@@ -25,7 +26,8 @@ let s:kind_settings_list.action_table.select_all = {
 function! s:kind_settings_list.action_table.select_all.func(candidate) "{{{
 	let valname = a:candidate.action__valname
 	call unite#start_temporary([['settings_var_all', valname]])
-endfunction "}}}
+endfunction
+"}}}
 
 let &cpo = s:save_cpo
 unlet s:save_cpo

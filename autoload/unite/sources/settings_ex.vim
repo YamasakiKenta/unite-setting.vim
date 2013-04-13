@@ -19,11 +19,13 @@ function! s:settings_ex.hooks.on_init(args, context) "{{{
 		call unite_setting_ex#init2()
 	endif
 	let a:context.source__dict_name = get(a:args, 0, 'g:unite_setting_ex_default_data')
-endfunction "}}}
+endfunction
+"}}}
 function! s:settings_ex.hooks.on_close(args, context) "{{{
 	let dict_name = get(a:context, 'source__dict_name')
 	call unite_setting_ex2#save(dict_name)
-endfunction "}}}
+endfunction
+"}}}
 function! s:settings_ex.gather_candidates(args, context) "{{{
 	" ê›íËÇ∑ÇÈçÄñ⁄
 	let dict_name = a:context.source__dict_name
@@ -53,7 +55,8 @@ function! s:settings_ex.gather_candidates(args, context) "{{{
 				\ }")
 
 
-endfunction "}}}
+endfunction
+"}}}
 
 let &cpo = s:save_cpo
 unlet s:save_cpo

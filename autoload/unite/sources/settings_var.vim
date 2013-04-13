@@ -19,7 +19,8 @@ function! s:source_settings_var.gather_candidates(args, context) "{{{
 				\ 'action__valname'   : v:val,
 				\ }")
 
-endfunction "}}}
+endfunction
+"}}}
 
 let &cpo = s:save_cpo
 unlet s:save_cpo

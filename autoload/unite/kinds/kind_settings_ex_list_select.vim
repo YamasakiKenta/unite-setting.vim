@@ -42,7 +42,8 @@ function! s:kind_settings_ex_list_select.action_table.delete.func(candidates) "{
 	call unite_setting_ex2#delete(dict_name, valname_ex, kind, nums)
 
 	call unite_setting_ex2#common_out(dict_name)
-endfunction "}}}
+endfunction
+"}}}
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
