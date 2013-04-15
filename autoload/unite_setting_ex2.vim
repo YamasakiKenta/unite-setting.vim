@@ -64,7 +64,6 @@ function! unite_setting_ex2#cnv_list_ex_select(dict_name, valname_ex, kind, type
 		
 endfunction
 "}}}
-let g:test3 = [[1], 'test', 'test2']
 function! unite_setting_ex2#save(dict_name) "{{{
 	exe 'let tmp_d = '.a:dict_name
 	call s:Common.save(tmp_d.__file, tmp_d)
