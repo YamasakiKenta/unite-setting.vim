@@ -29,10 +29,13 @@ function! s:settings_ex_list_select.gather_candidates(args, context) "{{{
 
 	let datas  = unite_setting_ex2#get_strs_on_off_new(dict_name, valname_ex, kind)
 
-	if only_
-		let num_ = 1
-	else
+	if only_ == 1 
+		" select
 		let num_ = 0
+	else
+		" list
+		" ”ñ‘I‘ğ—p‚Ì€–Ú
+		let num_ = -1
 		call insert(datas, { 'str' : ' NULL ', 'flg' : 0 })
 	endif
 

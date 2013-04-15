@@ -16,6 +16,13 @@ let s:unite_kind = {
 function! unite_setting_ex2#init()
 endfunction
 
+function! s:get_source_word_from_strs(dict_name, valname_ex, kind) "{{{
+	let datas = unite_setting_ex2#get_strs_on_off_new(a:dict_name, a:valname_ex, a:kind)
+	let strs = map(datas, 'v:val.str')
+	return unite_setting_ex2#get_source_word_sub( a:dict_name, a:valname_ex, a:kind, join(strs))
+endfunction
+"}}}
+
 function! unite_setting_ex2#select_list_toggle(candidates) "{{{
 
 	let candidates = type(a:candidates) == type([]) ? a:candidates : [a:candidates]
@@ -27,21 +34,19 @@ function! unite_setting_ex2#select_list_toggle(candidates) "{{{
 	let tmps = unite_setting_ex2#get_orig(dict_name, valname_ex, kind)
 
 	let nums = []
-	for candidate in candidates
-		if ( candidate.action__num > 0 )
-			call add(nums, candidate.action__num)
-		endif
-	endfor
+	let max  = len(tmps.items)
+	let nums = map(copy(a:candidates), "v:val.action__num")
+	let nums = filter(nums, '0 <= v:val && v:val < max')
 
 	" 新規追加の場合
 	if candidates[0].action__new != ''
-		call insert(tmps, candidates[0].action__new, 1)
-		call map(nums, "v:val+1")
+		call insert(tmps.items, candidates[0].action__new)
+		call map(tmps.nums, "v:val+1") " 既存の項目をずらす
 	else
 		call unite#force_quit_session()
 	endif
 
-	let tmps[0] = nums
+	let tmps.nums = nums
 	call unite_setting_ex2#set(dict_name, valname_ex, kind, tmps)
 
 	call unite_setting_ex2#common_out(dict_name)
@@ -166,7 +171,7 @@ function! unite_setting_ex2#get_source_word(dict_name, valname_ex, kind) "{{{
 	if type == 'bool'
 		let rtn = unite_setting_ex2#get_source_word_from_bool(a:dict_name, a:valname_ex, a:kind)
 	elseif type == 'list_ex' || type == 'select' 
-		let rtn = unite_setting_ex2#get_source_word_from_strs(a:dict_name, a:valname_ex, a:kind)
+		let rtn = s:get_source_word_from_strs(a:dict_name, a:valname_ex, a:kind)
 	elseif type == 'var'|| type == 'list'
 		let rtn = unite_setting_ex2#get_source_word_from_val(a:dict_name, a:valname_ex, a:kind)
 	else
@@ -182,12 +187,6 @@ function! unite_setting_ex2#get_source_word_from_bool(dict_name, valname_ex, kin
 				\ '<TRUE>  FALSE ' :
 				\ ' TRUE  <FALSE>'
 	return unite_setting_ex2#get_source_word_sub( a:dict_name, a:valname_ex, a:kind, str)
-endfunction
-"}}}
-function! unite_setting_ex2#get_source_word_from_strs(dict_name, valname_ex, kind) "{{{
-	let datas = unite_setting_ex2#get_strs_on_off_new(a:dict_name, a:valname_ex, a:kind)
-	let strs = map(datas, 'v:val.str')
-	return unite_setting_ex2#get_source_word_sub( a:dict_name, a:valname_ex, a:kind, join(strs))
 endfunction
 "}}}
 function! unite_setting_ex2#get_source_word_from_val(dict_name, valname_ex, kind) "{{{
@@ -238,34 +237,36 @@ function! unite_setting_ex2#get_strs_on_off_new(dict_name, valname_ex, kind) "{{
 	let datas = copy(unite_setting_ex2#get_orig(a:dict_name, a:valname_ex, a:kind))
 
 	" ★　バグ対応
-	if type(datas) != type([])
+	if type(datas) != type({})
+		echo 'ERROR '
+		echo datas
 		unlet datas
-		let datas = []
+		let datas = {'nums' : [], 'items' : []}
 	endif
 
-	let num_flgs  = datas[0]
+	let num_flgs  = get(datas, 'nums', [])
 
 	" ★　バグ対応
 	if type(num_flgs) != type([])
+		echo 'ERROR '
+		echo num_flgs
 		unlet num_flgs
 		let num_flgs = []
 	endif
 
-	if len(datas) > 0
-
-		let rtns = [0] + map(copy(datas[1:]), "{
-					\ 'str' : ' '.unite_setting_ex2#get_str(v:val).' ',
-					\ 'flg' : 0,
-					\ }")
-	endif
+	let rtns = map(copy(datas.items), "{
+				\ 'str' : ' '.unite_setting_ex2#get_str(v:val).' ',
+				\ 'flg' : 0,
+				\ }")
 
 	try 
-		for num_ in num_flgs
-			let rtns[num_].str = '<'.unite_setting_ex2#get_str(get(datas, num_, '*ERROR')).'>'
+		for num_ in filter(copy(num_flgs), 'v:val >= 0')
+			let rtns[num_].str = '<'.unite_setting_ex2#get_str(get(datas.items, num_, '*ERROR')).'>'
 			let rtns[num_].flg = 1
 		endfor
 	catch
 		" ★ 新規追加の場合エラーが発生する
+		echo 'ERROR - catch'
 		echo num_
 		echo rtns
 	endtry
@@ -275,10 +276,7 @@ function! unite_setting_ex2#get_strs_on_off_new(dict_name, valname_ex, kind) "{{
 		let rtns = [{'str' : '', 'flg' : 0}]
 	endif
 
-	unlet rtns[0]
-
 	return rtns
-
 endfunction
 "}}}
 function! unite_setting_ex2#get_type(dict_name, valname_ex, kind) "{{{
@@ -349,11 +347,11 @@ function! unite_setting_ex2#set_next(dict_name, valname_ex, kind) "{{{
 	else
 		let val = unite_setting_ex2#get_orig(a:dict_name, a:valname_ex, a:kind)
 
-		let num_ = val[0][0]
+		let num_ = get(val.nums, 0, 0)
 		let num_ = num_ + 1
-		let num_ = num_ < len(val) ? num_ : 1
+		let num_ = num_ < len(val.items) ? num_ : 0
 
-		let val[0][0] = num_
+		let val.nums[0] = num_
 
 	endif
 

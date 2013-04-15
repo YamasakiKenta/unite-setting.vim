@@ -7,11 +7,20 @@ function! s:get_lists(datas) "{{{
 
 	let rtns = []
 
-	for num_ in filter(a:datas[0], 'v:val < len(a:datas)+1')
-		if exists('a:datas[num_]')
-			call add(rtns, a:datas[num_])
-		endif
-	endfor
+	" š ‹Œ®
+	if type(a:datas) == type([])
+		for num_ in filter(a:datas[0], 'v:val < len(a:datas)+1')
+			if exists('a:datas[num_]')
+				call add(rtns, a:datas[num_])
+			endif
+		endfor
+	else
+		" VŒ^
+		let max = len(a:datas.items)
+		for num_ in filter(a:datas.nums, 'v:val < max')
+			call add(rtns, a:datas.items[num_])
+		endfor
+	endif
 
 	return rtns
 endfunction
@@ -113,10 +122,18 @@ function! unite_setting_ex#add(dict_name, valname_ex, description, type, val) "{
 
 	let tmp_d[a:valname_ex] = get(tmp_d , a:valname_ex , {})
 
+	" š Ì—p‚Ì•ÏŠ·
+	if a:type =~ 'list_ex\|select' && type(a:val) == type([])
+		let val = { 'nums' : map(a:val[0], "v:val-1"), 'items' : a:val[1:] }
+	else
+		let val = a:val
+	endif
+
 	let tmp_d[a:valname_ex].__type        = a:type
 	let tmp_d[a:valname_ex].__description = a:description
-	let tmp_d[a:valname_ex].__default     = a:val
-	let tmp_d[a:valname_ex].__common      = get(tmp_d[a:valname_ex], '__common', a:val)
+	let tmp_d[a:valname_ex].__default     = val
+	let tmp_d[a:valname_ex].__common      = get(tmp_d[a:valname_ex], '__common', val)
+
 
 	let tmp_d.__order = get(tmp_d , '__order', [])
 	call add(tmp_d.__order, a:valname_ex)
