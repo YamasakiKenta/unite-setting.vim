@@ -51,7 +51,7 @@ function! s:get_var(valname_ex, type) "{{{
 	let type       = a:type
 	exe 'let tmp = '.valname_ex
 
-	if type == 'select' || type == 'list_ex' 
+	if type == 'select' || type == 'list_ex'  || type == 'const_select' || type == 'const_list_ex'
 
 		if type(tmp) == type("")
 			let tmps = [tmp]
@@ -85,9 +85,9 @@ function! unite_setting_ex#get(dict_name, valname_ex, kind) "{{{
 	let type_ = tmp_d[a:valname_ex].__type
 	let val   = tmp_d[a:valname_ex][a:kind]
 
-	if type_ == 'list_ex'
+	if type_ == 'list_ex' || 'const_list_ex'
 		let rtns = s:get_lists(val)
-	elseif type_ == 'select'
+	elseif type_ == 'select' || 'const_select'
 		let rtns = join(s:get_lists(val))
 	elseif type_ == 'bool'
 		try

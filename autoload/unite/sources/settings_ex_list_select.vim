@@ -13,10 +13,11 @@ let s:settings_ex_list_select = {
 let s:settings_ex_list_select.hooks.on_syntax = function('unite_setting#sub_setting_syntax')
 function! s:settings_ex_list_select.hooks.on_init(args, context) "{{{
 	if len(a:args) > 0
-		let a:context.source__dict_name = a:args[0].dict_name
+		let a:context.source__dict_name    = a:args[0].dict_name
 		let a:context.source__valname_ex   = a:args[0].valname_ex
-		let a:context.source__kind      = a:args[0].kind
-		let a:context.source__only      = get(a:args[0], 'only_', 0)
+		let a:context.source__kind         = a:args[0].kind
+		let a:context.source__only         = get(a:args[0], 'only_', 0)
+		let a:context.source__const        = get(a:args[0], 'const_', 0)
 	endif
 endfunction
 "}}}
@@ -26,6 +27,7 @@ function! s:settings_ex_list_select.gather_candidates(args, context) "{{{
 	let valname_ex = a:context.source__valname_ex
 	let kind       = a:context.source__kind
 	let only_      = a:context.source__only
+	let const_     = a:context.source__const
 
 	let datas  = unite_setting_ex2#get_strs_on_off_new(dict_name, valname_ex, kind)
 
@@ -47,6 +49,7 @@ function! s:settings_ex_list_select.gather_candidates(args, context) "{{{
 					\ 'action__dict_name'  : dict_name,
 					\ 'action__valname_ex' : valname_ex,
 					\ 'action__kind'       : kind,
+					\ 'action__const_flg'  : const_,
 					\ 'action__valname'    : dict_name."['".valname_ex."']['".kind."']['".num_."']",
 					\ 'action__num'        : num_,
 					\ 'action__new'        : '',

@@ -52,6 +52,7 @@ function! s:settings_ex.gather_candidates(args, context) "{{{
 				\ 'action__valname'    : unite_setting_ex2#get_source_valname(dict_name, v:val, kind),
 				\ 'action__valname_ex' : v:val,
 				\ 'action__dict_name'  : dict_name,
+				\ 'action__const_flg'  : unite_setting_ex2#get_const_flg(dict_name, v:val, kind),
 				\ }")
 
 

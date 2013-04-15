@@ -15,6 +15,12 @@ let s:kind_settings_common.action_table.edit = {
 			\ }
 function! s:kind_settings_common.action_table.edit.func(candidate)  "{{{
 	let valname   = a:candidate.action__valname
+	let const_flg = get(a:candidate, 'action__const_flg', 0)
+
+	if const_flg == 1
+		echo "con't edit type"
+		return
+	endif
 
 	if !exists(valname)
 		let tmp_str = matchstr(valname, '.*\ze[.\{-}\]$')

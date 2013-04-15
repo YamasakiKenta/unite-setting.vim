@@ -6,11 +6,13 @@ let s:Common = s:V.import('Mind.Common')
 let s:Sjis = s:V.import('Mind.Sjis')
 
 let s:unite_kind = {
-			\ 'bool'     : 'kind_settings_ex_bool',
-			\ 'list'     : 'kind_settings_ex_var_list',
-			\ 'list_ex'  : 'kind_settings_ex_list',
-			\ 'select'   : 'kind_settings_ex_select',
-			\ 'var'      : 'kind_settings_ex_var',
+			\ 'bool'           : 'kind_settings_ex_bool',
+			\ 'list'           : 'kind_settings_ex_var_list',
+			\ 'list_ex'        : 'kind_settings_ex_list',
+			\ 'select'         : 'kind_settings_ex_select',
+			\ 'var'            : 'kind_settings_ex_var',
+			\ 'const_list_ex'  : 'kind_settings_ex_list',
+			\ 'const_select'   : 'kind_settings_ex_select',
 			\ }
 
 function! unite_setting_ex2#init()
@@ -55,18 +57,18 @@ endfunction
 "}}}
 
 function! unite_setting_ex2#cnv_list_ex_select(dict_name, valname_ex, kind, type) "{{{
-		let tmp =  unite_setting_ex#get(a:dict_name, a:valname_ex, a:kind) 
-		
-		if type(tmp) == type([])
-			let val = [[1]] + tmp
-		else
-			let val = [[1], tmp]
-		endif
+	let tmp =  unite_setting_ex#get(a:dict_name, a:valname_ex, a:kind) 
 
-		call unite_setting_ex2#set_type(a:dict_name, a:valname_ex, a:kind, a:type)
+	if type(tmp) == type([])
+		let val = [[1]] + tmp
+	else
+		let val = [[1], tmp]
+	endif
 
-		call unite_setting_ex2#set(a:dict_name, a:valname_ex, a:kind, val)
-		
+	call unite_setting_ex2#set_type(a:dict_name, a:valname_ex, a:kind, a:type)
+
+	call unite_setting_ex2#set(a:dict_name, a:valname_ex, a:kind, val)
+
 endfunction
 "}}}
 function! unite_setting_ex2#save(dict_name) "{{{
@@ -170,7 +172,7 @@ function! unite_setting_ex2#get_source_word(dict_name, valname_ex, kind) "{{{
 
 	if type == 'bool'
 		let rtn = unite_setting_ex2#get_source_word_from_bool(a:dict_name, a:valname_ex, a:kind)
-	elseif type == 'list_ex' || type == 'select' 
+	elseif type == 'list_ex' || type == 'select' || type == 'const_list_ex' || type == 'const_select'
 		let rtn = s:get_source_word_from_strs(a:dict_name, a:valname_ex, a:kind)
 	elseif type == 'var'|| type == 'list'
 		let rtn = unite_setting_ex2#get_source_word_from_val(a:dict_name, a:valname_ex, a:kind)
@@ -280,7 +282,7 @@ function! unite_setting_ex2#get_strs_on_off_new(dict_name, valname_ex, kind) "{{
 endfunction
 "}}}
 function! unite_setting_ex2#get_type(dict_name, valname_ex, kind) "{{{
-	
+
 	let type_ = 'title'
 	if  exists(a:dict_name.'[a:valname_ex].__type')
 		exe 'let type_ = '.a:dict_name.'[a:valname_ex].__type'
@@ -302,19 +304,19 @@ function! unite_setting_ex2#get_type(dict_name, valname_ex, kind) "{{{
 endfunction
 "}}}
 function! unite_setting_ex2#set_type(dict_name, valname_ex, kind, type) "{{{
-		exe 'let tmp_d = '.a:dict_name
+	exe 'let tmp_d = '.a:dict_name
 
-		if !exists('tmp_d[a:valname_ex]')
-			let tmp_d[a:valname_ex] = {}
-		endif
+	if !exists('tmp_d[a:valname_ex]')
+		let tmp_d[a:valname_ex] = {}
+	endif
 
-		let tmp_d[a:valname_ex].__type = a:type
+	let tmp_d[a:valname_ex].__type = a:type
 
-		if a:type == 'bool'
-			let tmp_d[a:valname_ex][a:kind] = s:set_type_bool(tmp_d[a:valname_ex][a:kind])
-		endif
+	if a:type == 'bool'
+		let tmp_d[a:valname_ex][a:kind] = s:set_type_bool(tmp_d[a:valname_ex][a:kind])
+	endif
 
-		exe 'let '.a:dict_name.' = tmp_d'
+	exe 'let '.a:dict_name.' = tmp_d'
 endfunction
 "}}}
 
@@ -382,6 +384,23 @@ function! s:set_type_bool(val) "{{{
 	return type(a:val) == type(0) ? a:val : 0
 endfunction
 "}}}
+"
+" NEW
+function! unite_setting_ex2#get_const_flg(dict_name, valname_ex, kind)
+	let type = unite_setting_ex2#get_type(a:dict_name, a:valname_ex, a:kind)
+
+	let types = [
+				\ 'const_select',
+				\ 'const_list_ex',
+				\ ]
+	if type =~ join(types, '\|')
+		let flg = 1
+	else
+		let flg = 0
+	endif
+
+	return flg
+endfunction
 
 let &cpo = unite_setting_ex2#save_cpo
 unlet unite_setting_ex2#save_cpo

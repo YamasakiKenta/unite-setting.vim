@@ -29,11 +29,18 @@ let s:kind_settings_ex_select.action_table.edit = {
 			\ }
 function! s:kind_settings_ex_select.action_table.edit.func(candidate) "{{{
 	let tmp_d = {
-				\ 'dict_name' : a:candidate.action__dict_name,
+				\ 'dict_name'    : a:candidate.action__dict_name,
 				\ 'valname_ex'   : a:candidate.action__valname_ex,
-				\ 'kind'      : a:candidate.action__kind,
-				\ 'only_'     : 1,
+				\ 'kind'         : a:candidate.action__kind,
+				\ 'only_'        : 1,
+				\ 'const_'       :
+				\ unite_setting_ex2#get_const_flg(
+				\ a:candidate.action__dict_name,
+				\ a:candidate.action__valname_ex, 
+				\ a:candidate.action__kind
+				\ ),
 				\ }
+
 	call unite#start_temporary([['settings_ex_list_select', tmp_d]], {'default_action' : 'a_toggle'})
 endfunction
 "}}}
