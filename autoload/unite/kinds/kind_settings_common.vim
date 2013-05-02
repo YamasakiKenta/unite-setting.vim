@@ -45,7 +45,7 @@ function! s:kind_settings_common.action_table.edit.func(candidate)  "{{{
 endfunction
 "}}}
 let s:kind_settings_common.action_table.delete = {
-			\ 'description'   : 'delete',
+			\ 'description'   : 'delete ( kind_settings_common.vim ) ',
 			\ 'is_quit'       : 0,
 			\ }
 function! s:kind_settings_common.action_table.delete.func(candidate)  "{{{

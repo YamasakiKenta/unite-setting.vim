@@ -92,8 +92,8 @@ function! unite_setting_ex2#delete(dict_name, valname_ex, kind, delete_nums) "{{
 	" íœ ( ‘å‚«‚¢”š‚©‚çíœ ) 
 	for delete_num in delete_nums
 		" ”Ô†‚ÌXV
-		if exists('datas[delete_num]')
-			unlet datas[delete_num]
+		if exists('datas.items[delete_num]')
+			unlet datas.items[delete_num]
 		endif
 
 		" íœ
@@ -102,7 +102,10 @@ function! unite_setting_ex2#delete(dict_name, valname_ex, kind, delete_nums) "{{
 	endfor
 
 	" ‘I‘ğ”Ô†‚Ìİ’è
-	let datas[0] = nums
+	let datas.nums = nums
+
+	echo datas
+	call input("")
 
 	" İ’è
 	call unite_setting_ex2#set(a:dict_name, a:valname_ex, a:kind, datas)

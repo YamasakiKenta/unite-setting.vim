@@ -27,7 +27,7 @@ let s:kind_settings_ex_list_select.action_table.a_toggle.func
 
 let s:kind_settings_ex_list_select.action_table.delete = {
 			\ 'is_selectable' : 1,
-			\ 'description'   : 'delete',
+			\ 'description'   : 'delete ( kind_settings_ex_list_select.vim ) ',
 			\ 'is_quit'        : 0,
 			\ }
 function! s:kind_settings_ex_list_select.action_table.delete.func(candidates) "{{{
