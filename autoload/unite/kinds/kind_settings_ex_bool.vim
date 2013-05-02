@@ -2,9 +2,7 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 function! unite#kinds#kind_settings_ex_bool#define()
-	return [
-				\ s:kind_settings_ex_bool,
-				\ ]
+	return s:kind_settings_ex_bool
 endfunction
 
 let s:kind_settings_ex_bool = { 

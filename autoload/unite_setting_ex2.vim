@@ -42,8 +42,9 @@ function! unite_setting_ex2#select_list_toggle(candidates) "{{{
 
 	" V‹K’Ç‰Á‚Ìê‡
 	if candidates[0].action__new != ''
-		call insert(tmps.items, candidates[0].action__new)
-		call map(tmps.nums, "v:val+1") " Šù‘¶‚Ì€–Ú‚ğ‚¸‚ç‚·
+		"call insert(tmps.items, candidates[0].action__new)
+		"call map(tmps.nums, "v:val+1") " Šù‘¶‚Ì€–Ú‚ğ‚¸‚ç‚·
+		call add(tmps.items, candidates[0].action__new)
 	else
 		call unite#force_quit_session()
 	endif
@@ -86,7 +87,7 @@ function! unite_setting_ex2#delete(dict_name, valname_ex, kind, delete_nums) "{{
 	let datas = unite_setting_ex2#get_orig(a:dict_name, a:valname_ex, a:kind)
 
 	" ‘I‘ğ”Ô†‚Ìíœ
-	let nums = datas[0]
+	let nums = get(datas, 'nums')
 
 	" íœ ( ‘å‚«‚¢”š‚©‚çíœ ) 
 	for delete_num in delete_nums

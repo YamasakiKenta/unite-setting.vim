@@ -122,8 +122,8 @@ function! unite_setting_ex#add(dict_name, valname_ex, description, type, val) "{
 
 	let tmp_d[a:valname_ex] = get(tmp_d , a:valname_ex , {})
 
-	" š Ì—p‚Ì•ÏŠ·
 	if a:type =~ 'list_ex\|select' && type(a:val) == type([])
+		" š Ì—p‚Ì•ÏŠ·
 		let val = { 'nums' : map(a:val[0], "v:val-1"), 'items' : a:val[1:] }
 	else
 		let val = a:val
@@ -131,7 +131,6 @@ function! unite_setting_ex#add(dict_name, valname_ex, description, type, val) "{
 
 	let tmp_d[a:valname_ex].__type        = a:type
 	let tmp_d[a:valname_ex].__description = a:description
-	let tmp_d[a:valname_ex].__default     = val
 	let tmp_d[a:valname_ex].__common      = get(tmp_d[a:valname_ex], '__common', val)
 
 
