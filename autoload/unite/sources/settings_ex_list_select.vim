@@ -43,6 +43,7 @@ function! s:settings_ex_list_select.gather_candidates(args, context) "{{{
 
 	let rtns = []
 	for data in datas
+		" •Ï‰»‚·‚é‚Ì‚ÍAwork action__num, action__valname
 		let rtns += [{
 					\ 'word'               : num_.' - '.data.str,
 					\ 'kind'               : 'settings_ex_list_select',

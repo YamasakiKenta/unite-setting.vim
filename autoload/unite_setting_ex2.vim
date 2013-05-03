@@ -15,6 +15,11 @@ let s:unite_kind = {
 			\ 'const_select'   : 'kind_settings_ex_select',
 			\ }
 
+" ★ list, var をなくす
+" ★ const_list_ex, const_select をなくす
+" bool    - true or false 
+" list_ex - 複数選択
+" select  - 単一選択
 function! unite_setting_ex2#init()
 endfunction
 
@@ -24,7 +29,6 @@ function! s:get_source_word_from_strs(dict_name, valname_ex, kind) "{{{
 	return unite_setting_ex2#get_source_word_sub( a:dict_name, a:valname_ex, a:kind, join(strs))
 endfunction
 "}}}
-
 function! unite_setting_ex2#select_list_toggle(candidates) "{{{
 
 	let candidates = type(a:candidates) == type([]) ? a:candidates : [a:candidates]
@@ -74,6 +78,7 @@ endfunction
 "}}}
 function! unite_setting_ex2#save(dict_name) "{{{
 	exe 'let tmp_d = '.a:dict_name
+	echo 'save'
 	call s:Common.save(tmp_d.__file, tmp_d)
 endfunction
 "}}}
@@ -103,9 +108,6 @@ function! unite_setting_ex2#delete(dict_name, valname_ex, kind, delete_nums) "{{
 
 	" 選択番号の設定
 	let datas.nums = nums
-
-	echo datas
-	call input("")
 
 	" 設定
 	call unite_setting_ex2#set(a:dict_name, a:valname_ex, a:kind, datas)
@@ -176,7 +178,7 @@ function! unite_setting_ex2#get_source_word(dict_name, valname_ex, kind) "{{{
 
 	if type == 'bool'
 		let rtn = unite_setting_ex2#get_source_word_from_bool(a:dict_name, a:valname_ex, a:kind)
-	elseif type == 'list_ex' || type == 'select' || type == 'const_list_ex' || type == 'const_select'
+	elseif type == 'list_ex' || type == 'select' 
 		let rtn = s:get_source_word_from_strs(a:dict_name, a:valname_ex, a:kind)
 	elseif type == 'var'|| type == 'list'
 		let rtn = unite_setting_ex2#get_source_word_from_val(a:dict_name, a:valname_ex, a:kind)
@@ -230,7 +232,7 @@ endfunction
 "}}}
 function! unite_setting_ex2#get_str(val) "{{{
 	let type_ = type(a:val)
-	if type_ == type(0) || type_ == type('a')
+	if type_ == type(0) || type_ == type('')
 		let str = a:val
 	else
 		let str = string(a:val)
@@ -244,18 +246,22 @@ function! unite_setting_ex2#get_strs_on_off_new(dict_name, valname_ex, kind) "{{
 
 	" ★　バグ対応
 	if type(datas) != type({})
-		echo 'ERROR '
-		echo datas
+		echo 'ERROR ' string(datas)
 		unlet datas
-		let datas = {'nums' : [], 'items' : []}
+		let datas = {'nums' : [], 'items' : [], 'consts' : []}
 	endif
 
-	let num_flgs  = get(datas, 'nums', [])
+	if exists('datas.nums')
+		let num_flgs  = datas.nums
+	elseif exists('datas.num')
+		let num_flgs  = [datas.num]
+	else
+		let num_flgs = []
+	endif
 
 	" ★　バグ対応
 	if type(num_flgs) != type([])
-		echo 'ERROR '
-		echo num_flgs
+		echo 'ERROR ' string(num_flgs)
 		unlet num_flgs
 		let num_flgs = []
 	endif
@@ -272,9 +278,7 @@ function! unite_setting_ex2#get_strs_on_off_new(dict_name, valname_ex, kind) "{{
 		endfor
 	catch
 		" ★ 新規追加の場合エラーが発生する
-		echo 'ERROR - catch'
-		echo num_
-		echo rtns
+		echo 'ERROR - catch' string(num_) string(rtns)
 	endtry
 
 
@@ -350,15 +354,18 @@ function! unite_setting_ex2#set_next(dict_name, valname_ex, kind) "{{{
 
 	if type == 'bool'
 		let val = unite_setting_ex#get(a:dict_name, a:valname_ex, a:kind) ? 0 : 1
-	else
+	elseif type == 'select'
 		let val = unite_setting_ex2#get_orig(a:dict_name, a:valname_ex, a:kind)
+		let num_ = val.num
 
-		let num_ = get(val.nums, 0, 0)
 		let num_ = num_ + 1
 		let num_ = num_ < len(val.items) ? num_ : 0
 
-		let val.nums[0] = num_
-
+		let val.num = num_
+	else
+		" ★
+		echo 'non supoert....'
+		call input("")
 	endif
 
 	call unite_setting_ex2#set(a:dict_name, a:valname_ex, a:kind, val )
@@ -391,16 +398,13 @@ endfunction
 "
 " NEW
 function! unite_setting_ex2#get_const_flg(dict_name, valname_ex, kind)
-	let type = unite_setting_ex2#get_type(a:dict_name, a:valname_ex, a:kind)
+	let datas = copy(unite_setting_ex2#get_orig(a:dict_name, a:valname_ex, a:kind))
 
-	let types = [
-				\ 'const_select',
-				\ 'const_list_ex',
-				\ ]
-	if type =~ join(types, '\|')
-		let flg = 1
-	else
-		let flg = 0
+	let flg = 0
+	if exists('datas.consts')
+		if len(datas.consts)
+			let flg = 1
+		endif
 	endif
 
 	return flg

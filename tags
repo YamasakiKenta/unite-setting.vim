@@ -7,39 +7,40 @@
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
 !_TAG_PROGRAM_VERSION	5.8J2	//
-GetFileNameForUnite	.\autoload\vital\_6289e09\mInd\common.vim	/^function! s:GetFileNameForUnite(args, context) "{{{$/;"	f
-Get_cmds	.\autoload\vital\_6289e09\mInd\common.vim	/^function! s:Get_cmds(cmd) "{{{$/;"	f
-LogFile	.\autoload\vital\_6289e09\mInd\common.vim	/^function! s:LogFile(name, deleteFlg, ...) "{{{$/;"	f
-MyQuit	.\autoload\vital\_6289e09\mInd\common.vim	/^function! s:MyQuit() "{{{$/;"	f
+GetFileNameForUnite	.\autoload\vital\_6289e09\mind\common.vim	/^function! s:GetFileNameForUnite(args, context) "{{{$/;"	f
+Get_cmds	.\autoload\vital\_6289e09\mind\common.vim	/^function! s:Get_cmds(cmd) "{{{$/;"	f
+LogFile	.\autoload\vital\_6289e09\mind\common.vim	/^function! s:LogFile(name, deleteFlg, ...) "{{{$/;"	f
+MyQuit	.\autoload\vital\_6289e09\mind\common.vim	/^function! s:MyQuit() "{{{$/;"	f
 SettingExAdd	.\plugin\command.vim	/^command! -nargs=+ SettingExAdd call s:setting_ex_add(<f-args>)$/;"	c
 _build_module	.\autoload\vital\_6289e09.vim	/^function! s:_build_module(sid)$/;"	f
-_get_dict_from_list	.\autoload\vital\_6289e09\mInd\common.vim	/^function! s:_get_dict_from_list(datas) "{{{$/;"	f
-_head	.\autoload\vital\_6289e09\mInd\debug.vim	/^function s:_head(func, lnum)$/;"	f
+_get_dict_from_list	.\autoload\vital\_6289e09\mind\common.vim	/^function! s:_get_dict_from_list(datas) "{{{$/;"	f
+_head	.\autoload\vital\_6289e09\mind\debug.vim	/^function s:_head(func, lnum)$/;"	f
 _import	.\autoload\vital\_6289e09.vim	/^function! s:_import(name, scripts)$/;"	f
-_len_compara	.\autoload\vital\_6289e09\mInd\common.vim	/^function! s:_len_compara(i1, i2) "{{{$/;"	f
+_len_compara	.\autoload\vital\_6289e09\mind\common.vim	/^function! s:_len_compara(i1, i2) "{{{$/;"	f
 _redir	.\autoload\vital\_6289e09.vim	/^function! s:_redir(cmd)$/;"	f
 _scripts	.\autoload\vital\_6289e09.vim	/^function! s:_scripts()$/;"	f
 _unify_path	.\autoload\vital\_6289e09.vim	/^  function! s:_unify_path(path)$/;"	f
 _wcwidth	.\autoload\vital\_6289e09\prelude.vim	/^  function! s:_wcwidth(ucs)$/;"	f
-add_uniq	.\autoload\vital\_6289e09\mInd\common.vim	/^function! s:add_uniq(datas, val) "{{{$/;"	f
-change_extension	.\autoload\vital\_6289e09\mInd\common.vim	/^function! s:change_extension(exts) "{{{$/;"	f
-change_unite	.\autoload\vital\_6289e09\mInd\common.vim	/^function! s:change_unite() "{{{$/;"	f
-conv	.\autoload\vital\_6289e09\mInd\sjis.vim	/^function! s:conv(str)$/;"	f
+add_uniq	.\autoload\vital\_6289e09\mind\common.vim	/^function! s:add_uniq(datas, val) "{{{$/;"	f
+change_extension	.\autoload\vital\_6289e09\mind\common.vim	/^function! s:change_extension(exts) "{{{$/;"	f
+change_unite	.\autoload\vital\_6289e09\mind\common.vim	/^function! s:change_unite() "{{{$/;"	f
+conv	.\autoload\vital\_6289e09\mind\sjis.vim	/^function! s:conv(str)$/;"	f
 escape_file_searching	.\autoload\vital\_6289e09\prelude.vim	/^function! s:escape_file_searching(buffer_name)$/;"	f
 escape_pattern	.\autoload\vital\_6289e09\prelude.vim	/^function! s:escape_pattern(str)$/;"	f
-event_save_file	.\autoload\vital\_6289e09\mInd\common.vim	/^function! s:event_save_file(tmpfile,strs,func,args) "{{{$/;"	f
-event_save_file_autocmd	.\autoload\vital\_6289e09\mInd\common.vim	/^function! s:event_save_file_autocmd(func,args) "{{{$/;"	f
-exe_line	.\autoload\vital\_6289e09\mInd\debug.vim	/^function s:exe_line(str)$/;"	f
-get_fname_key	.\autoload\vital\_6289e09\mInd\common.vim	/^function! s:get_fname_key(file_d, fname_full) "{{{$/;"	f
+event_save_file	.\autoload\vital\_6289e09\mind\common.vim	/^function! s:event_save_file(tmpfile,strs,func,args) "{{{$/;"	f
+event_save_file_autocmd	.\autoload\vital\_6289e09\mind\common.vim	/^function! s:event_save_file_autocmd(func,args) "{{{$/;"	f
+exe_line	.\autoload\vital\_6289e09\mind\debug.vim	/^function s:exe_line(str)$/;"	f
+get_fname_key	.\autoload\vital\_6289e09\mind\common.vim	/^function! s:get_fname_key(file_d, fname_full) "{{{$/;"	f
 get_kind	.\autoload\unite_setting_ex.vim	/^function! s:get_kind(valname_ex) "{{{$/;"	f
-get_kk	.\autoload\vital\_6289e09\mInd\common.vim	/^function! s:get_kk(str) "{{{$/;"	f
+get_kk	.\autoload\vital\_6289e09\mind\common.vim	/^function! s:get_kk(str) "{{{$/;"	f
 get_last_status	.\autoload\vital\_6289e09\prelude.vim	/^function! s:get_last_status()$/;"	f
-get_len_sort	.\autoload\vital\_6289e09\mInd\common.vim	/^function! s:get_len_sort(lists) "{{{$/;"	f
-get_list	.\autoload\vital\_6289e09\mInd\common.vim	/^function! s:get_list(tmp) "{{{$/;"	f
+get_len_sort	.\autoload\vital\_6289e09\mind\common.vim	/^function! s:get_len_sort(lists) "{{{$/;"	f
+get_list	.\autoload\vital\_6289e09\mind\common.vim	/^function! s:get_list(tmp) "{{{$/;"	f
 get_lists	.\autoload\unite_setting_ex.vim	/^function! s:get_lists(datas) "{{{$/;"	f
-get_now_filename	.\autoload\vital\_6289e09\mInd\common.vim	/^function! s:get_now_filename() "{{{$/;"	f
-get_pathEn	.\autoload\vital\_6289e09\mInd\common.vim	/^function! s:get_pathEn(path) "{{{$/;"	f
-get_pathSrash	.\autoload\vital\_6289e09\mInd\common.vim	/^function! s:get_pathSrash(path) "{{{$/;"	f
+get_now_filename	.\autoload\vital\_6289e09\mind\common.vim	/^function! s:get_now_filename() "{{{$/;"	f
+get_pathEn	.\autoload\vital\_6289e09\mind\common.vim	/^function! s:get_pathEn(path) "{{{$/;"	f
+get_pathSrash	.\autoload\vital\_6289e09\mind\common.vim	/^function! s:get_pathSrash(path) "{{{$/;"	f
+get_source_word_from_strs	.\autoload\unite_setting_ex2.vim	/^function! s:get_source_word_from_strs(dict_name, valname_ex, kind) "{{{$/;"	f
 get_var	.\autoload\unite_setting_ex.vim	/^function! s:get_var(valname_ex, type) "{{{$/;"	f
 getchar	.\autoload\vital\_6289e09\prelude.vim	/^function! s:getchar(...)$/;"	f
 getchar_safe	.\autoload\vital\_6289e09\prelude.vim	/^function! s:getchar_safe(...)$/;"	f
@@ -52,7 +53,7 @@ input_helper	.\autoload\vital\_6289e09\prelude.vim	/^function! s:input_helper(fu
 input_safe	.\autoload\vital\_6289e09\prelude.vim	/^function! s:input_safe(...)$/;"	f
 is_cygwin	.\autoload\vital\_6289e09\prelude.vim	/^function! s:is_cygwin()$/;"	f
 is_dict	.\autoload\vital\_6289e09\prelude.vim	/^function! s:is_dict(Value)$/;"	f
-is_different	.\autoload\vital\_6289e09\mInd\common.vim	/^function! s:is_different(path,path2) "{{{$/;"	f
+is_different	.\autoload\vital\_6289e09\mind\common.vim	/^function! s:is_different(path,path2) "{{{$/;"	f
 is_float	.\autoload\vital\_6289e09\prelude.vim	/^function! s:is_float(Value)$/;"	f
 is_funcref	.\autoload\vital\_6289e09\prelude.vim	/^function! s:is_funcref(Value)$/;"	f
 is_integer	.\autoload\vital\_6289e09\prelude.vim	/^function! s:is_integer(Value)$/;"	f
@@ -85,14 +86,14 @@ kind_settings_ex_var.action_table.select.func	.\autoload\unite\kinds\kind_settin
 kind_settings_list.action_table.select.func	.\autoload\unite\kinds\kind_settings_list.vim	/^function! s:kind_settings_list.action_table.select.func(candidate) "{{{$/;"	f
 kind_settings_list.action_table.select_all.func	.\autoload\unite\kinds\kind_settings_list.vim	/^function! s:kind_settings_list.action_table.select_all.func(candidate) "{{{$/;"	f
 load	.\autoload\vital\_6289e09.vim	/^function! s:load(...) dict$/;"	f
-load	.\autoload\vital\_6289e09\mInd\common.vim	/^function! s:load(name, default) "{{{$/;"	f
-map_diff	.\autoload\vital\_6289e09\mInd\common.vim	/^function! s:map_diff() "{{{$/;"	f
-map_diff_reset	.\autoload\vital\_6289e09\mInd\common.vim	/^function! s:map_diff_reset() "{{{$/;"	f
-map_diff_tab	.\autoload\vital\_6289e09\mInd\common.vim	/^function! s:map_diff_tab() "{{{$/;"	f
+load	.\autoload\vital\_6289e09\mind\common.vim	/^function! s:load(name, default) "{{{$/;"	f
+map_diff	.\autoload\vital\_6289e09\mind\common.vim	/^function! s:map_diff() "{{{$/;"	f
+map_diff_reset	.\autoload\vital\_6289e09\mind\common.vim	/^function! s:map_diff_reset() "{{{$/;"	f
+map_diff_tab	.\autoload\vital\_6289e09\mind\common.vim	/^function! s:map_diff_tab() "{{{$/;"	f
 path2directory	.\autoload\vital\_6289e09\prelude.vim	/^function! s:path2directory(path)$/;"	f
 path2project_directory	.\autoload\vital\_6289e09\prelude.vim	/^function! s:path2project_directory(path, ...)$/;"	f
 print_error	.\autoload\vital\_6289e09\prelude.vim	/^function! s:print_error(message)$/;"	f
-printf	.\autoload\vital\_6289e09\mInd\sjis.vim	/^function! s:printf(...)$/;"	f
+printf	.\autoload\vital\_6289e09\mind\sjis.vim	/^function! s:printf(...)$/;"	f
 s:Common	.\autoload\unite_setting_ex.vim	/^let s:Common = vital#of('unite-setting.vim').import('Mind.Common')$/;"	v
 s:Common	.\autoload\unite_setting_ex2.vim	/^let s:Common = s:V.import('Mind.Common')$/;"	v
 s:Sjis	.\autoload\unite_setting2.vim	/^let s:Sjis = s:V.import('Mind.Sjis')$/;"	v
@@ -155,9 +156,10 @@ s:save_cpo	.\autoload\unite\sources\settings_var_all.vim	/^let s:save_cpo = &cpo
 s:save_cpo	.\autoload\unite_setting.vim	/^let s:save_cpo = &cpo$/;"	v
 s:save_cpo	.\autoload\unite_setting2.vim	/^let s:save_cpo = &cpo$/;"	v
 s:save_cpo	.\autoload\unite_setting_ex.vim	/^let s:save_cpo = &cpo$/;"	v
-s:save_cpo	.\autoload\vital\_6289e09\mInd\common.vim	/^let s:save_cpo = &cpo$/;"	v
-s:save_cpo	.\autoload\vital\_6289e09\mInd\debug.vim	/^let s:save_cpo = &cpo$/;"	v
-s:save_cpo	.\autoload\vital\_6289e09\mInd\sjis.vim	/^let s:save_cpo = &cpo$/;"	v
+s:save_cpo	.\autoload\unite_setting_ex_3.vim	/^let s:save_cpo = &cpo$/;"	v
+s:save_cpo	.\autoload\vital\_6289e09\mind\common.vim	/^let s:save_cpo = &cpo$/;"	v
+s:save_cpo	.\autoload\vital\_6289e09\mind\debug.vim	/^let s:save_cpo = &cpo$/;"	v
+s:save_cpo	.\autoload\vital\_6289e09\mind\sjis.vim	/^let s:save_cpo = &cpo$/;"	v
 s:save_cpo	.\autoload\vital\_6289e09\prelude.vim	/^let s:save_cpo = &cpo$/;"	v
 s:save_cpo	.\plugin\command.vim	/^let s:save_cpo = &cpo$/;"	v
 s:self_version	.\autoload\vital\_6289e09.vim	/^let s:self_version = expand('<sfile>:t:r')$/;"	v
@@ -171,10 +173,10 @@ s:source_settings_var_all	.\autoload\unite\sources\settings_var_all.vim	/^let s:
 s:source_settings_var_all	.\autoload\unite\sources\settings_var_all.vim	/^let s:source_settings_var_all.name        = 'settings_var_all'$/;"	v
 s:unite_kind	.\autoload\unite_setting_ex2.vim	/^let s:unite_kind = {$/;"	v
 s:valname_to_source_kind_tabel	.\autoload\unite_setting2.vim	/^let s:valname_to_source_kind_tabel = {$/;"	v
-save	.\autoload\vital\_6289e09\mInd\common.vim	/^function! s:save(name, dict) "{{{$/;"	f
-selectEdit_write	.\autoload\vital\_6289e09\mInd\common.vim	/^function! s:selectEdit_write(args) "{{{$/;"	f
+save	.\autoload\vital\_6289e09\mind\common.vim	/^function! s:save(name, dict) "{{{$/;"	f
+selectEdit_write	.\autoload\vital\_6289e09\mind\common.vim	/^function! s:selectEdit_write(args) "{{{$/;"	f
 set_default	.\autoload\vital\_6289e09\prelude.vim	/^function! s:set_default(var, val)$/;"	f
-set_dict_extend	.\autoload\vital\_6289e09\mInd\common.vim	/^function! s:set_dict_extend(dict1, dict2) "{{{$/;"	f
+set_dict_extend	.\autoload\vital\_6289e09\mind\common.vim	/^function! s:set_dict_extend(dict1, dict2) "{{{$/;"	f
 set_dictionary_helper	.\autoload\vital\_6289e09\prelude.vim	/^function! s:set_dictionary_helper(variable, keys, pattern)$/;"	f
 set_type_bool	.\autoload\unite_setting_ex2.vim	/^function! s:set_type_bool(val) "{{{$/;"	f
 setting_ex_add	.\plugin\command.vim	/^function! s:setting_ex_add(...)$/;"	f
@@ -229,13 +231,13 @@ unite_setting_ex2#cnv_list_ex_select	.\autoload\unite_setting_ex2.vim	/^function
 unite_setting_ex2#common_out	.\autoload\unite_setting_ex2.vim	/^function! unite_setting_ex2#common_out(dict_name) "{{{$/;"	f
 unite_setting_ex2#delete	.\autoload\unite_setting_ex2.vim	/^function! unite_setting_ex2#delete(dict_name, valname_ex, kind, delete_nums) "{{{$/;"	f
 unite_setting_ex2#get_bits	.\autoload\unite_setting_ex2.vim	/^function! unite_setting_ex2#get_bits(dict_name, valname_ex, kind) "{{{$/;"	f
+unite_setting_ex2#get_const_flg	.\autoload\unite_setting_ex2.vim	/^function! unite_setting_ex2#get_const_flg(dict_name, valname_ex, kind)$/;"	f
 unite_setting_ex2#get_kind	.\autoload\unite_setting_ex2.vim	/^function! unite_setting_ex2#get_kind(dict_name, valname_ex, kind) "{{{$/;"	f
 unite_setting_ex2#get_orig	.\autoload\unite_setting_ex2.vim	/^function! unite_setting_ex2#get_orig(dict_name, valname_ex, kind) "{{{$/;"	f
 unite_setting_ex2#get_source_kind	.\autoload\unite_setting_ex2.vim	/^function! unite_setting_ex2#get_source_kind(dict_name, valname_ex, kind) "{{{$/;"	f
 unite_setting_ex2#get_source_valname	.\autoload\unite_setting_ex2.vim	/^function! unite_setting_ex2#get_source_valname(dict_name, valname_ex, kind) "{{{$/;"	f
 unite_setting_ex2#get_source_word	.\autoload\unite_setting_ex2.vim	/^function! unite_setting_ex2#get_source_word(dict_name, valname_ex, kind) "{{{$/;"	f
 unite_setting_ex2#get_source_word_from_bool	.\autoload\unite_setting_ex2.vim	/^function! unite_setting_ex2#get_source_word_from_bool(dict_name, valname_ex, kind) "{{{$/;"	f
-unite_setting_ex2#get_source_word_from_strs	.\autoload\unite_setting_ex2.vim	/^function! unite_setting_ex2#get_source_word_from_strs(dict_name, valname_ex, kind) "{{{$/;"	f
 unite_setting_ex2#get_source_word_from_val	.\autoload\unite_setting_ex2.vim	/^function! unite_setting_ex2#get_source_word_from_val(dict_name, valname_ex, kind) "{{{$/;"	f
 unite_setting_ex2#get_source_word_sub	.\autoload\unite_setting_ex2.vim	/^function! unite_setting_ex2#get_source_word_sub(dict_name, valname_ex, kind, str) "{{{$/;"	f
 unite_setting_ex2#get_source_word_sub_type	.\autoload\unite_setting_ex2.vim	/^function! unite_setting_ex2#get_source_word_sub_type(dict_name, valname_ex, kind) "{{{$/;"	f
@@ -250,6 +252,7 @@ unite_setting_ex2#select_list_toggle	.\autoload\unite_setting_ex2.vim	/^function
 unite_setting_ex2#set	.\autoload\unite_setting_ex2.vim	/^function! unite_setting_ex2#set(dict_name, valname_ex, kind, val) "{{{$/;"	f
 unite_setting_ex2#set_next	.\autoload\unite_setting_ex2.vim	/^function! unite_setting_ex2#set_next(dict_name, valname_ex, kind) "{{{$/;"	f
 unite_setting_ex2#set_type	.\autoload\unite_setting_ex2.vim	/^function! unite_setting_ex2#set_type(dict_name, valname_ex, kind, type) "{{{$/;"	f
+unite_setting_ex_3#add	.\autoload\unite_setting_ex_3.vim	/^function! unite_setting_ex_3#add(dict_name, valname_ex, description, type, val) "{{{$/;"	f
 unload	.\autoload\vital\_6289e09.vim	/^function! s:unload()$/;"	f
 vital#	.\autoload\vital\_6289e09.vim	/^function! vital#{s:self_version}#new()$/;"	f
 vital#of	.\autoload\vital.vim	/^function! vital#of(name)$/;"	f

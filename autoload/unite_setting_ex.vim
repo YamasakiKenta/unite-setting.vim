@@ -7,22 +7,28 @@ function! s:get_lists(datas) "{{{
 
 	let rtns = []
 
-	" š ‹Œ®
-	if type(a:datas) == type([])
-		for num_ in filter(a:datas[0], 'v:val < len(a:datas)+1')
-			if exists('a:datas[num_]')
-				call add(rtns, a:datas[num_])
-			endif
-		endfor
-	else
-		" VŒ^
+	try
 		let max = len(a:datas.items)
 		for num_ in filter(a:datas.nums, 'v:val < max')
 			call add(rtns, a:datas.items[num_])
 		endfor
-	endif
+	catch
+		echo 'error s:get_lists'
+	endtry
 
 	return rtns
+endfunction
+"}}}
+function! s:get_select_item(datas) "{{{
+
+	let rtn = 0
+
+	" VŒ^
+	if exists('a:datas.items[a:datas.num]')
+		let rtn = a:datas.items[a:datas.num]
+	endif
+
+	return rtn
 endfunction
 "}}}
 function! s:get_kind(valname_ex) "{{{
@@ -51,7 +57,7 @@ function! s:get_var(valname_ex, type) "{{{
 	let type       = a:type
 	exe 'let tmp = '.valname_ex
 
-	if type == 'select' || type == 'list_ex'  || type == 'const_select' || type == 'const_list_ex'
+	if type == 'select' || type == 'list_ex'
 
 		if type(tmp) == type("")
 			let tmps = [tmp]
@@ -85,10 +91,10 @@ function! unite_setting_ex#get(dict_name, valname_ex, kind) "{{{
 	let type_ = tmp_d[a:valname_ex].__type
 	let val   = tmp_d[a:valname_ex][a:kind]
 
-	if type_ == 'list_ex' || 'const_list_ex'
+	if type_ == 'list_ex' 
 		let rtns = s:get_lists(val)
-	elseif type_ == 'select' || 'const_select'
-		let rtns = join(s:get_lists(val))
+	elseif type_ == 'select'
+		let rtns = s:get_select_item(val)
 	elseif type_ == 'bool'
 		try
 			let rtns = val > 0 ? 1 : 0
