@@ -34,9 +34,9 @@ function! unite_setting_ex2#select_list_toggle(candidates) "{{{
 
 	let candidates = type(a:candidates) == type([]) ? a:candidates : [a:candidates]
 
-	let dict_name = candidates[0].action__dict_name
+	let dict_name    = candidates[0].action__dict_name
 	let valname_ex   = candidates[0].action__valname_ex
-	let kind      = candidates[0].action__kind
+	let kind         = candidates[0].action__kind
 
 	let tmps = unite_setting_ex2#get_orig(dict_name, valname_ex, kind)
 
@@ -47,8 +47,6 @@ function! unite_setting_ex2#select_list_toggle(candidates) "{{{
 
 	" V‹K’Ç‰Á‚Ìê‡
 	if candidates[0].action__new != ''
-		"call insert(tmps.items, candidates[0].action__new)
-		"call map(tmps.nums, "v:val+1") " Šù‘¶‚Ì€–Ú‚ğ‚¸‚ç‚·
 		call add(tmps.items, candidates[0].action__new)
 	else
 		call unite#force_quit_session()
