@@ -8,12 +8,13 @@ let s:Sjis = s:V.import('Mind.Sjis')
 let s:unite_kind = {
 			\ 'bool'           : 'kind_settings_ex_bool',
 			\ 'list'           : 'kind_settings_ex_var_list',
-			\ 'list_ex'        : 'kind_settings_ex_list',
 			\ 'select'         : 'kind_settings_ex_select',
+			\ 'list_ex'        : 'kind_settings_ex_select',
 			\ 'var'            : 'kind_settings_ex_var',
-			\ 'const_list_ex'  : 'kind_settings_ex_list',
-			\ 'const_select'   : 'kind_settings_ex_select',
 			\ }
+			"\ 'list_ex'        : 'kind_settings_ex_list',
+			"\ 'const_list_ex'  : 'kind_settings_ex_list',
+			"\ 'const_select'   : 'kind_settings_ex_select',
 
 " š list, var ‚ğ‚È‚­‚·
 " š const_list_ex, const_select ‚ğ‚È‚­‚·
@@ -41,7 +42,7 @@ function! unite_setting_ex2#select_list_toggle(candidates) "{{{
 
 	let nums = []
 	let max  = len(tmps.items)
-	let nums = map(copy(a:candidates), "v:val.action__num")
+	let nums = map(copy(candidates), "v:val.action__num")
 	let nums = filter(nums, '0 <= v:val && v:val < max')
 
 	" V‹K’Ç‰Á‚Ìê‡
@@ -348,6 +349,18 @@ function! unite_setting_ex2#set(dict_name, valname_ex, kind, val) "{{{
 
 endfunction
 "}}}
+function! s:next_items(num, items) "{{{
+	" ********************************************************************************
+	" @par           {items} ‚Ì”z—ñ”‚ğ’´‚¦‚È‚¢‚æ‚¤‚É {num} ‚ğ‰ÁZ‚·‚é
+	" @param[in]     num   = 0
+	" @param[in]     items = [1, 2, 3]
+	" @return        num   = 1
+	" ********************************************************************************
+	let num_ = a:num + 1
+	let num_ = num_ < len(a:items) ? num_ : 0
+	return num_
+endfunction
+" }}}
 function! unite_setting_ex2#set_next(dict_name, valname_ex, kind) "{{{
 	exe 'let tmp_d = '.a:dict_name
 	let type = unite_setting_ex2#get_type(a:dict_name, a:valname_ex, a:kind)
@@ -356,12 +369,10 @@ function! unite_setting_ex2#set_next(dict_name, valname_ex, kind) "{{{
 		let val = unite_setting_ex#get(a:dict_name, a:valname_ex, a:kind) ? 0 : 1
 	elseif type == 'select'
 		let val = unite_setting_ex2#get_orig(a:dict_name, a:valname_ex, a:kind)
-		let num_ = val.num
-
-		let num_ = num_ + 1
-		let num_ = num_ < len(val.items) ? num_ : 0
-
-		let val.num = num_
+		let val.num = s:next_items(val.num, val.items)
+	elseif type == 'list_ex'
+		let val = unite_setting_ex2#get_orig(a:dict_name, a:valname_ex, a:kind)
+		call map(val.nums, 's:next_items(v:val, val.items)')
 	else
 		" š
 		echo 'non supoert....'

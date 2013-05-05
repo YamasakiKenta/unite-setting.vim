@@ -32,7 +32,6 @@ function! s:kind_settings_ex_select.action_table.edit.func(candidate) "{{{
 				\ 'dict_name'    : a:candidate.action__dict_name,
 				\ 'valname_ex'   : a:candidate.action__valname_ex,
 				\ 'kind'         : a:candidate.action__kind,
-				\ 'only_'        : 1,
 				\ 'const_'       :
 				\ unite_setting_ex2#get_const_flg(
 				\ a:candidate.action__dict_name,
@@ -41,7 +40,9 @@ function! s:kind_settings_ex_select.action_table.edit.func(candidate) "{{{
 				\ ),
 				\ }
 
-	call unite#start_temporary([['settings_ex_list_select', tmp_d]], {'default_action' : 'a_toggle'})
+	let type = unite_setting_ex2#get_type(tmp_d.dict_name, tmp_d.valname_ex, tmp_d.kind)
+
+	call unite#start_temporary([['settings_ex_list_select', tmp_d]])
 endfunction
 "}}}
 

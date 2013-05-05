@@ -6,7 +6,7 @@ function! unite#kinds#kind_settings_ex_list_select#define()
 endfunction
 let s:kind_settings_ex_list_select = { 
 			\ 'name'           : 'settings_ex_list_select',
-			\ 'default_action' : 'a_toggles',
+			\ 'default_action' : 'a_toggle',
 			\ 'action_table'   : {},
 			\ 'parents': ['kind_settings_ex_common'],
 			\ }
@@ -36,6 +36,7 @@ function! s:kind_settings_ex_list_select.action_table.delete.func(candidates) "{
 	let valname_ex = a:candidates[0].action__valname_ex
 	let kind       = a:candidates[0].action__kind
 	let dict_name  = a:candidates[0].action__dict_name
+
 	let nums       = map(copy(a:candidates), 'v:val.action__num')
 
 	" çÌèúÇ∑ÇÈ
@@ -44,6 +45,7 @@ function! s:kind_settings_ex_list_select.action_table.delete.func(candidates) "{
 	call unite_setting_ex2#common_out(dict_name)
 endfunction
 "}}}
+
 
 let &cpo = s:save_cpo
 unlet s:save_cpo

@@ -16,7 +16,6 @@ function! s:settings_ex_list_select.hooks.on_init(args, context) "{{{
 		let a:context.source__dict_name    = a:args[0].dict_name
 		let a:context.source__valname_ex   = a:args[0].valname_ex
 		let a:context.source__kind         = a:args[0].kind
-		let a:context.source__only         = get(a:args[0], 'only_', 0)
 		let a:context.source__const        = get(a:args[0], 'const_', 0)
 	endif
 endfunction
@@ -26,18 +25,22 @@ function! s:settings_ex_list_select.gather_candidates(args, context) "{{{
 	let dict_name  = a:context.source__dict_name
 	let valname_ex = a:context.source__valname_ex
 	let kind       = a:context.source__kind
-	let only_      = a:context.source__only
 	let const_     = a:context.source__const
 
 	let datas  = unite_setting_ex2#get_strs_on_off_new(dict_name, valname_ex, kind)
 
+	let type  = unite_setting_ex2#get_type(dict_name, valname_ex, kind)
+	let only_ = ( type == 'select' ? 1 : 0 )
+
 	if only_ == 1 
 		" select
 		let num_ = 0
+		let unite_kind = 'settings_ex_list_select'
 	else
 		" list
 		" îÒëIëópÇÃçÄñ⁄
 		let num_ = -1
+		let unite_kind = 'settings_ex_list_selects'
 		call insert(datas, { 'str' : ' NULL ', 'flg' : 0 })
 	endif
 
@@ -46,7 +49,7 @@ function! s:settings_ex_list_select.gather_candidates(args, context) "{{{
 		" ïœâªÇ∑ÇÈÇÃÇÕÅAwork action__num, action__valname
 		let rtns += [{
 					\ 'word'               : num_.' - '.data.str,
-					\ 'kind'               : 'settings_ex_list_select',
+					\ 'kind'               : unite_kind,
 					\ 'action__dict_name'  : dict_name,
 					\ 'action__valname_ex' : valname_ex,
 					\ 'action__kind'       : kind,
