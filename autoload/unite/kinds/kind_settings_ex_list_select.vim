@@ -36,16 +36,23 @@ function! s:kind_settings_ex_list_select.action_table.delete.func(candidates) "{
 	let valname_ex = a:candidates[0].action__valname_ex
 	let kind       = a:candidates[0].action__kind
 	let dict_name  = a:candidates[0].action__dict_name
+	let const_flg  = a:candidates[0].action__const_flg  
 
-	let nums       = map(copy(a:candidates), 'v:val.action__num')
+	if const_flg == 0
+		unite#print_message("con't edit")
+	else
 
-	" íœ‚·‚é
-	call unite_setting_ex2#delete(dict_name, valname_ex, kind, nums)
+		let nums       = map(copy(a:candidates), 'v:val.action__num')
 
-	call unite_setting_ex2#common_out(dict_name)
+		" íœ‚·‚é
+		call unite_setting_ex2#delete(dict_name, valname_ex, kind, nums)
+
+		call unite_setting_ex2#common_out(dict_name)
+	endif
 endfunction
 "}}}
 
 
+" š •ÒW‚ğconst‚Å§Œä‚·‚é
 let &cpo = s:save_cpo
 unlet s:save_cpo
