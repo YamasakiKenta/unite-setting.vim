@@ -12,7 +12,7 @@ let s:settings_ex = {
 			\ 'hooks'       : {},
 			\ 'is_quit'     : 0,
 			\ }
-let s:settings_ex.hooks.on_syntax = function("unite_setting#sub_setting_syntax")
+let s:settings_ex.hooks.on_syntax = function("unite_setting2#sub_setting_syntax")
 function! s:settings_ex.hooks.on_init(args, context) "{{{
 	if !exists('g:unite_setting_ex_default_data')
 		echo 'LOAD...'
