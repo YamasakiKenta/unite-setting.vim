@@ -38,7 +38,7 @@ function! s:kind_settings_ex_list_select.action_table.delete.func(candidates) "{
 	let dict_name  = a:candidates[0].action__dict_name
 	let const_flg  = a:candidates[0].action__const_flg  
 
-	if const_flg == 0
+	if const_flg == 1
 		unite#print_message("con't edit")
 	else
 
@@ -52,7 +52,5 @@ function! s:kind_settings_ex_list_select.action_table.delete.func(candidates) "{
 endfunction
 "}}}
 
-
-" š •ÒW‚ğconst‚Å§Œä‚·‚é
 let &cpo = s:save_cpo
 unlet s:save_cpo
