@@ -109,42 +109,8 @@ function! unite_setting_ex#get(dict_name, valname_ex, kind) "{{{
 endfunction
 "}}}
 
-function! unite_setting_ex#add_title(dict_name, title_name) "{{{
-	let valname_ex = 'title_'.a:title_name
-	call unite_setting_ex#add( a:dict_name, valname_ex, 'perforce clients' , '' , a:title_name)
-endfunction
-"}}}
-
 function! unite_setting_ex#init(dict_name, file) "{{{
 	exe 'let '.a:dict_name.' = {"__order" : [], "__file" : a:file }'
-endfunction
-"}}}
-function! unite_setting_ex#add(dict_name, valname_ex, description, type, val) "{{{
-
-	let tmp_d = {}
-	if exists(a:dict_name)
-		exe 'let tmp_d = '.a:dict_name
-	endif
-
-	let tmp_d[a:valname_ex] = get(tmp_d , a:valname_ex , {})
-
-	if a:type =~ 'list_ex\|select' && type(a:val) == type([])
-		" Åö êÃópÇÃïœä∑
-		let val = { 'nums' : map(a:val[0], "v:val-1"), 'items' : a:val[1:] }
-	else
-		let val = a:val
-	endif
-
-	let tmp_d[a:valname_ex].__type        = a:type
-	let tmp_d[a:valname_ex].__description = a:description
-	let tmp_d[a:valname_ex].__common      = get(tmp_d[a:valname_ex], '__common', val)
-
-
-	let tmp_d.__order = get(tmp_d , '__order', [])
-	call add(tmp_d.__order, a:valname_ex)
-
-	exe 'let '.a:dict_name.' = tmp_d'
-
 endfunction
 "}}}
 function! unite_setting_ex#load(dict_name, ...) "{{{
@@ -174,6 +140,44 @@ endfunction
 
 function! unite_setting_ex#init2() "{{{
 	call unite_setting_ex#init('g:unite_setting_ex_default_data', '~/.unite_setting_ex')
+endfunction
+"}}}
+function! unite_setting_ex#load2() "{{{
+	call unite_setting_ex#load('g:unite_setting_ex_default_data')
+endfunction
+"}}}
+if 0
+function! unite_setting_ex#add_title(dict_name, title_name) "{{{
+	let valname_ex = 'title_'.a:title_name
+	call unite_setting_ex#add( a:dict_name, valname_ex, 'perforce clients' , '' , a:title_name)
+endfunction
+"}}}
+function! unite_setting_ex#add(dict_name, valname_ex, description, type, val) "{{{
+
+	let tmp_d = {}
+	if exists(a:dict_name)
+		exe 'let tmp_d = '.a:dict_name
+	endif
+
+	let tmp_d[a:valname_ex] = get(tmp_d , a:valname_ex , {})
+
+	if a:type =~ 'list_ex\|select' && type(a:val) == type([])
+		" Åö êÃópÇÃïœä∑
+		let val = { 'nums' : map(a:val[0], "v:val-1"), 'items' : a:val[1:] }
+	else
+		let val = a:val
+	endif
+
+	let tmp_d[a:valname_ex].__type        = a:type
+	let tmp_d[a:valname_ex].__description = a:description
+	let tmp_d[a:valname_ex].__common      = get(tmp_d[a:valname_ex], '__common', val)
+
+
+	let tmp_d.__order = get(tmp_d , '__order', [])
+	call add(tmp_d.__order, a:valname_ex)
+
+	exe 'let '.a:dict_name.' = tmp_d'
+
 endfunction
 "}}}
 function! unite_setting_ex#add2(data_d, ...) "{{{
@@ -209,10 +213,7 @@ function! unite_setting_ex#add2(data_d, ...) "{{{
 
 endfunction 
 "}}}
-function! unite_setting_ex#load2() "{{{
-	call unite_setting_ex#load('g:unite_setting_ex_default_data')
-endfunction
-"}}}
+endif
 
 
 let &cpo = s:save_cpo

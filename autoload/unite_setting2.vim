@@ -1,9 +1,6 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-let s:V = vital#of('unite-setting.vim')
-let s:Sjis = s:V.import('Mind.Sjis')
-
 let s:valname_to_source_kind_tabel = {
 			\ type(0)              : 'kind_settings_common',
 			\ type("")             : 'kind_settings_common',

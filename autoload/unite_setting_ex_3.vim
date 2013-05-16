@@ -3,6 +3,8 @@ set cpo&vim
 
 function! unite_setting_ex_3#add(dict_name, valname_ex, description, type, val) "{{{
 
+	let val = a:val
+
 	let tmp_d = {}
 	if exists(a:dict_name)
 		exe 'let tmp_d = '.a:dict_name
@@ -10,11 +12,11 @@ function! unite_setting_ex_3#add(dict_name, valname_ex, description, type, val) 
 
 	let tmp_d[a:valname_ex] = get(tmp_d , a:valname_ex , {})
 
-	let val = a:val
-
 	" Åö êÃópÇÃïœä∑
-	if a:type =~ 'list_ex\|select' && type(a:val) == type([])
-		let val = { 'nums' : map(a:val[0], "v:val-1"), 'items' : a:val[1:] }
+	if 0
+		if a:type =~ 'list_ex\|select' && type(val) == type([])
+			let val = { 'nums' : map(val[0], "v:val-1"), 'items' : val[1:] }
+		endif
 	endif
 
 	let tmp_d[a:valname_ex].__type        = a:type
