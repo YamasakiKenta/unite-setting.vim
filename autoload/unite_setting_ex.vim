@@ -79,7 +79,7 @@ function! unite_setting_ex#get(dict_name, valname_ex, kind) "{{{
 
 	" “o˜^‚ª‚È‚¢ê‡
 	if !exists('tmp_d[a:valname_ex][a:kind]')
-		let tmp_d[a:valname_ex][a:kind] = tmp_d[a:valname_ex].__common
+		let tmp_d[a:valname_ex][a:kind] = tmp_d[a:valname_ex].__default
 
 		" š g:‚Æ‚Ì“¯Šú
 		if exists(a:valname_ex)
@@ -110,7 +110,15 @@ endfunction
 "}}}
 
 function! unite_setting_ex#init(dict_name, file) "{{{
-	exe 'let '.a:dict_name.' = {"__order" : [], "__file" : a:file }'
+	let tmp = {
+				\ "__order"  : [],
+				\ "__file"   : a:file,
+				\ 'set_kind' : {
+				\ '__type'   : 'select',
+				\ '__common' : { 'items' : ['__default'], 'num' : 0 },
+				\ }
+				\ }
+	exe 'let '.a:dict_name.' = tmp'
 endfunction
 "}}}
 function! unite_setting_ex#load(dict_name, ...) "{{{
@@ -131,7 +139,7 @@ function! unite_setting_ex#load(dict_name, ...) "{{{
 
 	" •Ï”‚ÌC³‚ğ‚·‚é
 	for valname in filter(copy(tmp_d.__order), 'v:val=~"g:"')
-		exe 'let '.valname." = unite_setting_ex#get(a:dict_name, valname, '__common')"
+		exe 'let '.valname." = unite_setting_ex#get(a:dict_name, valname, '__default')"
 	endfor
 
 	return tmp_d

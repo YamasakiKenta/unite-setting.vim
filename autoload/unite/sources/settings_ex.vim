@@ -41,7 +41,7 @@ function! s:settings_ex.gather_candidates(args, context) "{{{
 	endif
 
 	" š 
-	let kind    = '__common'
+	let kind    = '__default'
 
 	" «‘–¼‚ÆAæ“¾ŠÖ”‚ª•K—v‚É‚È‚é
 	"

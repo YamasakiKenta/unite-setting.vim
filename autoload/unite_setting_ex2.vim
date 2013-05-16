@@ -149,7 +149,7 @@ function! unite_setting_ex2#get_kind(dict_name, valname_ex, kind) "{{{
 	if exists(a:dict_name.'[a:valname_ex][a:kind]')
 		return a:kind
 	endif
-	return '__common'
+	return '__default'
 endfunction
 "}}}
 function! unite_setting_ex2#get_orig(dict_name, valname_ex, kind) "{{{
@@ -337,12 +337,8 @@ function! unite_setting_ex2#set(dict_name, valname_ex, kind, val) "{{{
 
 	exe 'let '.valname.' = a:val'
 
-	if exists(a:valname_ex) || a:valname_ex =~ '^g:'
-		let tmp = unite_setting_ex#get(a:dict_name, a:valname_ex, a:kind)
-		exe 'let tmp2 = '.a:valname_ex
-		if type(tmp) == type(tmp2)
-			exe 'let '.a:valname_ex.' = tmp'
-		endif
+	if a:valname_ex =~ '^g:'
+		exe 'let '.a:valname_ex.' = a:val'
 	endif
 
 endfunction
