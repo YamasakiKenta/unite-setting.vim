@@ -61,7 +61,7 @@ endfunction
 "}}}
 
 function! unite_setting_ex2#cnv_list_ex_select(dict_name, valname_ex, kind, type) "{{{
-	let tmp =  unite_setting_ex#get_3(a:dict_name, a:valname_ex) 
+	let tmp =  unite_setting_ex_3#get(a:dict_name, a:valname_ex) 
 
 	if type(tmp) == type([])
 		let val = [[1]] + tmp

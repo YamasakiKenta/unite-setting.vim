@@ -74,20 +74,22 @@ function! s:get_var(valname_ex, type) "{{{
 endfunction
 "}}}
 
-function! unite_setting_ex#get(dict_name, valname_ex, kind)
-	return unite_setting_ex_3#get(a:dict_name, a:valname_ex)
-endfunction
+function! unite_setting_ex#init(...) "{{{
 
-function! unite_setting_ex#init(dict_name, file) "{{{
+	let dict_name = get(a:, 1, 'g:unite_setting_ex_default_data'              )
+	let file_name = get(a:, 2, simplify('~/.'.matchstr(dict_name, 'g:\zs.*')) )
+
 	let tmp = {
 				\ "__order"  : [],
-				\ "__file"   : a:file,
+				\ "__file"   : file_name,
 				\ 'set_kind' : {
 				\ '__type'   : 'select',
 				\ '__common' : { 'items' : ['__default'], 'num' : 0 },
 				\ }
 				\ }
-	exe 'let '.a:dict_name.' = tmp'
+	exe 'let '.dict_name.' = tmp'
+
+	return dict_name 
 endfunction
 "}}}
 function! unite_setting_ex#load(dict_name, ...) "{{{
@@ -108,7 +110,7 @@ function! unite_setting_ex#load(dict_name, ...) "{{{
 
 	" ïœêîÇÃèCê≥ÇÇ∑ÇÈ
 	for valname in filter(copy(tmp_d.__order), 'v:val=~"g:"')
-		exe 'let '.valname." = unite_setting_ex#get_3(a:dict_name, valname)"
+		exe 'let '.valname." = unite_setting_ex_3#get(a:dict_name, valname)"
 	endfor
 
 	return tmp_d
@@ -117,10 +119,6 @@ endfunction
 
 function! unite_setting_ex#init2() "{{{
 	call unite_setting_ex#init('g:unite_setting_ex_default_data', '~/.unite_setting_ex')
-endfunction
-"}}}
-function! unite_setting_ex#load2() "{{{
-	call unite_setting_ex#load('g:unite_setting_ex_default_data')
 endfunction
 "}}}
 

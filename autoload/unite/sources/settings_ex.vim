@@ -1,3 +1,4 @@
+
 let s:save_cpo = &cpo
 set cpo&vim
 
@@ -14,11 +15,11 @@ let s:settings_ex = {
 			\ }
 let s:settings_ex.hooks.on_syntax = function("unite_setting2#sub_setting_syntax")
 function! s:settings_ex.hooks.on_init(args, context) "{{{
-	if !exists('g:unite_setting_ex_default_data')
-		echo 'LOAD...'
-		call unite_setting_ex#init2()
+	if exists('a:args[0]')
+		let a:context.source__dict_name = a:args[0]
+	else
+		let a:context.source__dict_name = unite_setting_ex#init()
 	endif
-	let a:context.source__dict_name = get(a:args, 0, 'g:unite_setting_ex_default_data')
 endfunction
 "}}}
 function! s:settings_ex.hooks.on_close(args, context) "{{{
@@ -41,10 +42,11 @@ function! s:settings_ex.gather_candidates(args, context) "{{{
 	endif
 
 	" š 
-	let kind    = '__default'
+	let xind    = '__default'
 
 	" «‘–¼‚ÆAæ“¾ŠÖ”‚ª•K—v‚É‚È‚é
 	"
+	let kind = '__default'
 	return map( copy(orders), "{
 				\ 'word'               : unite_setting_ex2#get_source_word(dict_name, v:val, kind),
 				\ 'kind'               : unite_setting_ex2#get_source_kind(dict_name, v:val, kind),
