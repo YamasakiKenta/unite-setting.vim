@@ -61,7 +61,7 @@ endfunction
 "}}}
 
 function! unite_setting_ex2#cnv_list_ex_select(dict_name, valname_ex, kind, type) "{{{
-	let tmp =  unite_setting_ex#get(a:dict_name, a:valname_ex, a:kind) 
+	let tmp =  unite_setting_ex#get_3(a:dict_name, a:valname_ex) 
 
 	if type(tmp) == type([])
 		let val = [[1]] + tmp
@@ -190,14 +190,14 @@ function! unite_setting_ex2#get_source_word(dict_name, valname_ex, kind) "{{{
 endfunction
 "}}}
 function! unite_setting_ex2#get_source_word_from_bool(dict_name, valname_ex, kind) "{{{
-	let str =  unite_setting_ex#get(a:dict_name, a:valname_ex, a:kind) ? 
+	let str =  unite_setting_ex_3#get(a:dict_name, a:valname_ex) ? 
 				\ '<TRUE>  FALSE ' :
 				\ ' TRUE  <FALSE>'
 	return unite_setting_ex2#get_source_word_sub( a:dict_name, a:valname_ex, a:kind, str)
 endfunction
 "}}}
 function! unite_setting_ex2#get_source_word_from_val(dict_name, valname_ex, kind) "{{{
-	let data = unite_setting_ex#get(a:dict_name, a:valname_ex, a:kind)
+	let data = unite_setting_ex_3#get(a:dict_name, a:valname_ex)
 	return unite_setting_ex2#get_source_word_sub( a:dict_name, a:valname_ex, a:kind, string(data))
 endfunction
 "}}}
@@ -361,7 +361,7 @@ function! unite_setting_ex2#set_next(dict_name, valname_ex, kind) "{{{
 	let type = unite_setting_ex2#get_type(a:dict_name, a:valname_ex, a:kind)
 
 	if type == 'bool'
-		let val = unite_setting_ex#get(a:dict_name, a:valname_ex, a:kind) ? 0 : 1
+		let val = unite_setting_ex_3#get(a:dict_name, a:valname_ex) ? 0 : 1
 	elseif type == 'select'
 		let val = unite_setting_ex2#get_orig(a:dict_name, a:valname_ex, a:kind)
 		let val.num = s:next_items(val.num, val.items)

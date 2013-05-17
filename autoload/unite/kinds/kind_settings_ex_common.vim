@@ -110,7 +110,7 @@ function! s:kind_settings_ex_common.action_table.yank.func(candidates) "{{{
 		let valname_ex = candidate.action__valname_ex
 		let kind       = candidate.action__kind
 
-		let data = 'let '.valname_ex.' = '.string(unite_setting_ex#get( dict_name, valname_ex, kind))."\n"
+		let data = 'let '.valname_ex.' = '.string(unite_setting_ex_3#get( dict_name, valname_ex))."\n"
 		let @" = @" . data
 
 	endfor

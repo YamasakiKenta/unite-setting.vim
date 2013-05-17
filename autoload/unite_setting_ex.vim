@@ -74,40 +74,9 @@ function! s:get_var(valname_ex, type) "{{{
 endfunction
 "}}}
 
-function! unite_setting_ex#get(dict_name, valname_ex, kind) "{{{
-	exe 'let tmp_d = '.a:dict_name
-
-	" ìoò^Ç™Ç»Ç¢èÍçá
-	if !exists('tmp_d[a:valname_ex][a:kind]')
-		let tmp_d[a:valname_ex][a:kind] = tmp_d[a:valname_ex].__default
-
-		" Åö g:Ç∆ÇÃìØä˙
-		if exists(a:valname_ex)
-			exe 'return '.a:valname_ex
-		endif
-
-	endif
-
-	let type_ = tmp_d[a:valname_ex].__type
-	let val   = tmp_d[a:valname_ex][a:kind]
-
-	if type_ == 'list_ex' 
-		let rtns = s:get_lists(val)
-	elseif type_ == 'select'
-		let rtns = s:get_select_item(val)
-	elseif type_ == 'bool'
-		try
-			let rtns = val > 0 ? 1 : 0
-		catch
-			let rtns = 0
-		endtry
-	else
-		let rtns = val
-	endif
-
-	return rtns
+function! unite_setting_ex#get(dict_name, valname_ex, kind)
+	return unite_setting_ex_3#get(a:dict_name, a:valname_ex)
 endfunction
-"}}}
 
 function! unite_setting_ex#init(dict_name, file) "{{{
 	let tmp = {
@@ -139,7 +108,7 @@ function! unite_setting_ex#load(dict_name, ...) "{{{
 
 	" ïœêîÇÃèCê≥ÇÇ∑ÇÈ
 	for valname in filter(copy(tmp_d.__order), 'v:val=~"g:"')
-		exe 'let '.valname." = unite_setting_ex#get(a:dict_name, valname, '__default')"
+		exe 'let '.valname." = unite_setting_ex#get_3(a:dict_name, valname)"
 	endfor
 
 	return tmp_d
@@ -154,75 +123,6 @@ function! unite_setting_ex#load2() "{{{
 	call unite_setting_ex#load('g:unite_setting_ex_default_data')
 endfunction
 "}}}
-if 0
-function! unite_setting_ex#add_title(dict_name, title_name) "{{{
-	let valname_ex = 'title_'.a:title_name
-	call unite_setting_ex#add( a:dict_name, valname_ex, 'perforce clients' , '' , a:title_name)
-endfunction
-"}}}
-function! unite_setting_ex#add(dict_name, valname_ex, description, type, val) "{{{
-
-	let tmp_d = {}
-	if exists(a:dict_name)
-		exe 'let tmp_d = '.a:dict_name
-	endif
-
-	let tmp_d[a:valname_ex] = get(tmp_d , a:valname_ex , {})
-
-	if a:type =~ 'list_ex\|select' && type(a:val) == type([])
-		" Åö êÃópÇÃïœä∑
-		let val = { 'nums' : map(a:val[0], "v:val-1"), 'items' : a:val[1:] }
-	else
-		let val = a:val
-	endif
-
-	let tmp_d[a:valname_ex].__type        = a:type
-	let tmp_d[a:valname_ex].__description = a:description
-	let tmp_d[a:valname_ex].__common      = get(tmp_d[a:valname_ex], '__common', val)
-
-
-	let tmp_d.__order = get(tmp_d , '__order', [])
-	call add(tmp_d.__order, a:valname_ex)
-
-	exe 'let '.a:dict_name.' = tmp_d'
-
-endfunction
-"}}}
-function! unite_setting_ex#add2(data_d, ...) "{{{
-
-	if type(a:data_d) == type({})
-		" îzóÒÇ…ïœä∑Ç∑ÇÈ
-		let data_ds = [a:data_d]
-	else
-		" ïœêîñºÇÃÇ›ÇÃèÍçá
-
-		let data_ds = []
-		let data_d = {}
-
-		" îzóÒÇ…ïœä∑Ç∑ÇÈ
-		let valname_exs = extend([a:data_d], a:000)
-		for valname_ex in valname_exs
-			let  data_d.valname_ex = valname_ex
-			call add(data_ds, data_d)
-		endfor
-	endif
-
-	for data_d in data_ds
-		let dict_name     = get(data_d, 'dict_name'    , 'g:unite_setting_ex_default_data' ) 
-		let valname_ex    = get(data_d, 'valname_ex'   , '')
-		let description   = get(data_d, 'description'  , '')
-
-		exe 'let tmp = '.valname_ex
-		let type          = get(data_d, 'type'         , s:get_kind(tmp))
-		let val           = get(data_d, 'val'          , s:get_var(valname_ex, type))
-
-		call unite_setting_ex#add(dict_name, valname_ex, description, type, val)
-	endfor
-
-endfunction 
-"}}}
-endif
-
 
 let &cpo = s:save_cpo
 unlet s:save_cpo

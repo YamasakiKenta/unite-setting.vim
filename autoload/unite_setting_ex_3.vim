@@ -1,6 +1,61 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
+function! s:get_kind(dict_name, valname_ex) "{{{
+	" ********************************************************************************
+	" @par Ží•Ê‚ðŽæ“¾‚·‚é
+	" ********************************************************************************
+
+	let num  = 0
+	let kind = '__default'
+
+	if exists(a:dict_name)
+		exe 'let tmp = '.a:dict_name
+
+		if exists('tmp.set_kind.__type.__common.num')
+			let num = tmp.set_kind.__type.__common.num
+		endif
+
+		if exists('tmp.set_kind.__type.__common.items[num]')
+			let kind = tmp.set_kind.__type.__common.items[num]	
+		endif
+	endif
+
+	return kind
+endfunction
+"}}}
+function! s:get_lists(datas) "{{{
+
+
+	try
+		let rtns = []
+		let max = len(a:datas.items)
+		for num_ in filter(a:datas.nums, 'v:val < max')
+			call add(rtns, a:datas.items[num_])
+		endfor
+		return rtns
+
+	catch
+		echo 'error s:get_lists'
+		return []
+
+	endtry
+
+endfunction
+"}}}
+function! s:get_select_item(datas) "{{{
+
+	let rtn = 0
+
+	" VŒ^
+	if exists('a:datas.items[a:datas.num]')
+		let rtn = a:datas.items[a:datas.num]
+	endif
+
+	return rtn
+endfunction
+"}}}
+
 function! unite_setting_ex_3#add(dict_name, valname_ex, description, type, val) "{{{
 
 	let val = a:val
@@ -36,7 +91,7 @@ function! unite_setting_ex_3#add(dict_name, valname_ex, description, type, val) 
 	exe 'let '.a:dict_name.' = tmp_d'
 
 	if a:valname_ex =~ '^g:'
-		let tmp = unite_setting_ex#get(a:dict_name, a:valname_ex, '__default')
+		let tmp = unite_setting_ex_3#get(a:dict_name, a:valname_ex)
 		exe 'let '.a:valname_ex.' = tmp'
 	endif
 
@@ -44,20 +99,19 @@ function! unite_setting_ex_3#add(dict_name, valname_ex, description, type, val) 
 endfunction
 "}}}
 function! unite_setting_ex_3#get(dict_name, valname_ex) "{{{
-"
-	" “o˜^‚ª‚È‚¢ê‡
-	if !exists('tmp_d[a:valname_ex][a:kind]')
-		let tmp_d[a:valname_ex][a:kind] = tmp_d[a:valname_ex].__common
+	" ’l‚ÌŽæ“¾
+	exe 'let tmp_d = '.a:dict_name
 
-		" š g:‚Æ‚Ì“¯Šú
-		if exists(a:valname_ex)
-			exe 'return '.a:valname_ex
-		endif
-
+	" kind ‚ÌÝ’è
+	let kind = s:get_kind(a:dict_name, a:valname_ex)
+	if exists('tmp_d[a:valname_ex].__common')
+		let kind = __common
+	elseif !exists('tmp_d[a:valname_ex][kind]')
+		let tmp_d[a:valname_ex][kind] = tmp_d[a:valname_ex].__default
 	endif
 
 	let type_ = tmp_d[a:valname_ex].__type
-	let val   = tmp_d[a:valname_ex][a:kind]
+	let val   = tmp_d[a:valname_ex][kind]
 
 	if type_ == 'list_ex' 
 		let rtns = s:get_lists(val)
