@@ -338,7 +338,8 @@ function! unite_setting_ex2#set(dict_name, valname_ex, kind, val) "{{{
 	exe 'let '.valname.' = a:val'
 
 	if a:valname_ex =~ '^g:'
-		exe 'let '.a:valname_ex.' = a:val'
+		let tmp = unite_setting_ex_3#get(a:dict_name, a:valname_ex)
+		exe 'let '.a:valname_ex.' = tmp'
 	endif
 
 endfunction

@@ -37,7 +37,7 @@ function! unite_setting_ex_3#add(dict_name, valname_ex, description, type, val) 
 
 	if a:valname_ex =~ '^g:'
 		let tmp = unite_setting_ex#get(a:dict_name, a:valname_ex, '__default')
-		exe 'let '.a:valname_ex.' = a:val'
+		exe 'let '.a:valname_ex.' = tmp'
 	endif
 
 

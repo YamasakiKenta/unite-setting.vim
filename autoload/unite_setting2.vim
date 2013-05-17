@@ -11,16 +11,25 @@ let s:valname_to_source_kind_tabel = {
 			\ }
 
 function! unite_setting2#get_source_kind(valname) "{{{
+	" unite-setting.vim\autoload\unite\sources\settings_var.vim|18| \ 'kind'              : unite_setting2#get_source_kind(v:val),
+	" unite-setting.vim\autoload\unite\sources\settings_var_all.vim|32| \ 'kind'              : unite_setting2#get_source_kind(v:val),
+	" unite-setting.vim\autoload\unite_setting2.vim|13| function! unite_setting2#get_source_kind(valname) "
 	exe 'let Tmp = '.a:valname
 	return s:valname_to_source_kind_tabel[type(Tmp)]
 endfunction
 "}}}
 function! unite_setting2#get_source_word(valname) "{{{
+" unite-setting.vim\autoload\unite\sources\settings_var.vim|17| \ 'word'              : unite_setting2#get_source_word(v:val),
+" unite-setting.vim\autoload\unite\sources\settings_var_all.vim|31| \ 'word'              : unite_setting2#get_source_word(v:val),
+" unite-setting.vim\autoload\unite_setting2.vim|21| function! unite_setting2#get_source_word(valname) "
 	exe 'let Tmp = '.a:valname
 	return printf("%-100s : %s", a:valname, string(Tmp))
 endfunction
 "}}}
 function! unite_setting2#get_valnames(valname) "{{{
+	" unite-setting.vim\autoload\unite\sources\settings_var.vim|14| let valnames = unite_setting2#get_valnames(valname)
+	" unite-setting.vim\autoload\unite\sources\settings_var_all.vim|19| let tmps = unite_setting2#get_valnames(valnames[num_])
+	" unite-setting.vim\autoload\unite_setting2.vim|29| function! unite_setting2#get_valnames(valname) 
 	exe 'let Tmp = '.a:valname
 	if a:valname == 'g:'
 		let valnames = map(keys(Tmp),
@@ -36,11 +45,6 @@ function! unite_setting2#get_valnames(valname) "{{{
 	endif
 
 	return valnames
-endfunction
-"}}}
-function! unite_setting2#insert_list(list1, list2, num_) "{{{
-	exe 'let tmps = a:list1[0:'.a:num_.'] + a:list2 + a:list1['.(a:num_+1).':]'
-	return tmps
 endfunction
 "}}}
 
