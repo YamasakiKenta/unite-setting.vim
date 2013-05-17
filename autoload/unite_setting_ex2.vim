@@ -1,160 +1,65 @@
-let unite_setting_ex2#save_cpo = &cpo
+let s:save_cpo = &cpo
 set cpo&vim
 
-let s:V = vital#of('unite-setting.vim')
-let s:Common = s:V.import('Mind.Common')
-let s:Sjis = s:V.import('Mind.Sjis')
+" 必要 ( 2013/05/18 ) 
+function! unite_setting_ex2#get_const_flg(dict_name, valname_ex, kind) "{{{
+	let datas = copy(unite_setting_ex2#get_orig(a:dict_name, a:valname_ex, a:kind))
 
-let s:unite_kind = {
-			\ 'bool'           : 'kind_settings_ex_bool',
-			\ 'list'           : 'kind_settings_ex_var_list',
-			\ 'select'         : 'kind_settings_ex_select',
-			\ 'list_ex'        : 'kind_settings_ex_select',
-			\ 'var'            : 'kind_settings_ex_var',
-			\ }
-			"\ 'list_ex'        : 'kind_settings_ex_list',
-			"\ 'const_list_ex'  : 'kind_settings_ex_list',
-			"\ 'const_select'   : 'kind_settings_ex_select',
-
-" ★ list, var をなくす
-" ★ const_list_ex, const_select をなくす
-" bool    - true or false 
-" list_ex - 複数選択
-" select  - 単一選択
-function! unite_setting_ex2#init()
-endfunction
-
-function! s:get_source_word_from_strs(dict_name, valname_ex, kind) "{{{
-	let datas = unite_setting_ex2#get_strs_on_off_new(a:dict_name, a:valname_ex, a:kind)
-	let strs = map(datas, 'v:val.str')
-	return unite_setting_ex2#get_source_word_sub( a:dict_name, a:valname_ex, a:kind, join(strs))
-endfunction
-"}}}
-function! unite_setting_ex2#select_list_toggle(candidates) "{{{
-
-	let candidates = type(a:candidates) == type([]) ? a:candidates : [a:candidates]
-
-	let dict_name    = candidates[0].action__dict_name
-	let valname_ex   = candidates[0].action__valname_ex
-	let kind         = candidates[0].action__kind
-
-	let tmps = unite_setting_ex2#get_orig(dict_name, valname_ex, kind)
-
-	let nums = []
-	let max  = len(tmps.items)
-	let nums = map(copy(candidates), "v:val.action__num")
-	let nums = filter(nums, '0 <= v:val && v:val < max')
-
-	" 新規追加の場合
-	if candidates[0].action__new != ''
-		call add(tmps.items, candidates[0].action__new)
-	else
-		call unite#force_quit_session()
-	endif
-
-	let tmps.nums = nums
-	call unite_setting_ex2#set(dict_name, valname_ex, kind, tmps)
-
-	call unite_setting_ex2#common_out(dict_name)
-	return 
-endfunction
-"}}}
-
-function! unite_setting_ex2#cnv_list_ex_select(dict_name, valname_ex, kind, type) "{{{
-	let tmp =  unite_setting_ex_3#get(a:dict_name, a:valname_ex) 
-
-	if type(tmp) == type([])
-		let val = [[1]] + tmp
-	else
-		let val = [[1], tmp]
-	endif
-
-	call unite_setting_ex2#set_type(a:dict_name, a:valname_ex, a:kind, a:type)
-
-	call unite_setting_ex2#set(a:dict_name, a:valname_ex, a:kind, val)
-
-endfunction
-"}}}
-function! unite_setting_ex2#save(dict_name) "{{{
-	exe 'let tmp_d = '.a:dict_name
-	echo 'save'
-	call s:Common.save(tmp_d.__file, tmp_d)
-endfunction
-"}}}
-function! unite_setting_ex2#delete(dict_name, valname_ex, kind, delete_nums) "{{{
-
-	" 並び替え
-	let delete_nums = copy(a:delete_nums)
-	call sort(delete_nums, 'unite_setting_ex2#sort_lager')
-
-	" 番号の取得
-	let datas = unite_setting_ex2#get_orig(a:dict_name, a:valname_ex, a:kind)
-
-	" 選択番号の削除
-	let nums = get(datas, 'nums')
-
-	" 削除 ( 大きい数字から削除 ) 
-	for delete_num in delete_nums
-		" 番号の更新
-		if exists('datas.items[delete_num]')
-			unlet datas.items[delete_num]
+	let flg = 0
+	if exists('datas.consts')
+		if len(datas.consts)
+			let flg = 1
 		endif
+	endif
 
-		" 削除
-		call filter(nums, "v:val != delete_num")
-		call map(nums, "v:val - (v:val > delete_num? 1: 0)")
-	endfor
-
-	" 選択番号の設定
-	let datas.nums = nums
-
-	" 設定
-	call unite_setting_ex2#set(a:dict_name, a:valname_ex, a:kind, datas)
-
+	return flg
 endfunction
 "}}}
-function! unite_setting_ex2#get_source_valname(dict_name, valname_ex, kind) "{{{
-	if exists(a:valname_ex)
-		let valname = a:valname_ex
+function! unite_setting_ex2#set_next(dict_name, valname_ex, kind) "{{{
+	exe 'let tmp_d = '.a:dict_name
+	let type = unite_setting_ex2#get_type(a:dict_name, a:valname_ex, a:kind)
+
+	if type == 'bool'
+		let val = unite_setting_ex_3#get(a:dict_name, a:valname_ex) ? 0 : 1
+	elseif type == 'select'
+		let val = unite_setting_ex2#get_orig(a:dict_name, a:valname_ex, a:kind)
+		let val.num = s:next_items(val.num, val.items)
+	elseif type == 'list_ex'
+		let val = unite_setting_ex2#get_orig(a:dict_name, a:valname_ex, a:kind)
+		call map(val.nums, 's:next_items(v:val, val.items)')
 	else
-		let valname = a:dict_name.'['''.a:valname_ex.''']['''.a:kind.''']'
+		" ★
+		echo 'non supoert....'
+		call input("")
 	endif
-	return valname
+
+	call unite_setting_ex2#set(a:dict_name, a:valname_ex, a:kind, val )
+endfunction
+"}}}
+function! unite_setting_ex2#set(dict_name, valname_ex, kind, val) "{{{
+
+	if exists(a:dict_name.'["'.a:valname_ex.'"]["'.a:kind.'"]')
+		let valname = a:dict_name.'["'.a:valname_ex.'"]["'.a:kind.'"]'
+	else
+		let valname = a:valname_ex
+	endif
+
+	exe 'let '.valname.' = a:val'
+
+	if a:valname_ex =~ '^g:'
+		let tmp = unite_setting_ex_3#get(a:dict_name, a:valname_ex)
+		exe 'let '.a:valname_ex.' = tmp'
+	endif
+
 endfunction
 "}}}
 function! unite_setting_ex2#common_out(dict_name) "{{{
 	call unite#force_redraw()
 endfunction
 "}}}
-function! unite_setting_ex2#get_bits(dict_name, valname_ex, kind) "{{{
-
-	let tmp_d = unite_setting_ex2#get_orig(a:dict_name, a:valname_ex, a:kind)
-	let bits  = map(range(len(tmp_d)), "0")
-
-	" ★　バグ対応
-	if 0 && type(tmp_d[0]) != type([])
-		let tmp_d[0] = [1]
-	endif
-
-	for num_ in tmp_d[0]
-		let num_ = num_ < len(tmp_d) ? num_ : 1
-		let bits[num_] = num_
-	endfor
-
-
-	return bits
-endfunction
-"}}}
-function! unite_setting_ex2#get_kind(dict_name, valname_ex, kind) "{{{
-	if exists(a:dict_name.'[a:valname_ex][a:kind]')
-		return a:kind
-	endif
-	return '__default'
-endfunction
-"}}}
 function! unite_setting_ex2#get_orig(dict_name, valname_ex, kind) "{{{
 	exe 'let tmp_d = '.a:dict_name
-	let kind = unite_setting_ex2#get_kind(a:dict_name, a:valname_ex, a:kind)
+	let kind = s:get_kind(a:dict_name, a:valname_ex, a:kind)
 
 	if exists('tmp_d[a:valname_ex][kind]')
 		let rtn = tmp_d[a:valname_ex][kind]
@@ -164,69 +69,6 @@ function! unite_setting_ex2#get_orig(dict_name, valname_ex, kind) "{{{
 
 	return rtn
 
-endfunction
-"}}}
-function! unite_setting_ex2#get_source_kind(dict_name, valname_ex, kind) "{{{
-	let type = unite_setting_ex2#get_type(a:dict_name, a:valname_ex, a:kind)
-	return get( s:unite_kind, type, 'k_title')
-endfunction
-"}}}
-function! unite_setting_ex2#get_source_word(dict_name, valname_ex, kind) "{{{
-	exe 'let tmp_d = '.a:dict_name
-	let type = unite_setting_ex2#get_type(a:dict_name, a:valname_ex, a:kind)
-
-	if type == 'bool'
-		let rtn = unite_setting_ex2#get_source_word_from_bool(a:dict_name, a:valname_ex, a:kind)
-	elseif type == 'list_ex' || type == 'select' 
-		let rtn = s:get_source_word_from_strs(a:dict_name, a:valname_ex, a:kind)
-	elseif type == 'var'|| type == 'list'
-		let rtn = unite_setting_ex2#get_source_word_from_val(a:dict_name, a:valname_ex, a:kind)
-	else
-		" ★ タイトルをわける
-		let rtn = '"'.a:valname_ex.'"'
-	endif
-
-	return s:Sjis.printf("%10s %s", type, rtn)
-endfunction
-"}}}
-function! unite_setting_ex2#get_source_word_from_bool(dict_name, valname_ex, kind) "{{{
-	let str =  unite_setting_ex_3#get(a:dict_name, a:valname_ex) ? 
-				\ '<TRUE>  FALSE ' :
-				\ ' TRUE  <FALSE>'
-	return unite_setting_ex2#get_source_word_sub( a:dict_name, a:valname_ex, a:kind, str)
-endfunction
-"}}}
-function! unite_setting_ex2#get_source_word_from_val(dict_name, valname_ex, kind) "{{{
-	let data = unite_setting_ex_3#get(a:dict_name, a:valname_ex)
-	return unite_setting_ex2#get_source_word_sub( a:dict_name, a:valname_ex, a:kind, string(data))
-endfunction
-"}}}
-function! unite_setting_ex2#get_source_word_sub(dict_name, valname_ex, kind, str) "{{{
-	exe 'let tmp_d = '.a:dict_name
-	let description = ''
-	if exists('tmp_d[a:valname_ex].__description')
-		let description = tmp_d[a:valname_ex].__description
-	endif
-
-	return s:Sjis.printf(' %-100s %50s - %s', 
-				\ description,
-				\ unite_setting_ex2#get_source_word_sub_type(a:dict_name, a:valname_ex, a:kind),
-				\ a:str,
-				\ )
-endfunction
-"}}}
-function! unite_setting_ex2#get_source_word_sub_type(dict_name, valname_ex, kind) "{{{
-	let kind = unite_setting_ex2#get_kind( a:dict_name, a:valname_ex, a:kind) 
-
-	if exists(a:valname_ex)
-		let star = '_'
-	elseif kind=='__common'
-		let star = '*'
-	else
-		let star = ' '
-	endif
-
-	return star.''.a:valname_ex.''.star
 endfunction
 "}}}
 function! unite_setting_ex2#get_str(val) "{{{
@@ -310,38 +152,33 @@ function! unite_setting_ex2#get_type(dict_name, valname_ex, kind) "{{{
 	retu type_
 endfunction
 "}}}
-function! unite_setting_ex2#set_type(dict_name, valname_ex, kind, type) "{{{
+function! unite_setting_ex2#get_source_word_sub(dict_name, valname_ex, kind, str) "{{{
 	exe 'let tmp_d = '.a:dict_name
-
-	if !exists('tmp_d[a:valname_ex]')
-		let tmp_d[a:valname_ex] = {}
+	let description = ''
+	if exists('tmp_d[a:valname_ex].__description')
+		let description = tmp_d[a:valname_ex].__description
 	endif
 
-	let tmp_d[a:valname_ex].__type = a:type
-
-	if a:type == 'bool'
-		let tmp_d[a:valname_ex][a:kind] = s:set_type_bool(tmp_d[a:valname_ex][a:kind])
-	endif
-
-	exe 'let '.a:dict_name.' = tmp_d'
+	return unite_setting#util#printf(' %-100s %50s - %s', 
+				\ description,
+				\ unite_setting_ex2#get_source_word_sub_type(a:dict_name, a:valname_ex, a:kind),
+				\ a:str,
+				\ )
 endfunction
 "}}}
+" 保留 ( 2013/05/18 )
+function! unite_setting_ex2#get_source_word_sub_type(dict_name, valname_ex, kind) "{{{
+	let kind = s:get_kind( a:dict_name, a:valname_ex, a:kind) 
 
-function! unite_setting_ex2#set(dict_name, valname_ex, kind, val) "{{{
-
-	if exists(a:dict_name.'["'.a:valname_ex.'"]["'.a:kind.'"]')
-		let valname = a:dict_name.'["'.a:valname_ex.'"]["'.a:kind.'"]'
+	if exists(a:valname_ex)
+		let star = '_'
+	elseif kind=='__common'
+		let star = '*'
 	else
-		let valname = a:valname_ex
+		let star = ' '
 	endif
 
-	exe 'let '.valname.' = a:val'
-
-	if a:valname_ex =~ '^g:'
-		let tmp = unite_setting_ex_3#get(a:dict_name, a:valname_ex)
-		exe 'let '.a:valname_ex.' = tmp'
-	endif
-
+	return star.''.a:valname_ex.''.star
 endfunction
 "}}}
 function! s:next_items(num, items) "{{{
@@ -356,66 +193,14 @@ function! s:next_items(num, items) "{{{
 	return num_
 endfunction
 " }}}
-function! unite_setting_ex2#set_next(dict_name, valname_ex, kind) "{{{
-	exe 'let tmp_d = '.a:dict_name
-	let type = unite_setting_ex2#get_type(a:dict_name, a:valname_ex, a:kind)
-
-	if type == 'bool'
-		let val = unite_setting_ex_3#get(a:dict_name, a:valname_ex) ? 0 : 1
-	elseif type == 'select'
-		let val = unite_setting_ex2#get_orig(a:dict_name, a:valname_ex, a:kind)
-		let val.num = s:next_items(val.num, val.items)
-	elseif type == 'list_ex'
-		let val = unite_setting_ex2#get_orig(a:dict_name, a:valname_ex, a:kind)
-		call map(val.nums, 's:next_items(v:val, val.items)')
-	else
-		" ★
-		echo 'non supoert....'
-		call input("")
+function! s:get_kind(dict_name, valname_ex, kind) "{{{
+	if exists(a:dict_name.'[a:valname_ex][a:kind]')
+		return a:kind
 	endif
-
-	call unite_setting_ex2#set(a:dict_name, a:valname_ex, a:kind, val )
+	return '__default'
 endfunction
 "}}}
 
-function! unite_setting_ex2#get_valnames(valname) "{{{
-	exe 'let tmp = '.a:valname
-	if a:valname == 'g:'
-		let valnames = map(keys(tmp),
-					\ "'g:'.v:val")
-	elseif type([]) == type(tmp)
-		let valnames = map(range(len(tmp)),
-					\ "a:valname.'['.v:val.']'")
-	elseif type({}) == type(tmp)
-		let valnames = map(keys(tmp),
-					\ "a:valname.'['''.v:val.''']'")
-	else
-		let valnames = []
-	endif
-
-	return valnames
-endfunction
-"}}}
-
-function! s:set_type_bool(val) "{{{
-	return type(a:val) == type(0) ? a:val : 0
-endfunction
-"}}}
-"
-" NEW
-function! unite_setting_ex2#get_const_flg(dict_name, valname_ex, kind)
-	let datas = copy(unite_setting_ex2#get_orig(a:dict_name, a:valname_ex, a:kind))
-
-	let flg = 0
-	if exists('datas.consts')
-		if len(datas.consts)
-			let flg = 1
-		endif
-	endif
-
-	return flg
-endfunction
-
-let &cpo = unite_setting_ex2#save_cpo
-unlet unite_setting_ex2#save_cpo
+let &cpo = s:save_cpo
+unlet s:save_cpo
 
