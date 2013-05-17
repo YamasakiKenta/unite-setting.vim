@@ -9,7 +9,7 @@ function! s:insert_list(list1, list2, num_)
 	return tmps
 endfunction
 
-let s:source_settings_var_all      = deepcopy(unite_setting2#source_tmpl) 
+let s:source_settings_var_all      = deepcopy(unite_setting_var#source_tmpl) 
 let s:source_settings_var_all.name = 'settings_var_all'
 function! s:source_settings_var_all.gather_candidates(args, context) "{{{
 
@@ -21,7 +21,7 @@ function! s:source_settings_var_all.gather_candidates(args, context) "{{{
 	let valnames = [valname]
 
 	while num_ < len(valnames)
-		let tmps = unite_setting2#get_valnames(valnames[num_])
+		let tmps = unite_setting_var#get_valnames(valnames[num_])
 
 		if len(tmps) > 0
 			let valnames = s:insert_list(valnames, tmps, num_)
@@ -32,11 +32,7 @@ function! s:source_settings_var_all.gather_candidates(args, context) "{{{
 
 	endwhile
 
-	return map(copy(valnames), "{
-				\ 'word'              : unite_setting2#get_source_word(v:val),
-				\ 'kind'              : unite_setting2#get_source_kind(v:val),
-				\ 'action__valname'   : v:val,
-				\ }")
+	return unite_setting_var#get_candidate(valnames)
 
 endfunction
 "}}}
