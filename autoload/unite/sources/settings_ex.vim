@@ -18,7 +18,7 @@ function! s:settings_ex.hooks.on_init(args, context) "{{{
 	if exists('a:args[0]')
 		let a:context.source__dict_name = a:args[0]
 	else
-		let a:context.source__dict_name = unite_setting_ex#init()
+		let a:context.source__dict_name = unite_setting_ex_3#init()
 	endif
 endfunction
 "}}}

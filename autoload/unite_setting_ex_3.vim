@@ -1,6 +1,9 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
+let s:L = vital#of('unite-setting.vim')
+let s:Common = s:L.import('Mind.Common')
+
 function! s:get_kind(dict_name, valname_ex) "{{{
 	" ********************************************************************************
 	" @par 種別を取得する
@@ -128,6 +131,52 @@ function! unite_setting_ex_3#get(dict_name, valname_ex) "{{{
 	endif
 
 	return rtns
+endfunction
+"}}}
+"
+function! unite_setting_ex_3#init(...) "{{{
+
+	let dict_name = get(a:, 1, 'g:unite_setting_ex_default_data'              )
+	let file_name = get(a:, 2, simplify('~/.'.matchstr(dict_name, 'g:\zs.*')) )
+
+	let tmp = {
+				\ "__order"  : [],
+				\ "__file"   : file_name,
+				\ 'set_kind' : {
+				\ '__type'   : 'select',
+				\ '__common' : { 'items' : ['__default'], 'num' : 0 },
+				\ }
+				\ }
+	exe 'let '.dict_name.' = tmp'
+
+	return dict_name 
+endfunction
+"}}}
+function! unite_setting_ex_3#load(...) "{{{
+
+	let dict_name = get(a:, 1, 'g:unite_setting_ex_default_data'              )
+
+	exe 'let tmp_d = '.dict_name
+	let file_ = get(tmp_d, '__file', '')
+	
+	if !filereadable(file_)
+		return
+	endif
+
+	let load_d = s:Common.load(file_, {})
+
+	let load_d.__file  = file_
+	let load_d.__order = tmp_d.__order
+
+	call extend(tmp_d, load_d)
+
+	" ★ ADD の時点でも行うが、ファイルで取得した値を入れる
+	" 変数の修正をする
+	for valname in filter(copy(tmp_d.__order), 'v:val=~"g:"')
+		exe 'let '.valname." = unite_setting_ex_3#get(dict_name, valname)"
+	endfor
+
+	return tmp_d
 endfunction
 "}}}
 
