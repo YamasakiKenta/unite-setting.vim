@@ -99,9 +99,9 @@ function! s:settings_ex.hooks.on_init(args, context) "{{{
 endfunction
 "}}}
 function! s:settings_ex.hooks.on_close(args, context) "{{{
-	echo 'save'
 	exe 'let tmp_d = '.get(a:context, 'source__dict_name')
 	call unite_setting#util#save(tmp_d.__file, tmp_d)
+	echo 'save -> '.tmp_d.__file
 endfunction
 "}}}
 function! s:settings_ex.gather_candidates(args, context) "{{{
