@@ -1,35 +1,6 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-function! s:select_list_toggle(candidates) "{{{
-
-	let candidates = type(a:candidates) == type([]) ? a:candidates : [a:candidates]
-
-	let dict_name    = candidates[0].action__dict_name
-	let valname_ex   = candidates[0].action__valname_ex
-	let kind         = candidates[0].action__kind
-
-	let tmps = unite_setting_ex2#get_orig(dict_name, valname_ex, kind)
-
-	let nums = []
-	let max  = len(tmps.items)
-	let nums = map(copy(candidates), "v:val.action__num")
-	let nums = filter(nums, '0 <= v:val && v:val < max')
-
-	" V‹K’Ç‰Á‚Ìê‡
-	if candidates[0].action__new != ''
-		call add(tmps.items, candidates[0].action__new)
-	else
-		call unite#force_quit_session()
-	endif
-
-	let tmps.nums = nums
-	call unite_setting_ex2#set(dict_name, valname_ex, kind, tmps)
-
-	call unite_setting_ex2#common_out(dict_name)
-	return 
-endfunction
-"}}}
 function! s:delete(dict_name, valname_ex, kind, delete_nums) "{{{
 
 	" •À‚Ñ‘Ö‚¦
@@ -78,16 +49,58 @@ let s:kind_settings_ex_list_select.action_table.a_toggles = {
 			\ 'description' : 'Ý’è‚ÌØ‘Ö ( •¡”‘I‘ð‰Â”\ )',
 			\ 'is_quit'        : 0,
 			\ }
-function! s:kind_settings_ex_list_select.action_table.a_toggles.func(...)
-	return call('s:select_list_toggle', a:000)
+function! s:kind_settings_ex_list_select.action_table.a_toggles.func(candidates) "{{{
+	let candidates =  a:candidates
+
+	let dict_name    = candidates[0].action__dict_name
+	let valname_ex   = candidates[0].action__valname_ex
+	let kind         = candidates[0].action__kind
+
+	let tmps = unite_setting_ex2#get_orig(dict_name, valname_ex, kind)
+
+	let max  = len(tmps.items)
+	let nums = []
+	let nums = map(copy(candidates), "v:val.action__num")
+	let nums = filter(nums, '0 <= v:val && v:val < max')
+
+	" V‹K’Ç‰Á‚Ìê‡
+	if candidates[0].action__new != ''
+		call add(tmps.items, candidates[0].action__new)
+	else
+		call unite#force_quit_session()
+	endif
+
+	let tmps.nums = nums
+	call unite_setting_ex2#set(dict_name, valname_ex, kind, tmps)
+	call unite_setting_ex2#common_out(dict_name)
 endfunction
+"}}}
 
 let s:kind_settings_ex_list_select.action_table.a_toggle = {
 			\ 'description' : 'Ý’è‚ÌØ‘Ö',
 			\ 'is_quit'        : 0,
 			\ }
-function! s:kind_settings_ex_list_select.action_table.a_toggle.func(...)
-	return call('s:select_list_toggle', a:000)
+function! s:kind_settings_ex_list_select.action_table.a_toggle.func(candidates)
+	let dict_name    = a:candidates.action__dict_name
+	let valname_ex   = a:candidates.action__valname_ex
+	let kind         = a:candidates.action__kind
+
+	let tmps = unite_setting_ex2#get_orig(dict_name, valname_ex, kind)
+
+	let max  = len(tmps.items)
+	let num_ = a:candidates.action__num
+	let num_ = ( 0 <= num_ && num_ < max ) ? num_ : -1 
+
+	" V‹K’Ç‰Á‚Ìê‡
+	if a:candidates.action__new != ''
+		call add(tmps.items, a:candidates.action__new)
+	else
+		call unite#force_quit_session()
+	endif
+
+	let tmps.num = num_
+	call unite_setting_ex2#set(dict_name, valname_ex, kind, tmps)
+	call unite_setting_ex2#common_out(dict_name)
 endfunction
 
 let s:kind_settings_ex_list_select.action_table.delete = {
