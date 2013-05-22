@@ -89,7 +89,7 @@ let s:settings_ex = {
 			\ 'hooks'       : {},
 			\ 'is_quit'     : 0,
 			\ }
-let s:settings_ex.hooks.on_syntax = function("unite_setting2#sub_setting_syntax")
+let s:settings_ex.hooks.on_syntax = function("unite_setting_2#sub_setting_syntax")
 function! s:settings_ex.hooks.on_init(args, context) "{{{
 	if exists('a:args[0]')
 		let a:context.source__dict_name = a:args[0]

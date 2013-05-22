@@ -1,7 +1,7 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-function! unite_setting2#sub_setting_syntax(args, context) 
+function! unite_setting_2#sub_setting_syntax(args, context) 
 	syntax match uniteSource__settings_choose /<.\{-}>/ containedin=uniteSource__settings contained
 	syntax match uniteSource__settings_group /".*"/ containedin=uniteSource__settings contained
 	highlight default link uniteSource__settings_choose Type 
