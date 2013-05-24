@@ -4,6 +4,9 @@ set cpo&vim
 function! unite#kinds#kind_settings_common#define()
 	return s:kind_settings_common
 endfunction
+
+call unite#define_kind( s:kind_settings_common )
+
 let s:kind_settings_common = { 
 			\ 'name'           : 'kind_settings_common',
 			\ 'default_action' : 'edit',
@@ -18,11 +21,14 @@ function! s:kind_settings_common.action_table.edit.func(candidate)  "{{{
 	let const_flg = get(a:candidate, 'action__const_flg', 0)
 
 	if const_flg == 1
-		unite#print_message("con't edit")
+		call unite#print_message("con't edit")
 		return
 	endif
 
 	if !exists(valname)
+
+		call unite#print_message("not define!")
+		
 		let tmp_str = matchstr(valname, '.*\ze[.\{-}\]$')
 		exe 'let type_ = type('.tmp_str.')'
 
@@ -39,6 +45,40 @@ function! s:kind_settings_common.action_table.edit.func(candidate)  "{{{
 
 	if str !=# ""
 		exe 'let '.valname.' = '.str
+	endif
+
+	call unite#force_redraw()
+endfunction
+"}}}
+let s:kind_settings_common.action_table.edit_key = {
+			\ 'description'   : 'key setting',
+			\ 'is_quit'       : 0,
+			\ }
+function! s:kind_settings_common.action_table.edit_key.func(candidate)  "{{{
+	let valname   = a:candidate.action__valname
+	let const_flg     = get(a:candidate, 'action__const_flg', 0)
+	let key_edit_flg  = get(a:candidate, 'action__key_edit_flg', 1)
+
+	if const_flg == 1 || key_edit_flg == 0
+		call unite#print_message("con't edit")
+		return
+	endif
+
+	let dict_name = matchstr(valname, '.*\ze[.\{-}\]$')
+	let key       = matchstr(valname, '.*[\zs.\{-}\ze\]$')
+
+	exe 'let type_ = type('.dict_name.')'
+
+	if type_ != type({})
+		call unite#print_message("not dict")
+		return
+	endif
+
+	let str = input(key.' : ', key)
+
+	if str !=# "" && str !=# key
+		let cmd = 'let '.dict_name.'['.str.'] = '.valname
+		exe 'unlet '.valname
 	endif
 
 	call unite#force_redraw()
@@ -92,7 +132,7 @@ let s:kind_settings_common.action_table.yank_data = {
 			\ 'is_quit'       : 0,
 			\ 'is_selectable' : 1,
 			\ }
-function! s:kind_settings_common.action_table.yan_data.func(candidates)  "{{{
+function! s:kind_settings_common.action_table.yank_data.func(candidates)  "{{{
 	let @" = ''
 	let @* = ''
 	for candidate in a:candidates
