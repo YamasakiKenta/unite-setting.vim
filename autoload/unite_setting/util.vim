@@ -11,6 +11,9 @@ endfunction
 function! unite_setting#util#printf(...)
 	return call(s:Sjis.printf, a:000)
 endfunction
+function! unite_setting#util#load(...)
+	return call(s:Common.load, a:000)
+endfunction
 
 let &cpo = s:save_cpo
 unlet s:save_cpo

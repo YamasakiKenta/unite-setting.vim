@@ -1,9 +1,6 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-let s:L = vital#of('unite-setting.vim')
-let s:Common = s:L.import('Mind.Common')
-
 let s:default = 'g:unite_setting_ex_default_data'
 
 function! s:get_kind(dict_name, valname_ex) "{{{
@@ -251,7 +248,7 @@ function! unite_setting_ex_3#load(...) "{{{
 		echo 'unite_setting_ex_3#load -> find file'
 	endif
 
-	let load_d = s:Common.load(file_, {})
+	let load_d = unite_setting#util#load(file_, {})
 
 
 	let load_d.__file  = file_
