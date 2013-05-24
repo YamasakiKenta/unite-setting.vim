@@ -261,6 +261,7 @@ function! unite_setting_ex_3#load(...) "{{{
 	call extend(tmp_d, load_d)
 
 	" ★ ADD の時点でも行うが、ファイルで取得した値を入れる
+	"
 	" 変数の修正をする
 	for valname in filter(copy(tmp_d.__order), 'v:val=~"g:"')
 		exe 'let '.valname." = unite_setting_ex_3#get(dict_name, valname)"

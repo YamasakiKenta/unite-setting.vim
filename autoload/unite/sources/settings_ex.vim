@@ -32,7 +32,7 @@ function! s:get_source_kind(dict_name, valname_ex, kind) "{{{
 				\ 'list_ex'        : 'kind_settings_ex_select',
 				\ 'var'            : 'kind_settings_ex_var',
 				\ }
-	return get( unite_kind, type, '')
+	return get( unite_kind, type, 'common')
 endfunction
 "}}}
 
