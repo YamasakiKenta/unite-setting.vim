@@ -87,12 +87,12 @@ function! s:kind_settings_common.action_table.yank.func(candidates)  "{{{
 	let @* = @"
 endfunction
 "}}}
-let s:kind_settings_common.action_table.delete = {
+let s:kind_settings_common.action_table.yank_data = {
 			\ 'description'   : 'yank data',
 			\ 'is_quit'       : 0,
 			\ 'is_selectable' : 1,
 			\ }
-function! s:kind_settings_common.action_table.delete.func(candidates)  "{{{
+function! s:kind_settings_common.action_table.yan_data.func(candidates)  "{{{
 	let @" = ''
 	let @* = ''
 	for candidate in a:candidates
