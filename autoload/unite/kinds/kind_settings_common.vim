@@ -5,8 +5,6 @@ function! unite#kinds#kind_settings_common#define()
 	return s:kind_settings_common
 endfunction
 
-call unite#define_kind( s:kind_settings_common )
-
 let s:kind_settings_common = { 
 			\ 'name'           : 'kind_settings_common',
 			\ 'default_action' : 'edit',
@@ -17,14 +15,15 @@ let s:kind_settings_common.action_table.edit = {
 			\ 'is_quit'       : 0,
 			\ }
 function! s:kind_settings_common.action_table.edit.func(candidate)  "{{{
-	let valname   = a:candidate.action__valname
-	let const_flg = get(a:candidate, 'action__const_flg', 0)
+	let valname    = a:candidate.action__valname
+	let const_flg  = get(a:candidate, 'action__const_flg', 0)
 
 	if const_flg == 1
 		call unite#print_message("con't edit")
 		return
 	endif
 
+	" íËã`Ç≥ÇÍÇƒÇ¢Ç»Ç¢èÍçáÇÕÅAí«â¡Ç∑ÇÈ
 	if !exists(valname)
 
 		call unite#print_message("not define!")
@@ -45,6 +44,12 @@ function! s:kind_settings_common.action_table.edit.func(candidate)  "{{{
 
 	if str !=# ""
 		exe 'let '.valname.' = '.str
+
+		" ex ÇÃê›íË
+		let valname_ex = get(a:candidate, 'action__valname_ex', 0)
+		if exists(valname_ex)
+			exe 'let '.valname_ex.' = '.str
+		endif
 	endif
 
 	call unite#force_redraw()
@@ -74,11 +79,17 @@ function! s:kind_settings_common.action_table.edit_key.func(candidate)  "{{{
 		return
 	endif
 
+	echo dict_name
 	let str = input(key.' : ', key)
 
 	if str !=# "" && str !=# key
-		let cmd = 'let '.dict_name.'['.str.'] = '.valname
-		exe 'unlet '.valname
+		let  cmd = 'let   '.dict_name.'['.str.'] = '.valname
+		echo cmd
+		exe  cmd
+
+		let  cmd = 'unlet '.valname
+		echo cmd
+		exe  cmd
 	endif
 
 	call unite#force_redraw()
@@ -143,6 +154,8 @@ function! s:kind_settings_common.action_table.yank_data.func(candidates)  "{{{
 	let @* = @"
 endfunction
 "}}}
+
+call unite#define_kind( s:kind_settings_common )
 
 let &cpo = s:save_cpo
 unlet s:save_cpo

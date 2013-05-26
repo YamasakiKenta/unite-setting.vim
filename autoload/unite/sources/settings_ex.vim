@@ -128,16 +128,18 @@ function! s:settings_ex.gather_candidates(args, context) "{{{
 				\ 'word'               : s:get_source_word(dict_name, v:val, kind),
 				\ 'kind'               : s:get_source_kind(dict_name, v:val, kind),
 				\ 'action__kind'       : kind,
-				\ 'action__valname'    : s:get_source_valname(dict_name, v:val, kind),
+				\ 'action__valname'    : dict_name.'['''.v:val.''']['''.kind.''']',
 				\ 'action__valname_ex' : v:val,
 				\ 'action__dict_name'  : dict_name,
 				\ 'action__const_flg'  : unite_setting_ex2#get_const_flg(dict_name, v:val, kind),
 				\ }")
 
+				" \ 'action__valname'    : s:get_source_valname(dict_name, v:val, kind),
 
 endfunction
 "}}}
 
+call unite#define_source(s:settings_ex)
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
