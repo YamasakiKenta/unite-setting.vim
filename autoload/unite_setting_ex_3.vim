@@ -244,8 +244,6 @@ function! unite_setting_ex_3#load(...) "{{{
 	if !filereadable(file_)
 		echo 'unite_setting_ex_3#load -> not find '.file_
 		return
-	else
-		echo 'unite_setting_ex_3#load -> find file'
 	endif
 
 	let load_d = unite_setting#util#load(file_, {})
