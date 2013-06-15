@@ -15,27 +15,6 @@ function! unite_setting_ex2#get_const_flg(dict_name, valname_ex, kind) "{{{
 	return flg
 endfunction
 "}}}
-function! unite_setting_ex2#set_next(dict_name, valname_ex, kind) "{{{
-	exe 'let tmp_d = '.a:dict_name
-	let type = unite_setting_ex2#get_type(a:dict_name, a:valname_ex, a:kind)
-
-	if type == 'bool'
-		let val = unite_setting_ex_3#get(a:dict_name, a:valname_ex) ? 0 : 1
-	elseif type == 'select'
-		let val = unite_setting_ex2#get_orig(a:dict_name, a:valname_ex, a:kind)
-		let val.num = s:next_items(val.num, val.items)
-	elseif type == 'list_ex'
-		let val = unite_setting_ex2#get_orig(a:dict_name, a:valname_ex, a:kind)
-		call map(val.nums, 's:next_items(v:val, val.items)')
-	else
-		" Åö
-		echo 'non supoert....'
-		call input("")
-	endif
-
-	call unite_setting_ex2#set(a:dict_name, a:valname_ex, a:kind, val )
-endfunction
-"}}}
 function! unite_setting_ex2#set(dict_name, valname_ex, kind, val) "{{{
 
 	if exists(a:dict_name.'["'.a:valname_ex.'"]["'.a:kind.'"]')
@@ -181,18 +160,6 @@ function! s:get_source_word_sub_type(dict_name, valname_ex, kind) "{{{
 	return star.''.a:valname_ex.''.star
 endfunction
 "}}}
-function! s:next_items(num, items) "{{{
-	" ********************************************************************************
-	" @par           {items} ÇÃîzóÒêîÇí¥Ç¶Ç»Ç¢ÇÊÇ§Ç… {num} Çâ¡éZÇ∑ÇÈ
-	" @param[in]     num   = 0
-	" @param[in]     items = [1, 2, 3]
-	" @return        num   = 1
-	" ********************************************************************************
-	let num_ = a:num + 1
-	let num_ = num_ < len(a:items) ? num_ : 0
-	return num_
-endfunction
-" }}}
 function! s:get_kind(dict_name, valname_ex, kind) "{{{
 	if exists(a:dict_name.a:valname_ex.a:kind)
 		echo a:dict_name.a:valname_ex.a:kind
