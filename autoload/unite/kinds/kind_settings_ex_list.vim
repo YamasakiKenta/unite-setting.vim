@@ -48,8 +48,7 @@ function! s:kind_settings_ex_list.action_table.edit.func(candidate) "{{{
 		return
 	endif
 
-
-	let tmp          = input("",string(unite_setting_ex2#dict(dict_name)[valname_ex].__default))
+	let tmp = input("",string(unite_setting_ex2#dict(dict_name)[valname_ex].__default))
 
 	if tmp != ""
 		exe 'let val = '.tmp
