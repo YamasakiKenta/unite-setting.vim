@@ -2,7 +2,7 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 " •K—v ( 2013/05/18 ) 
-function! unite_setting_ex2#dict(dict_name)
+function! unite_setting_ex2#dict(dict_name) "{{{
 	try
 		exe 'return '.a:dict_name
 	catch
@@ -11,6 +11,7 @@ function! unite_setting_ex2#dict(dict_name)
 		return []
 	endtry
 endfunction
+"}}}
 function! unite_setting_ex2#get_const_flg(dict_name, valname_ex, kind) "{{{
 	let datas = copy(unite_setting_ex2#dict(a:dict_name)[a:valname_ex].__default)
 
@@ -34,7 +35,7 @@ function! s:get_str(val) "{{{
 	return str
 endfunction
 "}}}
-function! unite_setting_ex2#get_strs_on_off_new(dict_name, valname_ex, kind) "{{{
+function! unite_setting_ex2#get_strs_on_off_new(dict_name, valname_ex) "{{{
 
 	let datas = copy(unite_setting_ex2#dict(a:dict_name)[a:valname_ex].__default)
 
@@ -66,8 +67,11 @@ function! unite_setting_ex2#get_strs_on_off_new(dict_name, valname_ex, kind) "{{
 				\ }")
 
 	try 
+		let tmp_var = ''
 		for num_ in filter(copy(num_flgs), 'v:val >= 0')
-			let rtns[num_].str = '<'.s:get_str(get(datas.items, num_, '*ERROR')).'>'
+			unlet tmp_var
+			let tmp_var = get(datas.items, num_, '*ERROR*')
+			let rtns[num_].str = '<'.s:get_str(tmp_var).'>'
 			let rtns[num_].flg = 1
 		endfor
 	catch

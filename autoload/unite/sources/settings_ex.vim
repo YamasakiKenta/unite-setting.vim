@@ -33,7 +33,7 @@ function! s:get_source_word_sub(dict_name, valname_ex, kind, str) "{{{
 endfunction
 "}}}
 function! s:get_source_word_from_strs(dict_name, valname_ex, kind) "{{{
-	let datas = unite_setting_ex2#get_strs_on_off_new(a:dict_name, a:valname_ex, a:kind)
+	let datas = unite_setting_ex2#get_strs_on_off_new(a:dict_name, a:valname_ex)
 	let strs  = map(datas, 'v:val.str')
 	return s:get_source_word_sub( a:dict_name, a:valname_ex, a:kind, join(strs))
 endfunction
