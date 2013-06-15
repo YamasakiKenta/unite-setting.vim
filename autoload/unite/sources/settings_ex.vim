@@ -5,24 +5,6 @@ function! unite#sources#settings_ex#define()
 	return s:settings_ex 
 endfunction
 
-function! s:get_valnames(valname) "{{{
-	exe 'let tmp = '.a:valname
-	if a:valname == 'g:'
-		let valnames = map(keys(tmp),
-					\ "'g:'.v:val")
-	elseif type([]) == type(tmp)
-		let valnames = map(range(len(tmp)),
-					\ "a:valname.'['.v:val.']'")
-	elseif type({}) == type(tmp)
-		let valnames = map(keys(tmp),
-					\ "a:valname.'['''.v:val.''']'")
-	else
-		let valnames = []
-	endif
-
-	return valnames
-endfunction
-"}}}
 function! s:get_source_kind(dict_name, valname_ex, kind) "{{{
 	let type = unite_setting_ex2#get_type(a:dict_name, a:valname_ex, a:kind)
 	let unite_kind = {
@@ -107,27 +89,26 @@ function! s:settings_ex.hooks.on_close(args, context) "{{{
 endfunction
 "}}}
 function! s:settings_ex.gather_candidates(args, context) "{{{
-	" 設定する項目
 	let dict_name = a:context.source__dict_name
-	exe 'let tmp_d = '.dict_name
-
 	call unite#print_source_message(dict_name, self.name)
 
-	" ★ データに登録がない場合は、どうしよう
-	if exists('tmp_d.__order')
-		let orders  = tmp_d.__order
-	else
-		let orders = s:get_valnames(dict_name)
+	if !exists(a:context.source__dict_name)
+		call unite#print_error(printf("not find %s.", a:context.source__dict_name))
+		return []
 	endif
 
-	" 辞書名と、取得関数が必要になる
-	"
+	exe 'let tmp_d = '.dict_name
+	if !exists('tmp_d.__order')
+		call unite#print_error(printf('add %s.__order', dict_name))
+		return []
+	endif
+
 	let kind = '__default'
-	return map( copy(orders), "{
+	return map( copy(tmp_d.__order), "{
 				\ 'word'               : s:get_source_word(dict_name, v:val, kind),
 				\ 'kind'               : s:get_source_kind(dict_name, v:val, kind),
 				\ 'action__kind'       : kind,
-				\ 'action__valname'    : dict_name.'['''.v:val.''']['''.kind.''']',
+				\ 'action__valname'    : printf('%s[\"%s\"][\"%s\"]', dict_name, v:val, kind),
 				\ 'action__valname_ex' : v:val,
 				\ 'action__dict_name'  : dict_name,
 				\ 'action__const_flg'  : unite_setting_ex2#get_const_flg(dict_name, v:val, kind),
@@ -137,5 +118,9 @@ endfunction
 
 call unite#define_source(s:settings_ex)
 
-let &cpo = s:save_cpo
-unlet s:save_cpo
+if exists('s:save_cpo')
+	let &cpo = s:save_cpo
+	unlet s:save_cpo
+else
+	set cpo&
+endif
