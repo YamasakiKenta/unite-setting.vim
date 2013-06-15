@@ -15,15 +15,15 @@ endfunction
 " }}}
 
 function! unite_setting#kind#set_next(dict_name, valname_ex, kind) "{{{
-	let type = unite_setting_ex2#var(a:dict_name)[a:valname_ex].__type
+	let type = unite_setting_ex2#dict(a:dict_name)[a:valname_ex].__type
 
 	if type == 'bool'
 		let val = unite_setting#data#get(a:dict_name, a:valname_ex) ? 0 : 1
 	elseif type == 'select'
-		let val = unite_setting_ex2#get_orig(a:dict_name, a:valname_ex, a:kind)
+		let val = unite_setting_ex2#dict(a:dict_name)[a:valname_ex].__default
 		let val.num = s:next_items(val.num, val.items)
 	elseif type == 'list_ex'
-		let val = unite_setting_ex2#get_orig(a:dict_name, a:valname_ex, a:kind)
+		let val = unite_setting_ex2#dict(a:dict_name)[a:valname_ex].__default
 		call map(val.nums, 's:next_items(v:val, val.items)')
 	else
 		echo 'non supoert....'

@@ -2,11 +2,17 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 " 必要 ( 2013/05/18 ) 
-function! unite_setting_ex2#var(dict_name)
-	exe 'return '.a:dict_name
+function! unite_setting_ex2#dict(dict_name)
+	try
+		exe 'return '.a:dict_name
+	catch
+		echo a:dict_name
+		call input("")
+		return []
+	endtry
 endfunction
 function! unite_setting_ex2#get_const_flg(dict_name, valname_ex, kind) "{{{
-	let datas = copy(unite_setting_ex2#get_orig(a:dict_name, a:valname_ex, a:kind))
+	let datas = copy(unite_setting_ex2#dict(a:dict_name)[a:valname_ex].__default)
 
 	let flg = 0
 	if exists('datas.consts')
@@ -16,21 +22,6 @@ function! unite_setting_ex2#get_const_flg(dict_name, valname_ex, kind) "{{{
 	endif
 
 	return flg
-endfunction
-"}}}
-function! unite_setting_ex2#get_orig(dict_name, valname_ex, kind) "{{{
-	exe 'let tmp_d = '.a:dict_name
-	let tmp_d = unite_setting_ex2#var(dict_name)
-	let kind = '__default'
-
-	if exists('tmp_d[a:valname_ex].__default')
-		let rtn = tmp_d[a:valname_ex].__default
-	else
-		exe 'let rtn = '.a:valname_ex
-	endif
-
-	return rtn
-
 endfunction
 "}}}
 function! unite_setting_ex2#get_str(val) "{{{
@@ -45,7 +36,7 @@ endfunction
 "}}}
 function! unite_setting_ex2#get_strs_on_off_new(dict_name, valname_ex, kind) "{{{
 
-	let datas = copy(unite_setting_ex2#get_orig(a:dict_name, a:valname_ex, a:kind))
+	let datas = copy(unite_setting_ex2#dict(a:dict_name)[a:valname_ex].__default)
 
 	" ★　バグ対応
 	if type(datas) != type({})

@@ -19,7 +19,7 @@ function! s:kind_settings_ex_var.action_table.edit.func(candidate) "{{{
 	let dict_name  = a:candidate.action__dict_name
 	let valname_ex = a:candidate.action__valname_ex
 	let kind       = a:candidate.action__kind
-	let tmp        = input("",string(unite_setting_ex2#get_orig(dict_name, valname_ex, kind)))
+	let tmp        = input("",string(unite_setting_ex2#dict(dict_name)[valname_ex].__default))
 
 	if tmp != ""
 		exe 'let val = '.tmp

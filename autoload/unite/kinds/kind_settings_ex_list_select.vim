@@ -8,7 +8,7 @@ function! s:delete(dict_name, valname_ex, kind, delete_nums) "{{{
 	call sort(delete_nums, 'unite_setting_ex2#sort_lager')
 
 	" ”Ô†‚Ìæ“¾
-	let datas = unite_setting_ex2#get_orig(a:dict_name, a:valname_ex, a:kind)
+	let datas = unite_setting_ex2#dict(a:dict_name)[a:valname_ex].__default
 
 	" ‘I‘ğ”Ô†‚Ìíœ
 	let nums = get(datas, 'nums')
@@ -56,7 +56,7 @@ function! s:kind_settings_ex_list_select.action_table.a_toggles.func(candidates)
 	let valname_ex   = candidates[0].action__valname_ex
 	let kind         = candidates[0].action__kind
 
-	let tmps = unite_setting_ex2#get_orig(dict_name, valname_ex, kind)
+	let tmps = unite_setting_ex2#dict(dict_name)[valname_ex].__default
 
 	let max  = len(tmps.items)
 	let nums = []
@@ -85,7 +85,7 @@ function! s:kind_settings_ex_list_select.action_table.a_toggle.func(candidates)
 	let valname_ex   = a:candidates.action__valname_ex
 	let kind         = a:candidates.action__kind
 
-	let tmps = unite_setting_ex2#get_orig(dict_name, valname_ex, kind)
+	let tmps = unite_setting_ex2#dict(dict_name)[valname_ex].__default
 
 	let max  = len(tmps.items)
 	let num_ = a:candidates.action__num
