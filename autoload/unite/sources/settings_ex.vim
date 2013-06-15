@@ -18,10 +18,24 @@ function! s:get_source_kind(dict_name, valname_ex, kind) "{{{
 endfunction
 "}}}
 
+function! s:get_source_word_sub(dict_name, valname_ex, kind, str) "{{{
+	exe 'let tmp_d = '.a:dict_name
+	let description = ''
+	if exists('tmp_d[a:valname_ex].__description')
+		let description = tmp_d[a:valname_ex].__description
+	endif
+
+	return unite_setting#util#printf(' %-100s %50s - %s', 
+				\ description,
+				\ a:valname_ex,
+				\ a:str,
+				\ )
+endfunction
+"}}}
 function! s:get_source_word_from_strs(dict_name, valname_ex, kind) "{{{
 	let datas = unite_setting_ex2#get_strs_on_off_new(a:dict_name, a:valname_ex, a:kind)
 	let strs  = map(datas, 'v:val.str')
-	return unite_setting_ex2#get_source_word_sub( a:dict_name, a:valname_ex, a:kind, join(strs))
+	return s:get_source_word_sub( a:dict_name, a:valname_ex, a:kind, join(strs))
 endfunction
 "}}}
 function! s:get_source_word(dict_name, valname_ex, kind) "{{{
@@ -52,15 +66,20 @@ function! s:get_source_valname(dict_name, valname_ex, kind) "{{{
 endfunction
 "}}}
 function! s:get_source_word_from_bool(dict_name, valname_ex, kind) "{{{
-	let str =  unite_setting_ex_3#get(a:dict_name, a:valname_ex) ? 
-				\ '<TRUE>  FALSE ' :
-				\ ' TRUE  <FALSE>'
-	return unite_setting_ex2#get_source_word_sub( a:dict_name, a:valname_ex, a:kind, str)
+	try
+		let str =  unite_setting_ex_3#get(a:dict_name, a:valname_ex) ? 
+					\ '<TRUE>  FALSE ' :
+					\ ' TRUE  <FALSE>'
+	catch
+		echo a:valname_ex
+		call input("")
+	endtry
+	return s:get_source_word_sub( a:dict_name, a:valname_ex, a:kind, str)
 endfunction
 "}}}
 function! s:get_source_word_from_val(dict_name, valname_ex, kind) "{{{
 	let data = unite_setting_ex_3#get(a:dict_name, a:valname_ex)
-	return unite_setting_ex2#get_source_word_sub( a:dict_name, a:valname_ex, a:kind, string(data))
+	return s:get_source_word_sub( a:dict_name, a:valname_ex, a:kind, string(data))
 endfunction
 "}}}
 

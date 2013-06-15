@@ -31,7 +31,24 @@ function! unite_setting#kind#set_next(dict_name, valname_ex, kind) "{{{
 		call input("")
 	endif
 
-	call unite_setting_ex2#set(a:dict_name, a:valname_ex, a:kind, val )
+	call unite_setting#kind#set(a:dict_name, a:valname_ex, a:kind, val )
+endfunction
+"}}}
+function! unite_setting#kind#set(dict_name, valname_ex, kind, val) "{{{
+
+	if exists(a:dict_name.'["'.a:valname_ex.'"]["'.a:kind.'"]')
+		let valname = a:dict_name.'["'.a:valname_ex.'"]["'.a:kind.'"]'
+	else
+		let valname = a:valname_ex
+	endif
+
+	exe 'let '.valname.' = a:val'
+
+	if a:valname_ex =~ '^g:'
+		let tmp = unite_setting_ex_3#get(a:dict_name, a:valname_ex)
+		exe 'let '.a:valname_ex.' = tmp'
+	endif
+
 endfunction
 "}}}
 

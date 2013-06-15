@@ -53,7 +53,7 @@ function! s:kind_settings_ex_list.action_table.edit.func(candidate) "{{{
 
 	if tmp != ""
 		exe 'let val = '.tmp
-		call unite_setting_ex2#set(dict_name, valname_ex, kind, val)
+		call unite_setting#kind#set(dict_name, valname_ex, kind, val)
 	endif
 
 	call unite#force_redraw()

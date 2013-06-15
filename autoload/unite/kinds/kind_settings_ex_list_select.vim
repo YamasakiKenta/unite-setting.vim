@@ -29,7 +29,7 @@ function! s:delete(dict_name, valname_ex, kind, delete_nums) "{{{
 	let datas.nums = nums
 
 	" ê›íË
-	call unite_setting_ex2#set(a:dict_name, a:valname_ex, a:kind, datas)
+	call unite_setting#kind#set(a:dict_name, a:valname_ex, a:kind, datas)
 
 endfunction
 "}}}
@@ -71,7 +71,7 @@ function! s:kind_settings_ex_list_select.action_table.a_toggles.func(candidates)
 	endif
 
 	let tmps.nums = nums
-	call unite_setting_ex2#set(dict_name, valname_ex, kind, tmps)
+	call unite_setting#kind#set(dict_name, valname_ex, kind, tmps)
 	call unite#force_redraw()
 endfunction
 "}}}
@@ -99,7 +99,7 @@ function! s:kind_settings_ex_list_select.action_table.a_toggle.func(candidates)
 	endif
 
 	let tmps.num = num_
-	call unite_setting_ex2#set(dict_name, valname_ex, kind, tmps)
+	call unite_setting#kind#set(dict_name, valname_ex, kind, tmps)
 	call unite#force_redraw()
 endfunction
 

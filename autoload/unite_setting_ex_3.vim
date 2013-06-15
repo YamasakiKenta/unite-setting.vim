@@ -5,6 +5,26 @@ let s:default = 'g:unite_setting_ex_default_data'
 function! s:get_dict_name(...)
 	return get(a:, 1, '') == '' ? s:default : a:1
 endfunction
+function! s:get_type(val) "{{{
+	let val_type_ = type(a:val)
+	if type(0) ==  val_type_
+		let type_ = 'bool'
+	elseif type([]) == val_type_
+		let type_ = 'list'
+	elseif type({}) == val_type_
+		if type(get(a:val, 'num', [])) == type(0)
+			let type_ = 'select'
+		elseif type(get(a:val, 'nums', 0)) == type([])
+			let type_ = 'list_ex'
+		else
+			let type_ = 'list' 
+		endif
+	else
+		let type_ = 'var'
+	endif
+	return type_
+endfunction
+"}}}
 function! s:get_lists(datas) "{{{
 	try
 		let rtns = []
@@ -65,25 +85,8 @@ endfunction
 "}}}
 
 function! unite_setting_ex_3#add(dict_name, valname_ex, description, val) "{{{
-
-	let val_type_ = type(a:val)
-
-	let type_ = 'var'
-	if type(0) ==  val_type_
-		let type_ = 'bool'
-	elseif type([]) == val_type_
-		let type_ = 'list'
-	elseif type({}) == val_type_
-		let type_ = 'list' 
-		if type(get(a:val, 'num', [])) == type(0)
-			let type_ = 'select'
-		elseif type(get(a:val, 'nums', 0)) == type([])
-			let type_ = 'list_ex'
-		endif
-	endif
-
+	let type_ = s:get_type(a:val)
 	return s:add_with_type(a:dict_name, a:valname_ex, a:description, a:val, type_) 
-
 endfunction
 "}}}
 function! unite_setting_ex_3#get(dict_name, valname_ex) "{{{

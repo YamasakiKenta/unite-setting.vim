@@ -15,23 +15,6 @@ function! unite_setting_ex2#get_const_flg(dict_name, valname_ex, kind) "{{{
 	return flg
 endfunction
 "}}}
-function! unite_setting_ex2#set(dict_name, valname_ex, kind, val) "{{{
-
-	if exists(a:dict_name.'["'.a:valname_ex.'"]["'.a:kind.'"]')
-		let valname = a:dict_name.'["'.a:valname_ex.'"]["'.a:kind.'"]'
-	else
-		let valname = a:valname_ex
-	endif
-
-	exe 'let '.valname.' = a:val'
-
-	if a:valname_ex =~ '^g:'
-		let tmp = unite_setting_ex_3#get(a:dict_name, a:valname_ex)
-		exe 'let '.a:valname_ex.' = tmp'
-	endif
-
-endfunction
-"}}}
 function! unite_setting_ex2#get_orig(dict_name, valname_ex, kind) "{{{
 	exe 'let tmp_d = '.a:dict_name
 	let kind = '__default'
@@ -125,20 +108,6 @@ function! unite_setting_ex2#get_type(dict_name, valname_ex, kind) "{{{
 	endif
 
 	retu type_
-endfunction
-"}}}
-function! unite_setting_ex2#get_source_word_sub(dict_name, valname_ex, kind, str) "{{{
-	exe 'let tmp_d = '.a:dict_name
-	let description = ''
-	if exists('tmp_d[a:valname_ex].__description')
-		let description = tmp_d[a:valname_ex].__description
-	endif
-
-	return unite_setting#util#printf(' %-100s %50s - %s', 
-				\ description,
-				\ a:valname_ex,
-				\ a:str,
-				\ )
 endfunction
 "}}}
 
