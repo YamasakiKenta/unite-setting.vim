@@ -20,10 +20,11 @@ endfunction
 "}}}
 function! unite_setting_ex2#get_orig(dict_name, valname_ex, kind) "{{{
 	exe 'let tmp_d = '.a:dict_name
+	let tmp_d = unite_setting_ex2#var(dict_name)
 	let kind = '__default'
 
-	if exists('tmp_d[a:valname_ex][kind]')
-		let rtn = tmp_d[a:valname_ex][kind]
+	if exists('tmp_d[a:valname_ex].__default')
+		let rtn = tmp_d[a:valname_ex].__default
 	else
 		exe 'let rtn = '.a:valname_ex
 	endif
