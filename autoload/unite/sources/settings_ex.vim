@@ -19,7 +19,7 @@ endfunction
 "}}}
 
 function! s:get_source_word_sub(dict_name, valname_ex, kind, str) "{{{
-	exe 'let tmp_d = '.a:dict_name
+	let tmp_d = unite_setting_ex2#var(a:dict_name)
 	let description = ''
 	if exists('tmp_d[a:valname_ex].__description')
 		let description = tmp_d[a:valname_ex].__description
@@ -92,7 +92,7 @@ function! s:settings_ex.hooks.on_init(args, context) "{{{
 endfunction
 "}}}
 function! s:settings_ex.hooks.on_close(args, context) "{{{
-	exe 'let tmp_d = '.get(a:context, 'source__dict_name')
+	let tmp_d = unite_setting_ex2#var(a:context.source__dict_name)
 	call unite_setting#util#save(tmp_d.__file, tmp_d)
 	echo 'save -> '.tmp_d.__file
 endfunction
@@ -106,7 +106,7 @@ function! s:settings_ex.gather_candidates(args, context) "{{{
 		return []
 	endif
 
-	exe 'let tmp_d = '.dict_name
+	let tmp_d = unite_setting_ex2#var(dict_name)
 	if !exists('tmp_d.__order')
 		call unite#print_error(printf('add %s.__order', dict_name))
 		return []
