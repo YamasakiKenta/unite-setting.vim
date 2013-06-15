@@ -194,7 +194,8 @@ function! s:next_items(num, items) "{{{
 endfunction
 " }}}
 function! s:get_kind(dict_name, valname_ex, kind) "{{{
-	if exists(a:dict_name.'[a:valname_ex][a:kind]')
+	if exists(a:dict_name.a:valname_ex.a:kind)
+		echo a:dict_name.a:valname_ex.a:kind
 		return a:kind
 	endif
 	return '__default'

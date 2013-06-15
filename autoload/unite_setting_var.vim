@@ -44,7 +44,9 @@ let unite_setting_var#source_tmpl = {
 			\ 'hooks'       : {},
 			\ 'is_quit'     : 0,
 			\ }
-let unite_setting_var#source_tmpl.hooks.on_syntax = function("unite_setting_2#sub_setting_syntax")
+function! unite_setting_var#source_tmpl.hooks.on_syntax(...)
+	return call("unite_setting_2#sub_setting_syntax", a:000)
+endfunction
 
 function! unite_setting_var#source_tmpl.hooks.on_init(args, context) 
 	let a:context.source__valname = get(a:args, 0, 'g:')
@@ -68,10 +70,10 @@ function! unite_setting_var#source_tmpl.change_candidates(args, context) "{{{
 	let rtns = []
 	if new_ != ''
 		let rtns = [{
-					\ 'word' : printf("[add]%45s : %s", valname, new_),
-					\ 'kind' : 'kind_settings_common',
-					\ 'action__valname'   : valname,
-					\ 'action__new'   : new_
+					\ 'word'            : printf("[add]%45s : %s", valname, new_),
+					\ 'kind'            : 'kind_settings_common',
+					\ 'action__valname' : valname,
+					\ 'action__new'     : new_,
 					\ }]
 	endif
 

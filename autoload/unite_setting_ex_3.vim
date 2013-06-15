@@ -34,7 +34,6 @@ function! s:get_select_item(datas) "{{{
 	return rtn
 endfunction
 "}}}
-
 function! s:add_with_type(dict_name, valname_ex, description, val, type) "{{{
 
 	let dict_name = ( a:dict_name == '' ? s:default : a:dict_name ) 
@@ -71,6 +70,7 @@ function! s:add_with_type(dict_name, valname_ex, description, val, type) "{{{
 
 endfunction
 "}}}
+"
 function! unite_setting_ex_3#add(dict_name, valname_ex, description, val) "{{{
 
 	let val_type_ = type(a:val)
@@ -237,5 +237,9 @@ function! unite_setting_ex_3#load(...) "{{{
 endfunction
 "}}}
 
-let &cpo = s:save_cpo
-unlet s:save_cpo
+if exists('s:save_cpo')
+	let &cpo = s:save_cpo
+	unlet s:save_cpo
+else
+	set cpo&
+endif
