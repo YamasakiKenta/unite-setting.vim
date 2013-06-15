@@ -10,7 +10,9 @@ let s:settings_ex_list_select = {
 			\ 'syntax'      : 'uniteSource__settings',
 			\ 'hooks'       : {},
 			\ }
-let s:settings_ex_list_select.hooks.on_syntax = function('unite_setting_2#sub_setting_syntax')
+function! s:settings_ex_list_select.hooks.on_syntax(...)
+	return call('unite_setting_2#sub_setting_syntax', a:000)
+endfunction
 function! s:settings_ex_list_select.hooks.on_init(args, context) "{{{
 	if len(a:args) > 0
 		let a:context.source__dict_name    = a:args[0].dict_name

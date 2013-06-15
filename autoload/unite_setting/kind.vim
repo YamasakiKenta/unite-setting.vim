@@ -19,7 +19,7 @@ function! unite_setting#kind#set_next(dict_name, valname_ex, kind) "{{{
 	let type = unite_setting_ex2#get_type(a:dict_name, a:valname_ex, a:kind)
 
 	if type == 'bool'
-		let val = unite_setting_ex_3#get(a:dict_name, a:valname_ex) ? 0 : 1
+		let val = unite_setting#data#get(a:dict_name, a:valname_ex) ? 0 : 1
 	elseif type == 'select'
 		let val = unite_setting_ex2#get_orig(a:dict_name, a:valname_ex, a:kind)
 		let val.num = s:next_items(val.num, val.items)
@@ -45,7 +45,7 @@ function! unite_setting#kind#set(dict_name, valname_ex, kind, val) "{{{
 	exe 'let '.valname.' = a:val'
 
 	if a:valname_ex =~ '^g:'
-		let tmp = unite_setting_ex_3#get(a:dict_name, a:valname_ex)
+		let tmp = unite_setting#data#get(a:dict_name, a:valname_ex)
 		exe 'let '.a:valname_ex.' = tmp'
 	endif
 

@@ -67,7 +67,7 @@ endfunction
 "}}}
 function! s:get_source_word_from_bool(dict_name, valname_ex, kind) "{{{
 	try
-		let str =  unite_setting_ex_3#get(a:dict_name, a:valname_ex) ? 
+		let str =  unite_setting#data#get(a:dict_name, a:valname_ex) ? 
 					\ '<TRUE>  FALSE ' :
 					\ ' TRUE  <FALSE>'
 	catch
@@ -78,7 +78,7 @@ function! s:get_source_word_from_bool(dict_name, valname_ex, kind) "{{{
 endfunction
 "}}}
 function! s:get_source_word_from_val(dict_name, valname_ex, kind) "{{{
-	let data = unite_setting_ex_3#get(a:dict_name, a:valname_ex)
+	let data = unite_setting#data#get(a:dict_name, a:valname_ex)
 	return s:get_source_word_sub( a:dict_name, a:valname_ex, a:kind, string(data))
 endfunction
 "}}}

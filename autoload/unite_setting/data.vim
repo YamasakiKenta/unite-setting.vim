@@ -77,19 +77,19 @@ function! s:add_with_type(dict_name, valname_ex, description, val, type) "{{{
 
 	" •Ï”‚ÌXV
 	if a:valname_ex =~ '^g:'
-		let tmp = unite_setting_ex_3#get(dict_name, a:valname_ex)
+		let tmp = unite_setting#data#get(dict_name, a:valname_ex)
 		exe 'let '.a:valname_ex.' = tmp'
 	endif
 
 endfunction
 "}}}
 
-function! unite_setting_ex_3#add(dict_name, valname_ex, description, val) "{{{
+function! unite_setting#data#add(dict_name, valname_ex, description, val) "{{{
 	let type_ = s:get_type(a:val)
 	return s:add_with_type(a:dict_name, a:valname_ex, a:description, a:val, type_) 
 endfunction
 "}}}
-function! unite_setting_ex_3#get(dict_name, valname_ex) "{{{
+function! unite_setting#data#get(dict_name, valname_ex) "{{{
 
 	let dict_name = s:get_dict_name(a:dict_name)
 
@@ -116,7 +116,7 @@ function! unite_setting_ex_3#get(dict_name, valname_ex) "{{{
 	return rtns
 endfunction
 "}}}
-function! unite_setting_ex_3#init(...) "{{{
+function! unite_setting#data#init(...) "{{{
 	" ********************************************************************************
 	" @par
 	" @param[in]     a:1 dict_name
@@ -127,21 +127,21 @@ function! unite_setting_ex_3#init(...) "{{{
 
 	if !exists(dict_name)
 		let file_name = get(a:, 2, expand('~/.'.matchstr(dict_name, 'g:\zs.*')))
-		echo 'unite_setting_ex_3#init -> init'
+		echo 'unite_setting#data#init -> init'
 		let tmp = {
 					\ "__order"  : [],
 					\ "__file"   : file_name,
 					\ }
 		exe 'let '.dict_name.' = tmp'
 
-		call call('unite_setting_ex_3#load', a:000)
+		call call('unite_setting#data#load', a:000)
 	else
 	endif
 
 	return dict_name 
 endfunction
 "}}}
-function! unite_setting_ex_3#load(...) "{{{
+function! unite_setting#data#load(...) "{{{
 
 	let dict_name = call('s:get_dict_name', a:000)
 
@@ -150,7 +150,7 @@ function! unite_setting_ex_3#load(...) "{{{
 
 	
 	if !filereadable(file_)
-		echo 'unite_setting_ex_3#load -> not find '.file_
+		echo 'unite_setting#data#load -> not find '.file_
 		return
 	endif
 
@@ -170,7 +170,7 @@ function! unite_setting_ex_3#load(...) "{{{
 	"
 	" •Ï”‚ÌC³‚ğ‚·‚é
 	for valname in filter(copy(tmp_d.__order), 'v:val=~"g:"')
-		exe 'let '.valname." = unite_setting_ex_3#get(dict_name, valname)"
+		exe 'let '.valname." = unite_setting#data#get(dict_name, valname)"
 	endfor
 
 	return tmp_d
