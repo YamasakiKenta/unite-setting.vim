@@ -35,7 +35,6 @@ function! unite_setting#kind#set_next(dict_name, valname_ex, kind) "{{{
 endfunction
 "}}}
 
-
 if exists('s:save_cpo')
 	let &cpo = s:save_cpo
 	unlet s:save_cpo

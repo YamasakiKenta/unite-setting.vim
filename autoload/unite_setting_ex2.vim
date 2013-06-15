@@ -32,13 +32,9 @@ function! unite_setting_ex2#set(dict_name, valname_ex, kind, val) "{{{
 
 endfunction
 "}}}
-function! unite_setting_ex2#common_out(dict_name) "{{{
-	call unite#force_redraw()
-endfunction
-"}}}
 function! unite_setting_ex2#get_orig(dict_name, valname_ex, kind) "{{{
 	exe 'let tmp_d = '.a:dict_name
-	let kind = s:get_kind(a:dict_name, a:valname_ex, a:kind)
+	let kind = '__default'
 
 	if exists('tmp_d[a:valname_ex][kind]')
 		let rtn = tmp_d[a:valname_ex][kind]
@@ -140,32 +136,9 @@ function! unite_setting_ex2#get_source_word_sub(dict_name, valname_ex, kind, str
 
 	return unite_setting#util#printf(' %-100s %50s - %s', 
 				\ description,
-				\ s:get_source_word_sub_type(a:dict_name, a:valname_ex, a:kind),
+				\ a:valname_ex,
 				\ a:str,
 				\ )
-endfunction
-"}}}
-" •Û—¯ ( 2013/05/18 )
-function! s:get_source_word_sub_type(dict_name, valname_ex, kind) "{{{
-	let kind = s:get_kind( a:dict_name, a:valname_ex, a:kind) 
-
-	if exists(a:valname_ex)
-		let star = '_'
-	elseif kind=='__common'
-		let star = '*'
-	else
-		let star = ' '
-	endif
-
-	return star.''.a:valname_ex.''.star
-endfunction
-"}}}
-function! s:get_kind(dict_name, valname_ex, kind) "{{{
-	if exists(a:dict_name.a:valname_ex.a:kind)
-		echo a:dict_name.a:valname_ex.a:kind
-		return a:kind
-	endif
-	return '__default'
 endfunction
 "}}}
 

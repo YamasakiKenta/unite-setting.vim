@@ -72,7 +72,7 @@ function! s:kind_settings_ex_list_select.action_table.a_toggles.func(candidates)
 
 	let tmps.nums = nums
 	call unite_setting_ex2#set(dict_name, valname_ex, kind, tmps)
-	call unite_setting_ex2#common_out(dict_name)
+	call unite#force_redraw()
 endfunction
 "}}}
 
@@ -100,7 +100,7 @@ function! s:kind_settings_ex_list_select.action_table.a_toggle.func(candidates)
 
 	let tmps.num = num_
 	call unite_setting_ex2#set(dict_name, valname_ex, kind, tmps)
-	call unite_setting_ex2#common_out(dict_name)
+	call unite#force_redraw()
 endfunction
 
 let s:kind_settings_ex_list_select.action_table.delete = {
@@ -125,7 +125,7 @@ function! s:kind_settings_ex_list_select.action_table.delete.func(candidates) "{
 		" çÌèúÇ∑ÇÈ
 		call s:delete(dict_name, valname_ex, kind, nums)
 
-		call unite_setting_ex2#common_out(dict_name)
+		call unite#force_redraw()
 	endif
 endfunction
 "}}}

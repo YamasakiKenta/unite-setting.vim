@@ -20,7 +20,7 @@ function! s:kind_settings_ex_select.action_table.a_toggle.func(candidate) "{{{
 	let kind       = a:candidate.action__kind
 
 	call unite_setting#kind#set_next(dict_name, valname_ex, kind)
-	call unite_setting_ex2#common_out(dict_name)
+	call unite#force_redraw()
 endfunction
 "}}}
 let s:kind_settings_ex_select.action_table.edit = {

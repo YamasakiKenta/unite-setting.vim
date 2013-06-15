@@ -56,7 +56,7 @@ function! s:kind_settings_ex_list.action_table.edit.func(candidate) "{{{
 		call unite_setting_ex2#set(dict_name, valname_ex, kind, val)
 	endif
 
-	call unite_setting_ex2#common_out(dict_name)
+	call unite#force_redraw()
 endfunction
 "}}}
 
