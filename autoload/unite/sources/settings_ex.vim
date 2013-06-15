@@ -89,7 +89,9 @@ let s:settings_ex = {
 			\ 'hooks'       : {},
 			\ 'is_quit'     : 0,
 			\ }
-let s:settings_ex.hooks.on_syntax = function("unite_setting_2#sub_setting_syntax")
+function! s:settings_ex.hooks.on_syntax(...)
+	return call('unite_setting_2#sub_setting_syntax', a:000)
+endfunction
 function! s:settings_ex.hooks.on_init(args, context) "{{{
 	if exists('a:args[0]')
 		let a:context.source__dict_name = a:args[0]
@@ -118,9 +120,6 @@ function! s:settings_ex.gather_candidates(args, context) "{{{
 		let orders = s:get_valnames(dict_name)
 	endif
 
-	" š 
-	let xind    = '__default'
-
 	" «‘–¼‚ÆAæ“¾ŠÖ”‚ª•K—v‚É‚È‚é
 	"
 	let kind = '__default'
@@ -133,9 +132,6 @@ function! s:settings_ex.gather_candidates(args, context) "{{{
 				\ 'action__dict_name'  : dict_name,
 				\ 'action__const_flg'  : unite_setting_ex2#get_const_flg(dict_name, v:val, kind),
 				\ }")
-
-				" \ 'action__valname'    : s:get_source_valname(dict_name, v:val, kind),
-
 endfunction
 "}}}
 

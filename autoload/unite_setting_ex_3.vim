@@ -3,31 +3,6 @@ set cpo&vim
 
 let s:default = 'g:unite_setting_ex_default_data'
 
-function! s:get_kind(dict_name, valname_ex) "{{{
-	" ********************************************************************************
-	" @par í•Ê‚ğæ“¾‚·‚é
-	" ********************************************************************************
-	
-	let dict_name = ( a:dict_name == '' ? s:default : a:dict_name ) 
-
-	let num  = 0
-	let kind = '__default'
-
-	if exists(dict_name)
-		exe 'let tmp = '.dict_name
-
-		if exists('tmp.set_kind.__type.__common.num')
-			let num = tmp.set_kind.__type.__common.num
-		endif
-
-		if exists('tmp.set_kind.__type.__common.items[num]')
-			let kind = tmp.set_kind.__type.__common.items[num]	
-		endif
-	endif
-
-	return kind
-endfunction
-"}}}
 function! s:get_lists(datas) "{{{
 
 
@@ -179,16 +154,8 @@ function! unite_setting_ex_3#get(dict_name, valname_ex) "{{{
 	" ’l‚Ìæ“¾
 	exe 'let tmp_d = '.dict_name
 
-	" kind ‚Ìİ’è
-	let kind = s:get_kind(dict_name, a:valname_ex)
-	if exists('tmp_d[a:valname_ex].__common')
-		let kind = __common
-	elseif !exists('tmp_d[a:valname_ex][kind]')
-		let tmp_d[a:valname_ex][kind] = tmp_d[a:valname_ex].__default
-	endif
-
 	let type_ = tmp_d[a:valname_ex].__type
-	let val   = tmp_d[a:valname_ex][kind]
+	let val   = tmp_d[a:valname_ex].__default
 
 	if type_ == 'list_ex' 
 		let rtns = s:get_lists(val)
@@ -218,10 +185,6 @@ function! unite_setting_ex_3#init(...) "{{{
 		let tmp = {
 					\ "__order"  : [],
 					\ "__file"   : file_name,
-					\ 'set_kind' : {
-					\ '__type'   : 'select',
-					\ '__common' : { 'items' : ['__default'], 'num' : 0 },
-					\ }
 					\ }
 		exe 'let '.dict_name.' = tmp'
 
