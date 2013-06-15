@@ -8,7 +8,7 @@ function! unite_setting_2#sub_setting_syntax(args, context)
 	highlight default link uniteSource__settings_const Underlined  
 endfunction
 
-function! unite_setting#version()
+function! unite_setting_2#version()
 endfunction
 
 let &cpo = s:save_cpo

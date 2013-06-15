@@ -161,13 +161,13 @@ function! unite_setting_ex2#get_source_word_sub(dict_name, valname_ex, kind, str
 
 	return unite_setting#util#printf(' %-100s %50s - %s', 
 				\ description,
-				\ unite_setting_ex2#get_source_word_sub_type(a:dict_name, a:valname_ex, a:kind),
+				\ s:get_source_word_sub_type(a:dict_name, a:valname_ex, a:kind),
 				\ a:str,
 				\ )
 endfunction
 "}}}
 " •Û—¯ ( 2013/05/18 )
-function! unite_setting_ex2#get_source_word_sub_type(dict_name, valname_ex, kind) "{{{
+function! s:get_source_word_sub_type(dict_name, valname_ex, kind) "{{{
 	let kind = s:get_kind( a:dict_name, a:valname_ex, a:kind) 
 
 	if exists(a:valname_ex)
@@ -201,6 +201,9 @@ function! s:get_kind(dict_name, valname_ex, kind) "{{{
 endfunction
 "}}}
 
-let &cpo = s:save_cpo
-unlet s:save_cpo
-
+if exists('s:save_cpo')
+	let &cpo = s:save_cpo
+	unlet s:save_cpo
+else
+	set cpo&
+endif
