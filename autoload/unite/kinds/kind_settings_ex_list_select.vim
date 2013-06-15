@@ -54,7 +54,6 @@ function! s:kind_settings_ex_list_select.action_table.a_toggles.func(candidates)
 
 	let dict_name    = candidates[0].action__dict_name
 	let valname_ex   = candidates[0].action__valname_ex
-	let kind         = candidates[0].action__kind
 
 	let tmps = unite_setting_ex2#dict(dict_name)[valname_ex].__default
 
@@ -71,7 +70,7 @@ function! s:kind_settings_ex_list_select.action_table.a_toggles.func(candidates)
 	endif
 
 	let tmps.nums = nums
-	call unite_setting#kind#set(dict_name, valname_ex, kind, tmps)
+	call unite_setting#kind#set(dict_name, valname_ex, '__default', tmps)
 	call unite#force_redraw()
 endfunction
 "}}}
@@ -83,7 +82,6 @@ let s:kind_settings_ex_list_select.action_table.a_toggle = {
 function! s:kind_settings_ex_list_select.action_table.a_toggle.func(candidates)
 	let dict_name    = a:candidates.action__dict_name
 	let valname_ex   = a:candidates.action__valname_ex
-	let kind         = a:candidates.action__kind
 
 	let tmps = unite_setting_ex2#dict(dict_name)[valname_ex].__default
 
@@ -112,7 +110,6 @@ function! s:kind_settings_ex_list_select.action_table.delete.func(candidates) "{
 
 	" èâä˙âª
 	let valname_ex = a:candidates[0].action__valname_ex
-	let kind       = a:candidates[0].action__kind
 	let dict_name  = a:candidates[0].action__dict_name
 	let const_flg  = a:candidates[0].action__const_flg  
 
@@ -123,7 +120,7 @@ function! s:kind_settings_ex_list_select.action_table.delete.func(candidates) "{
 		let nums       = map(copy(a:candidates), 'v:val.action__num')
 
 		" çÌèúÇ∑ÇÈ
-		call s:delete(dict_name, valname_ex, kind, nums)
+		call s:delete(dict_name, valname_ex, '__default', nums)
 
 		call unite#force_redraw()
 	endif

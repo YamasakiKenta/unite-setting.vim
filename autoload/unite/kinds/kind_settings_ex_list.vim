@@ -27,7 +27,6 @@ let s:kind_settings_ex_list.action_table.edit = {
 function! s:kind_settings_ex_list.action_table.edit.func(candidate) "{{{
 	let dict_name    = a:candidate.action__dict_name
 	let valname_ex   = a:candidate.action__valname_ex
-	let kind         = a:candidate.action__kind
 
 	let const_flg = get(a:candidate, 'action__const_flg', 0)
 

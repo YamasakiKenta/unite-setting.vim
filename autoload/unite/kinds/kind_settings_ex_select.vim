@@ -17,9 +17,8 @@ let s:kind_settings_ex_select.action_table.a_toggle = {
 function! s:kind_settings_ex_select.action_table.a_toggle.func(candidate) "{{{
 	let dict_name  = a:candidate.action__dict_name
 	let valname_ex = a:candidate.action__valname_ex
-	let kind       = a:candidate.action__kind
 
-	call unite_setting#kind#set_next(dict_name, valname_ex, kind)
+	call unite_setting#kind#set_next(dict_name, valname_ex, '__default')
 	call unite#force_redraw()
 endfunction
 "}}}

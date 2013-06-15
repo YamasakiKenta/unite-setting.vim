@@ -101,19 +101,8 @@ function! s:settings_ex.gather_candidates(args, context) "{{{
 	let dict_name = a:context.source__dict_name
 	call unite#print_source_message(dict_name, self.name)
 
-	if !exists(a:context.source__dict_name)
-		call unite#print_error(printf("not find %s.", a:context.source__dict_name))
-		return []
-	endif
-
-	let tmp_d = unite_setting_ex2#dict(dict_name)
-	if !exists('tmp_d.__order')
-		call unite#print_error(printf('add %s.__order', dict_name))
-		return []
-	endif
-
 	let kind = '__default'
-	return map( copy(tmp_d.__order), "{
+	return map( copy(unite_setting_ex2#dict(dict_name).__order), "{
 				\ 'word'               : s:get_source_word(dict_name, v:val, kind),
 				\ 'kind'               : s:get_source_kind(dict_name, v:val),
 				\ 'action__kind'       : kind,

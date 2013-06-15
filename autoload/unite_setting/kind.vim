@@ -56,13 +56,13 @@ function! unite_setting#kind#unite_list_select(candidate) "{{{
 	let const_ = unite_setting_ex2#get_const_flg(
 				\ a:candidate.action__dict_name,
 				\ a:candidate.action__valname_ex, 
-				\ a:candidate.action__kind
+				\ '__default',
 				\ )
 
 	let tmp_d = {
 				\ 'dict_name'  : a:candidate.action__dict_name,
 				\ 'valname_ex' : a:candidate.action__valname_ex,
-				\ 'kind'       : a:candidate.action__kind,
+				\ 'kind'       : '__default',
 				\ 'const_'     : const_,
 				\ }
 

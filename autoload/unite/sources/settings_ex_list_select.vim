@@ -54,9 +54,8 @@ function! s:settings_ex_list_select.gather_candidates(args, context) "{{{
 					\ 'kind'               : unite_kind,
 					\ 'action__dict_name'  : dict_name,
 					\ 'action__valname_ex' : valname_ex,
-					\ 'action__kind'       : kind,
 					\ 'action__const_flg'  : const_,
-					\ 'action__valname'    : dict_name."['".valname_ex."']['".kind."']['items']['".num_."']",
+					\ 'action__valname'    : dict_name."['".valname_ex."']['__default']['items']['".num_."']",
 					\ 'action__num'        : num_,
 					\ 'action__new'        : '',
 					\ }]
@@ -84,7 +83,6 @@ function! s:settings_ex_list_select.change_candidates(args, context) "{{{
 					\ 'action__new'       : new_,
 					\ 'action__dict_name' : a:context.source__dict_name,
 					\ 'action__valname_ex'   : a:context.source__valname_ex,
-					\ 'action__kind'      : a:context.source__kind,
 					\ 'action__num'       : 1,
 					\ }]
 	endif

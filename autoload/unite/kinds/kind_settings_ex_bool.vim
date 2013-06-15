@@ -20,8 +20,7 @@ function! s:kind_settings_ex_bool.action_table.a_toggle.func(candidates) "{{{
 	for candidate in a:candidates
 		let dict_name  = candidate.action__dict_name
 		let valname_ex = candidate.action__valname_ex
-		let kind       = candidate.action__kind
-		call unite_setting#kind#set_next(dict_name, valname_ex, kind)
+		call unite_setting#kind#set_next(dict_name, valname_ex, '__default')
 	endfor
 	call unite#force_redraw()
 endfunction 
