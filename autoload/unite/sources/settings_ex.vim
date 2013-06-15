@@ -5,8 +5,8 @@ function! unite#sources#settings_ex#define()
 	return s:settings_ex 
 endfunction
 
-function! s:get_source_kind(dict_name, valname_ex, kind) "{{{
-	let type = unite_setting_ex2#get_type(a:dict_name, a:valname_ex, a:kind)
+function! s:get_source_kind(dict_name, valname_ex) "{{{
+	let type = unite_setting_ex2#var(a:dict_name)[a:valname_ex].__type
 	let unite_kind = {
 				\ 'bool'           : 'kind_settings_ex_bool',
 				\ 'list'           : 'kind_settings_ex_var_list',
@@ -40,8 +40,7 @@ endfunction
 "}}}
 function! s:get_source_word(dict_name, valname_ex, kind) "{{{
 
-	exe 'let tmp_d = '.a:dict_name
-	let type = unite_setting_ex2#get_type(a:dict_name, a:valname_ex, a:kind)
+	let type = unite_setting_ex2#var(a:dict_name)[a:valname_ex].__type
 
 	if type == 'bool'
 		let rtn = s:get_source_word_from_bool(a:dict_name, a:valname_ex, a:kind)
@@ -116,7 +115,7 @@ function! s:settings_ex.gather_candidates(args, context) "{{{
 	let kind = '__default'
 	return map( copy(tmp_d.__order), "{
 				\ 'word'               : s:get_source_word(dict_name, v:val, kind),
-				\ 'kind'               : s:get_source_kind(dict_name, v:val, kind),
+				\ 'kind'               : s:get_source_kind(dict_name, v:val),
 				\ 'action__kind'       : kind,
 				\ 'action__valname'    : printf('%s[\"%s\"][\"%s\"]', dict_name, v:val, kind),
 				\ 'action__valname_ex' : v:val,

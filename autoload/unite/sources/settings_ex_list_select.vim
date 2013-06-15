@@ -31,7 +31,7 @@ function! s:settings_ex_list_select.gather_candidates(args, context) "{{{
 
 	let datas  = unite_setting_ex2#get_strs_on_off_new(dict_name, valname_ex, kind)
 
-	let type  = unite_setting_ex2#get_type(dict_name, valname_ex, kind)
+	let type = unite_setting_ex2#var(dict_name)[valname_ex].__type
 	let only_ = ( type == 'select' ? 1 : 0 )
 
 	if only_ == 1 

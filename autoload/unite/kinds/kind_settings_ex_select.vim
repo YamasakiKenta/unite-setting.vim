@@ -40,8 +40,6 @@ function! s:kind_settings_ex_select.action_table.edit.func(candidate) "{{{
 				\ ),
 				\ }
 
-	let type = unite_setting_ex2#get_type(tmp_d.dict_name, tmp_d.valname_ex, tmp_d.kind)
-
 	call unite#start_temporary([['settings_ex_list_select', tmp_d]])
 endfunction
 "}}}

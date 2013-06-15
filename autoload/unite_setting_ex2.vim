@@ -2,6 +2,9 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 " •K—v ( 2013/05/18 ) 
+function! unite_setting_ex2#var(dict_name)
+	exe 'return '.a:dict_name
+endfunction
 function! unite_setting_ex2#get_const_flg(dict_name, valname_ex, kind) "{{{
 	let datas = copy(unite_setting_ex2#get_orig(a:dict_name, a:valname_ex, a:kind))
 
@@ -86,28 +89,6 @@ function! unite_setting_ex2#get_strs_on_off_new(dict_name, valname_ex, kind) "{{
 	endif
 
 	return rtns
-endfunction
-"}}}
-function! unite_setting_ex2#get_type(dict_name, valname_ex, kind) "{{{
-
-	let type_ = 'title'
-	if  exists(a:dict_name.'[a:valname_ex].__type')
-		exe 'let type_ = '.a:dict_name.'[a:valname_ex].__type'
-	else
-		if exists(a:valname_ex)
-			exe 'let tmp = '.a:valname_ex
-			let type_ = type(tmp)
-			if type([]) == type_ || type({}) == type_
-				let type_ = 'list'
-			elseif type(0) == type_ && ( tmp == 0 || tmp == 1 ) 
-				let type_ = 'bool'
-			else
-				let type_ = 'var'
-			endif
-		endif
-	endif
-
-	retu type_
 endfunction
 "}}}
 

@@ -15,8 +15,7 @@ endfunction
 " }}}
 
 function! unite_setting#kind#set_next(dict_name, valname_ex, kind) "{{{
-	exe 'let tmp_d = '.a:dict_name
-	let type = unite_setting_ex2#get_type(a:dict_name, a:valname_ex, a:kind)
+	let type = unite_setting_ex2#var(a:dict_name)[a:valname_ex].__type
 
 	if type == 'bool'
 		let val = unite_setting#data#get(a:dict_name, a:valname_ex) ? 0 : 1
