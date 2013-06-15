@@ -24,7 +24,7 @@ function! unite_setting_ex2#get_const_flg(dict_name, valname_ex, kind) "{{{
 	return flg
 endfunction
 "}}}
-function! unite_setting_ex2#get_str(val) "{{{
+function! s:get_str(val) "{{{
 	let type_ = type(a:val)
 	if type_ == type(0) || type_ == type('')
 		let str = a:val
@@ -61,13 +61,13 @@ function! unite_setting_ex2#get_strs_on_off_new(dict_name, valname_ex, kind) "{{
 	endif
 
 	let rtns = map(copy(datas.items), "{
-				\ 'str' : ' '.unite_setting_ex2#get_str(v:val).' ',
+				\ 'str' : ' '.s:get_str(v:val).' ',
 				\ 'flg' : 0,
 				\ }")
 
 	try 
 		for num_ in filter(copy(num_flgs), 'v:val >= 0')
-			let rtns[num_].str = '<'.unite_setting_ex2#get_str(get(datas.items, num_, '*ERROR')).'>'
+			let rtns[num_].str = '<'.s:get_str(get(datas.items, num_, '*ERROR')).'>'
 			let rtns[num_].flg = 1
 		endfor
 	catch
