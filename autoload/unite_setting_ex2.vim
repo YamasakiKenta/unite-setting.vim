@@ -13,7 +13,7 @@ function! unite_setting_ex2#dict(dict_name) "{{{
 endfunction
 "}}}
 function! unite_setting_ex2#get_const_flg(dict_name, valname_ex, kind) "{{{
-	let datas = copy(unite_setting_ex2#dict(a:dict_name)[a:valname_ex].__default)
+	let datas = unite_setting_ex2#dict(a:dict_name)[a:valname_ex].__default
 
 	let flg = 0
 	if exists('datas.consts')
@@ -35,54 +35,33 @@ function! s:get_str(val) "{{{
 	return str
 endfunction
 "}}}
-function! unite_setting_ex2#get_strs_on_off_new(dict_name, valname_ex) "{{{
-
-	let datas = copy(unite_setting_ex2#dict(a:dict_name)[a:valname_ex].__default)
-
-	" ★　バグ対応
-	if type(datas) != type({})
-		echo 'ERROR ' string(datas)
-		unlet datas
-		let datas = {'nums' : [], 'items' : [], 'consts' : []}
-	endif
-
-	if exists('datas.nums')
-		let num_flgs  = datas.nums
-	elseif exists('datas.num')
-		let num_flgs  = [datas.num]
+function! s:get_num_flgs(datas) "{{{
+	if exists('a:datas.nums')
+		let num_flgs  = a:datas.nums
+	elseif exists('a:datas.num')
+		let num_flgs  = [a:datas.num]
 	else
 		let num_flgs = []
 	endif
-
-	" ★　バグ対応
-	if type(num_flgs) != type([])
-		echo 'ERROR ' string(num_flgs)
-		unlet num_flgs
-		let num_flgs = []
-	endif
+	return num_flgs
+endfunction
+"}}}
+function! unite_setting_ex2#get_strs_on_off_new(dict_name, valname_ex) "{{{
+	let datas    = copy(unite_setting_ex2#dict(a:dict_name)[a:valname_ex].__default)
+	let num_flgs = s:get_num_flgs(datas)
 
 	let rtns = map(copy(datas.items), "{
 				\ 'str' : ' '.s:get_str(v:val).' ',
 				\ 'flg' : 0,
 				\ }")
 
-	try 
-		let tmp_var = ''
-		for num_ in filter(copy(num_flgs), 'v:val >= 0')
-			unlet tmp_var
-			let tmp_var = get(datas.items, num_, '*ERROR*')
-			let rtns[num_].str = '<'.s:get_str(tmp_var).'>'
-			let rtns[num_].flg = 1
-		endfor
-	catch
-		" ★ 新規追加の場合エラーが発生する
-		echo 'ERROR - catch' string(num_) string(rtns)
-	endtry
-
-
-	if !exists('rtns')
-		let rtns = [{'str' : '', 'flg' : 0}]
-	endif
+	let tmp_var = ''
+	for num_ in filter(copy(num_flgs), 'v:val >= 0')
+		unlet tmp_var
+		let tmp_var = get(datas.items, num_, '*ERROR*')
+		let rtns[num_].str = '<'.s:get_str(tmp_var).'>'
+		let rtns[num_].flg = 1
+	endfor
 
 	return rtns
 endfunction

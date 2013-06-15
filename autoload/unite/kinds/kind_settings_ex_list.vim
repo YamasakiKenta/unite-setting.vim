@@ -16,22 +16,10 @@ let s:kind_settings_ex_list.action_table.a_toggle = {
 			\ 'description' : 'ëIë',
 			\ 'is_quit'     : 0,
 			\ }
-function! s:kind_settings_ex_list.action_table.a_toggle.func(candidate) "{{{
-	let tmp_d = {
-				\ 'dict_name' : a:candidate.action__dict_name,
-				\ 'valname_ex'   : a:candidate.action__valname_ex,
-				\ 'kind'      : a:candidate.action__kind,
-				\ 'const_'       :
-				\ unite_setting_ex2#get_const_flg(
-				\ a:candidate.action__dict_name,
-				\ a:candidate.action__valname_ex, 
-				\ a:candidate.action__kind
-				\ ),
-				\ }
-
-	call unite#start_temporary([['settings_ex_list_select', tmp_d]])
+function! s:kind_settings_ex_list.action_table.a_toggle.func(...)
+	return call('unite_setting#kind#unite_list_select', a:000)
 endfunction
-"}}}
+
 let s:kind_settings_ex_list.action_table.edit = {
 			\ 'description' : 'ê›íËï“èW',
 			\ 'is_quit'     : 0,
