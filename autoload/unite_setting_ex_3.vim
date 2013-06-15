@@ -35,7 +35,7 @@ function! s:get_select_item(datas) "{{{
 endfunction
 "}}}
 
-function! unite_setting_ex_3#add_with_type(dict_name, valname_ex, description, val, type) "{{{
+function! s:add_with_type(dict_name, valname_ex, description, val, type) "{{{
 
 	let dict_name = ( a:dict_name == '' ? s:default : a:dict_name ) 
 
@@ -89,7 +89,7 @@ function! unite_setting_ex_3#add(dict_name, valname_ex, description, val) "{{{
 		endif
 	endif
 
-	return unite_setting_ex_3#add_with_type(a:dict_name, a:valname_ex, a:description, a:val, type_) 
+	return s:add_with_type(a:dict_name, a:valname_ex, a:description, a:val, type_) 
 
 endfunction
 "}}}
@@ -142,7 +142,7 @@ function! unite_setting_ex_3#add_val(dict_name, valname_ex) "{{{
 		let val   = val_data
 	endif
 	
-	return unite_setting_ex_3#add_with_type(a:dict_name, a:valname_ex, '', val, type_)
+	return s:add_with_type(a:dict_name, a:valname_ex, '', val, type_)
 
 endfunction
 "}}}
@@ -176,11 +176,16 @@ endfunction
 "}}}
 
 function! unite_setting_ex_3#init(...) "{{{
+	" ********************************************************************************
+	" @par
+	" @param[in]     a:1 dict_name
+	" @param[in]     a:2 filename
+	" ********************************************************************************
 
-	let dict_name = ( get(a:, 1, '') == '' ? s:default : a:1 ) 
-	let file_name = get(a:, 2, expand('~/.'.matchstr(dict_name, 'g:\zs.*')) )
+	let dict_name = get(a:, 1, '') == '' ? s:default : a:1
 
 	if !exists(dict_name)
+		let file_name = get(a:, 2, expand('~/.'.matchstr(dict_name, 'g:\zs.*')))
 		echo 'unite_setting_ex_3#init -> init'
 		let tmp = {
 					\ "__order"  : [],
