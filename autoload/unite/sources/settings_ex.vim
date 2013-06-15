@@ -56,15 +56,6 @@ function! s:get_source_word(dict_name, valname_ex, kind) "{{{
 	return unite_setting#util#printf("%10s %s", type, rtn)
 endfunction
 "}}}
-function! s:get_source_valname(dict_name, valname_ex, kind) "{{{
-	if exists(a:valname_ex)
-		let valname = a:valname_ex
-	else
-		let valname = a:dict_name.'['''.a:valname_ex.''']['''.a:kind.''']'
-	endif
-	return valname
-endfunction
-"}}}
 function! s:get_source_word_from_bool(dict_name, valname_ex, kind) "{{{
 	try
 		let str =  unite_setting#data#get(a:dict_name, a:valname_ex) ? 
