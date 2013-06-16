@@ -6,7 +6,7 @@ function! s:get_val(valname)
 	exe 'return '.a:valname
 endfunction
 function! s:get_source_kind(valname) "{{{
-	let tmp = s:get_val(a:valname)
+	let Tmp = s:get_val(a:valname)
 	let valname_to_source_kind_tabel = { 
 				\ type(0)              : 'kind_settings_common',
 				\ type("")             : 'kind_settings_common',
@@ -15,28 +15,34 @@ function! s:get_source_kind(valname) "{{{
 				\ type([])             : 'kind_settings_list',
 				\ type({})             : 'kind_settings_list',
 				\ }
-	return valname_to_source_kind_tabel[type(tmp)]
+	return valname_to_source_kind_tabel[type(Tmp)]
 endfunction
 "}}}
 function! s:get_source_word(valname) "{{{
-	let tmp = s:get_val(a:valname)
-	return printf("%-100s : %s", a:valname, string(tmp))
+	let Tmp = s:get_val(a:valname)
+	return printf("%-100s : %s", a:valname, string(Tmp))
 endfunction
 "}}}
 function! unite_setting_var#get_valnames(valname) "{{{
-	let tmp = s:get_val(a:valname)
-	if a:valname == 'g:'
-		let valnames = map(keys(tmp),
-					\ "'g:'.v:val")
-	elseif type([]) == type(tmp)
-		let valnames = map(range(len(tmp)),
-					\ "a:valname.'['.v:val.']'")
-	elseif type({}) == type(tmp)
-		let valnames = map(keys(tmp),
-					\ "a:valname.'['''.v:val.''']'")
-	else
+	try
+		let Tmp = s:get_val(a:valname)
+		if a:valname == 'g:'
+			let valnames = map(keys(Tmp),
+						\ "'g:'.v:val")
+		elseif type([]) == type(Tmp)
+			let valnames = map(range(len(Tmp)),
+						\ "a:valname.'['.v:val.']'")
+		elseif type({}) == type(Tmp)
+			let valnames = map(keys(Tmp),
+						\ "a:valname.'['''.v:val.''']'")
+		else
+			let valnames = []
+		endif
+	catch
+		echo "unite_setting_var#get_valnames : ".string(a:valname)
+		call input("")
 		let valnames = []
-	endif
+	endtry
 
 	return valnames
 endfunction

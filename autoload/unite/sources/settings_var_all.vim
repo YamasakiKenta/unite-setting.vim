@@ -19,7 +19,7 @@ function! s:source_settings_var_all.gather_candidates(args, context) "{{{
 		let tmps = unite_setting_var#get_valnames(valnames[num_])
 
 		if len(tmps) > 0
-			let valnames = insert(valnames, tmps, num_)
+			let valnames = extend(valnames, tmps, num_+1)
 			unlet valnames[num_]
 		else
 			let num_ = num_ + 1
@@ -31,6 +31,12 @@ function! s:source_settings_var_all.gather_candidates(args, context) "{{{
 
 endfunction
 "}}}
+"
+call unite#define_source(s:source_settings_var_all)
 
-let &cpo = s:save_cpo
-unlet s:save_cpo
+if exists('s:save_cpo')
+	let &cpo = s:save_cpo
+	unlet s:save_cpo
+else
+	set cpo&
+endif
