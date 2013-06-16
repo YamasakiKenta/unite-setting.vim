@@ -79,7 +79,7 @@ let s:kind_settings_ex_list_select.action_table.a_toggle = {
 			\ 'description' : 'ê›íËÇÃêÿë÷',
 			\ 'is_quit'        : 0,
 			\ }
-function! s:kind_settings_ex_list_select.action_table.a_toggle.func(candidates)
+function! s:kind_settings_ex_list_select.action_table.a_toggle.func(candidates) "{{{
 	let dict_name    = a:candidates.action__dict_name
 	let valname_ex   = a:candidates.action__valname_ex
 
@@ -97,9 +97,10 @@ function! s:kind_settings_ex_list_select.action_table.a_toggle.func(candidates)
 	endif
 
 	let tmps.num = num_
-	call unite_setting#kind#set(dict_name, valname_ex, kind, tmps)
+	call unite_setting#kind#set(dict_name, valname_ex, '__default', tmps)
 	call unite#force_redraw()
 endfunction
+"}}}
 
 let s:kind_settings_ex_list_select.action_table.delete = {
 			\ 'is_selectable' : 1,

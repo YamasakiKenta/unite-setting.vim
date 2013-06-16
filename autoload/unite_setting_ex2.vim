@@ -1,7 +1,28 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-" •K—v ( 2013/05/18 ) 
+function! s:get_str(val) "{{{
+	let type_ = type(a:val)
+	if type_ == type(0) || type_ == type('')
+		let str = a:val
+	else
+		let str = string(a:val)
+	endif
+	return str
+endfunction
+"}}}
+function! s:get_num_flgs(datas) "{{{
+	if exists('a:datas.nums')
+		let num_flgs  = a:datas.nums
+	elseif exists('a:datas.num')
+		let num_flgs  = [a:datas.num]
+	else
+		let num_flgs = []
+	endif
+	return num_flgs
+endfunction
+"}}}
+"
 function! unite_setting_ex2#dict(dict_name) "{{{
 	try
 		exe 'return '.a:dict_name
@@ -23,27 +44,6 @@ function! unite_setting_ex2#get_const_flg(dict_name, valname_ex, kind) "{{{
 	endif
 
 	return flg
-endfunction
-"}}}
-function! s:get_str(val) "{{{
-	let type_ = type(a:val)
-	if type_ == type(0) || type_ == type('')
-		let str = a:val
-	else
-		let str = string(a:val)
-	endif
-	return str
-endfunction
-"}}}
-function! s:get_num_flgs(datas) "{{{
-	if exists('a:datas.nums')
-		let num_flgs  = a:datas.nums
-	elseif exists('a:datas.num')
-		let num_flgs  = [a:datas.num]
-	else
-		let num_flgs = []
-	endif
-	return num_flgs
 endfunction
 "}}}
 function! unite_setting_ex2#get_strs_on_off_new(dict_name, valname_ex) "{{{
