@@ -20,29 +20,50 @@ endfunction
 "}}}
 function! s:get_source_word(valname) "{{{
 	let Tmp = s:get_val(a:valname)
-	return printf("%-100s : %s", a:valname, string(Tmp))
+	return printf("%s = %s", a:valname, string(Tmp))
 endfunction
 "}}}
-function! unite_setting_var#get_valnames(valname) "{{{
-	try
-		let Tmp = s:get_val(a:valname)
-		if a:valname == 'g:'
-			let valnames = map(keys(Tmp),
-						\ "'g:'.v:val")
-		elseif type([]) == type(Tmp)
-			let valnames = map(range(len(Tmp)),
-						\ "a:valname.'['.v:val.']'")
-		elseif type({}) == type(Tmp)
-			let valnames = map(keys(Tmp),
-						\ "a:valname.'['''.v:val.''']'")
-		else
-			let valnames = []
-		endif
-	catch
-		echo "unite_setting_var#get_valnames : ".string(a:valname)
-		call input("")
+"
+function! s:get_candidate(valnames) "{{{
+	return map(copy(a:valnames), "{
+				\ 'word'              : s:get_source_word(v:val),
+				\ 'kind'              : s:get_source_kind(v:val),
+				\ 'action__valname'   : v:val,
+				\ }")
+endfunction
+"}}}
+function! s:get_valnames(valname) "{{{
+	let Tmp = s:get_val(a:valname)
+	if a:valname == 'g:'
+		let valnames = map(keys(Tmp),
+					\ "'g:'.v:val")
+	elseif type([]) == type(Tmp)
+		let valnames = map(range(len(Tmp)),
+					\ "a:valname.'['.v:val.']'")
+	elseif type({}) == type(Tmp)
+		let valnames = map(keys(Tmp),
+					\ "a:valname.'['''.v:val.''']'")
+	else
 		let valnames = []
-	endtry
+	endif
+
+	return valnames
+endfunction
+"}}}
+function! s:get_valnames_all(valname) "{{{
+	let valnames = [a:valname]
+	let num_     = 0
+	while num_ < len(valnames)
+		let tmps = s:get_valnames(valnames[num_])
+
+		if len(tmps) > 0
+			let valnames = extend(valnames, tmps, num_+1)
+			unlet valnames[num_]
+		else
+			let num_ = num_ + 1
+		endif
+
+	endwhile
 
 	return valnames
 endfunction
@@ -54,17 +75,10 @@ let unite_setting_var#source_tmpl = {
 			\ 'hooks'       : {},
 			\ 'is_quit'     : 0,
 			\ }
-function! unite_setting_var#source_tmpl.hooks.on_syntax(...)
-	return call("unite_setting_2#sub_setting_syntax", a:000)
-endfunction
-
 function! unite_setting_var#source_tmpl.hooks.on_init(args, context) 
 	let a:context.source__valname = get(a:args, 0, 'g:')
 endfunction
-
 function! unite_setting_var#source_tmpl.change_candidates(args, context) "{{{
-
-	" ’Ç‰Á
 	let new_    = a:context.input
 	let valname = a:context.source__valname
 	let valdata = s:get_val(valname)
@@ -78,27 +92,44 @@ function! unite_setting_var#source_tmpl.change_candidates(args, context) "{{{
 	endif
 
 
-	let rtns = []
 	if new_ != ''
 		let rtns = [{
-					\ 'word'            : printf("[add]%45s : %s", valname, new_),
+					\ 'word'            : printf("[add]%s : %s", valname, new_),
 					\ 'kind'            : 'kind_settings_common',
 					\ 'action__valname' : valname,
 					\ 'action__new'     : new_,
 					\ }]
+	else
+		let rtns = []
 	endif
 
 	return rtns
 
 endfunction
 "}}}
+function! s:gather_candidates(args, context, all_flg) "{{{
 
-function! unite_setting_var#get_candidate(valnames)
-	return map(copy(a:valnames), "{
-				\ 'word'              : s:get_source_word(v:val),
-				\ 'kind'              : s:get_source_kind(v:val),
-				\ 'action__valname'   : v:val,
-				\ }")
+	let valname = a:context.source__valname
+
+	call unite#print_message(valname)
+
+	if a:all_flg == 1
+		let valnames = s:get_valnames_all(valname)
+	else
+		let valnames = s:get_valnames(valname)
+	endif
+
+	return s:get_candidate(valnames)
+
+endfunction
+"}}}
+
+function! unite_setting_var#gather_candidates(args, context) 
+	return s:gather_candidates(a:args, a:context, 0)
+endfunction
+
+function! unite_setting_var#gather_candidates_all(args, context)
+	return s:gather_candidates(a:args, a:context, 1)
 endfunction
 
 if exists('s:save_cpo')

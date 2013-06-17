@@ -6,31 +6,9 @@ endfunction
 
 let s:source_settings_var_all      = deepcopy(unite_setting_var#source_tmpl) 
 let s:source_settings_var_all.name = 'settings_var_all'
-function! s:source_settings_var_all.gather_candidates(args, context) "{{{
-
-	let valname = a:context.source__valname
-
-	call unite#print_source_message(valname, self.name)
-
-	let num_     = 0
-	let valnames = [valname]
-
-	while num_ < len(valnames)
-		let tmps = unite_setting_var#get_valnames(valnames[num_])
-
-		if len(tmps) > 0
-			let valnames = extend(valnames, tmps, num_+1)
-			unlet valnames[num_]
-		else
-			let num_ = num_ + 1
-		endif
-
-	endwhile
-
-	return unite_setting_var#get_candidate(valnames)
-
+function! s:source_settings_var_all.gather_candidates(...)
+	return call('unite_setting_var#gather_candidates_all', a:000)
 endfunction
-"}}}
 "
 call unite#define_source(s:source_settings_var_all)
 
