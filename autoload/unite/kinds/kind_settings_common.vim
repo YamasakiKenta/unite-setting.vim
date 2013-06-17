@@ -61,10 +61,9 @@ let s:kind_settings_common.action_table.edit_key = {
 			\ }
 function! s:kind_settings_common.action_table.edit_key.func(candidate)  "{{{
 	let valname   = a:candidate.action__valname
-	let const_flg     = get(a:candidate, 'action__const_flg', 0)
-	let key_edit_flg  = get(a:candidate, 'action__key_edit_flg', 1)
+	let const_flg = get(a:candidate, 'action__const_flg', 0)
 
-	if const_flg == 1 || key_edit_flg == 0
+	if const_flg == 1
 		call unite#print_message("con't edit")
 		return
 	endif
