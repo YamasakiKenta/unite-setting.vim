@@ -2,29 +2,16 @@
 
 CONTENTS					*unite-setting-contents*
 
-Interface		|unite-setting-interface|
-  Commands		  |unite-setting-commands|
-  Variables		  |unite-setting-variables|
 Sources			|unite-setting-sources|
 
 ==============================================================================
+SOURCES *unite-sources*
+						*unite-source-setting_var*
+setting_var	変数の一覧を表示
 
-FUNCTIONS					*unite-setting-functions*
-
-						*unite_setting_ex#add()*
-unite_setting_ex#add({dict-name}, {valname}, {description}, {type}, {val})
-		設定を追加します。
-
-
-
-==============================================================================
-SOURCES *unite-setting-sources*
-
-						*setting-var*
-setting_var	vim の編集の一覧を表示します。
-
-						*settings_ex*
-settings_ex	各種設定が行えます
+						*unite-source-setting_var_all*
+setting_var_all	変数の一覧を表示
+		リスト型、辞書型は展開する
 
 ==============================================================================
 KINDS *unite-setting-kinds*
