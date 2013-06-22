@@ -26,9 +26,6 @@ function! s:kind_settings_common.action_table.edit.func(candidate)  "{{{
 	let str = input(valname.' : ', str)
 
 	if str !=# ""
-		if exists(valname)
-			exe 'unlet '.valname
-		endif
 		exe 'let '.valname.' = '.str
 	endif
 
