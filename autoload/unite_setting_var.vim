@@ -94,7 +94,7 @@ function! unite_setting_var#source_tmpl.change_candidates(args, context) "{{{
 
 	if new_ != ''
 		let rtns = [{
-					\ 'word'            : printf("[add]%s : %s", valname, new_),
+					\ 'word'            : printf("[add]%s : ", valname),
 					\ 'kind'            : 'kind_settings_common',
 					\ 'action__valname' : valname,
 					\ 'action__new'     : new_,

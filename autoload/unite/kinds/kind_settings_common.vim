@@ -11,45 +11,25 @@ let s:kind_settings_common = {
 			\ 'action_table'   : {},
 			\ }
 let s:kind_settings_common.action_table.edit = {
-			\ 'description'   : 'val setting',
+			\ 'description'   : '',
 			\ 'is_quit'       : 0,
 			\ }
 function! s:kind_settings_common.action_table.edit.func(candidate)  "{{{
 	let valname    = a:candidate.action__valname
-	let const_flg  = get(a:candidate, 'action__const_flg', 0)
 
-	if const_flg == 1
-		call unite#print_message("con't edit")
-		return
+	if exists(valname)
+		exe 'let str = string('.valname.')'
+	els
+		let str = ''
 	endif
 
-	" íËã`Ç≥ÇÍÇƒÇ¢Ç»Ç¢èÍçáÇÕÅAí«â¡Ç∑ÇÈ
-	if !exists(valname)
-
-		call unite#print_message("not define!")
-		
-		let tmp_str = matchstr(valname, '.*\ze[.\{-}\]$')
-		exe 'let type_ = type('.tmp_str.')'
-
-		" Åö èâä˙ì¸óÕÇÃïœçX
-		if type_ == type([])
-			exe 'call add('.tmp_str.', 0)'
-		elseif type_ == type({})
-			exe 'let '.valname.' = 0'
-		endif
-	endif
-
-	exe 'let str = string('.valname.')'
 	let str = input(valname.' : ', str)
 
 	if str !=# ""
-		exe 'let '.valname.' = '.str
-
-		" ex ÇÃê›íË
-		let valname_ex = get(a:candidate, 'action__valname_ex', 0)
-		if exists(valname_ex)
-			exe 'let '.valname_ex.' = '.str
+		if exists(valname)
+			exe 'unlet '.valname
 		endif
+		exe 'let '.valname.' = '.str
 	endif
 
 	call unite#force_redraw()
@@ -61,12 +41,6 @@ let s:kind_settings_common.action_table.edit_key = {
 			\ }
 function! s:kind_settings_common.action_table.edit_key.func(candidate)  "{{{
 	let valname   = a:candidate.action__valname
-	let const_flg = get(a:candidate, 'action__const_flg', 0)
-
-	if const_flg == 1
-		call unite#print_message("con't edit")
-		return
-	endif
 
 	let dict_name = matchstr(valname, '.*\ze[.\{-}\]$')
 	let key       = matchstr(valname, '.*[\zs.\{-}\ze\]$')
@@ -83,11 +57,11 @@ function! s:kind_settings_common.action_table.edit_key.func(candidate)  "{{{
 
 	if str !=# "" && str !=# key
 		let  cmd = 'let   '.dict_name.'['.str.'] = '.valname
-		echo cmd
+		call unite#print_message(cmd)
 		exe  cmd
 
 		let  cmd = 'unlet '.valname
-		echo cmd
+		call unite#print_message(cmd)
 		exe  cmd
 	endif
 
@@ -99,11 +73,8 @@ let s:kind_settings_common.action_table.delete = {
 			\ 'is_quit'       : 0,
 			\ }
 function! s:kind_settings_common.action_table.delete.func(candidate)  "{{{
-
 	let valname   = a:candidate.action__valname
-
 	exe 'unlet '.valname
-
 	call unite#force_redraw()
 endfunction
 "}}}
@@ -132,22 +103,6 @@ function! s:kind_settings_common.action_table.yank.func(candidates)  "{{{
 	for candidate in a:candidates
 		exe 'let valname = "let ".candidate.action__valname." = ".string('.candidate.action__valname.')."\n"'
 		let @" = @" . valname
-	endfor
-	echo @"
-	let @* = @"
-endfunction
-"}}}
-let s:kind_settings_common.action_table.yank_data = {
-			\ 'description'   : 'yank data',
-			\ 'is_quit'       : 0,
-			\ 'is_selectable' : 1,
-			\ }
-function! s:kind_settings_common.action_table.yank_data.func(candidates)  "{{{
-	let @" = ''
-	let @* = ''
-	for candidate in a:candidates
-		exe "let data = 'let ".candidate.action__valname." = '.string(".candidate.action__valname.").'\n'"
-		let @" = @" . data
 	endfor
 	echo @"
 	let @* = @"
