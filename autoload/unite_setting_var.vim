@@ -61,10 +61,11 @@ endfunction
 "}}}
 function! s:get_valnames(valname, all_flg) "{{{
 	if a:all_flg == 1
-		let valnames = s:get_valnames_sub_all(valname)
+		let valnames = s:get_valnames_sub_all(a:valname)
 	else
-		let valnames = s:get_valnames_sub_simple(valname)
+		let valnames = s:get_valnames_sub_simple(a:valname)
 	endif
+	return valnames
 endfunction
 "}}}
 
@@ -107,7 +108,7 @@ endfunction
 function! unite_setting_var#gather_candidates(args, context, all_flg) "{{{
 
 	let valname  = a:context.source__valname
-	let valnames = s:get_valnames(valname, all_flg)
+	let valnames = s:get_valnames(valname, a:all_flg)
 
 	return map(copy(valnames), "{
 				\ 'word'              : s:get_source_word(v:val),
