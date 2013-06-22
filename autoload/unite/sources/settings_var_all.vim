@@ -6,8 +6,8 @@ endfunction
 
 let s:source_settings_var_all      = deepcopy(unite_setting_var#source_tmpl) 
 let s:source_settings_var_all.name = 'settings_var_all'
-function! s:source_settings_var_all.gather_candidates(...)
-	return call('unite_setting_var#gather_candidates_all', a:000)
+function! s:source_settings_var_all.gather_candidates(args, context)
+	return unite_setting_var#gather_candidates(a:args, a:context, 1)
 endfunction
 "
 call unite#define_source(s:source_settings_var_all)
