@@ -45,7 +45,7 @@ function! s:get_valnames_sub_all(valname) "{{{
 	let valnames = [a:valname]
 	let num_     = 0
 	while num_ < len(valnames)
-		let tmps = s:get_valnames(valnames[num_])
+		let tmps = s:get_valnames(valnames[num_], 0)
 
 		if len(tmps) > 0
 			let valnames = extend(valnames, tmps, num_+1)
