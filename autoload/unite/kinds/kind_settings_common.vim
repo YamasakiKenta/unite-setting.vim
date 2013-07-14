@@ -49,7 +49,7 @@ function! s:kind_settings_common.action_table.edit_key.func(candidate)  "{{{
 		return
 	endif
 
-	echo dict_name
+	echom string(dict_name)
 	let str = input(key.' : ', key)
 
 	if str !=# "" && str !=# key
@@ -101,7 +101,7 @@ function! s:kind_settings_common.action_table.yank.func(candidates)  "{{{
 		exe 'let valname = "let ".candidate.action__valname." = ".string('.candidate.action__valname.')."\n"'
 		let @" = @" . valname
 	endfor
-	echo @"
+	echom @"
 	let @* = @"
 endfunction
 "}}}
