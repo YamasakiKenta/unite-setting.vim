@@ -7,11 +7,11 @@ Sources			|unite-setting-sources|
 ==============================================================================
 SOURCES *unite-sources*
 						*unite-source-setting_var*
-setting_var	変数の一覧を表示
+setting_var	螟画焚縺ｮ荳隕ｧ繧定｡ｨ遉ｺ
 
 						*unite-source-setting_var_all*
-setting_var_all	変数の一覧を表示
-		リスト型、辞書型は展開する
+setting_var_all	螟画焚縺ｮ荳隕ｧ繧定｡ｨ遉ｺ
+		繝ｪ繧ｹ繝亥梛縲∬ｾ樊嶌蝙九�ｯ螻暮幕縺吶ｋ
 
 ==============================================================================
 KINDS *unite-setting-kinds*
@@ -26,11 +26,11 @@ kind_settings_list
 ACTIONS *unite-setting-actions*
 
 kind_settings_common
-　　edit
-　　edit_key
-　　delete
-　　preview
-　　yank
+縲縲edit
+縲縲edit_key
+縲縲delete
+縲縲preview
+縲縲yank
 
 kind_settings_list
     kind_settings_common
