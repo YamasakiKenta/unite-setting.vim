@@ -69,15 +69,15 @@ function! s:get_valnames(valname, all_flg) "{{{
 endfunction
 "}}}
 
-let unite_setting_var#source_tmpl = {
+let unite_settings#source_tmpl = {
 			\ 'description' : 'show var',
 			\ 'syntax'      : 'uniteSource__settings',
 			\ 'hooks'       : {},
 			\ }
-function! unite_setting_var#source_tmpl.hooks.on_init(args, context) 
+function! unite_settings#source_tmpl.hooks.on_init(args, context) 
 	let a:context.source__valname = get(a:args, 0, 'g:')
 endfunction
-function! unite_setting_var#source_tmpl.change_candidates(args, context) "{{{
+function! unite_settings#source_tmpl.change_candidates(args, context) "{{{
 	let new_    = a:context.input
 	let valname = a:context.source__valname
 	let valdata = s:get_val(valname)
@@ -105,7 +105,7 @@ function! unite_setting_var#source_tmpl.change_candidates(args, context) "{{{
 
 endfunction
 "}}}
-function! unite_setting_var#gather_candidates(args, context, all_flg) "{{{
+function! unite_settings#gather_candidates(args, context, all_flg) "{{{
 
 	let valname  = a:context.source__valname
 	let valnames = s:get_valnames(valname, a:all_flg)
